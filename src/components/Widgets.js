@@ -13,19 +13,21 @@ import teamMembers from "../data/teamMembers";
 
 
 export const ProfileCardWidget = () => {
+  // call rider api here for profile
   return (
     <Card border="light" className="text-center p-0 mb-4">
-      <div style={{ backgroundImage: `url(${ProfileCover})` }} className="profile-cover rounded-top" />
+      <div style={{ backgroundColor:"#61DAFB" }} className="profile-cover rounded-top" />
       <Card.Body className="pb-5">
-        <Card.Img src={Profile1} alt="Neil Portrait" className="user-avatar large-avatar rounded-circle mx-auto mt-n7 mb-4" />
+        <Card.Img src={Profile1} alt="Neil Portrait" className="user-avatar large-avatar rounded-circle mx-auto mt-n7 mb-1" />
         <Card.Title>Neil Sims</Card.Title>
-        <Card.Subtitle className="fw-normal">Senior Software Engineer</Card.Subtitle>
-        <Card.Text className="text-gray mb-4">New York, USA</Card.Text>
+        {/* <Card.Subtitle className="fw-normal">Senior Software Engineer</Card.Subtitle> */}
+        <Card.Text className="text-gray mb-4">City of Operation : Mumbai</Card.Text>
+        <Card.Text className="text-gray mb-4">Vehicle No : MH 43 A 1234</Card.Text>
 
-        <Button variant="primary" size="sm" className="me-2">
+        {/* <Button variant="primary" size="sm" className="me-2">
           <FontAwesomeIcon icon={faUserPlus} className="me-1" /> Connect
-        </Button>
-        <Button variant="secondary" size="sm">Send Message</Button>
+        </Button> */}
+        {/* <Button variant="secondary" size="sm">Send Message</Button> */}
       </Card.Body>
     </Card>
   );

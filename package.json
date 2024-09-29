@@ -29,6 +29,7 @@
     "@fortawesome/free-regular-svg-icons": "^5.15.4",
     "@fortawesome/free-solid-svg-icons": "^5.15.4",
     "@fortawesome/react-fontawesome": "^0.1.17",
+    "@hookform/resolvers": "^3.9.0",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
@@ -36,6 +37,7 @@
     "bootstrap": "5.0.0-beta1",
     "chartist": "^0.11.4",
     "chartist-plugin-tooltips-updated": "^0.1.4",
+    "file-saver": "^2.0.5",
     "moment-timezone": "^0.5.31",
     "react": "^16.13.1",
     "react-chartist": "^0.14.4",
@@ -43,6 +45,8 @@
     "react-datetime": "^3.0.4",
     "react-dom": "^16.13.1",
     "react-github-btn": "^1.2.0",
+    "react-hook-form": "^7.53.0",
+    "react-hot-toast": "^2.4.1",
     "react-live": "^2.2.3",
     "react-loader-spinner": "^6.1.6",
     "react-router-dom": "^6.26.2",
@@ -50,7 +54,9 @@
     "react-scripts": "3.4.3",
     "react-transition-group": "^4.4.1",
     "sass": "^1.50.0",
-    "simplebar-react": "^2.3.0"
+    "simplebar-react": "^2.3.0",
+    "xlsx": "^0.18.5",
+    "yup": "^1.4.0"
   },
   "scripts": {
     "start": "react-scripts start",

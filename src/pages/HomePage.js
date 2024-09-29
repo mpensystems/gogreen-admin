@@ -216,6 +216,9 @@ import BookingTab from './BookingTab';
 import RidersTab from './RidersTab';
 import KycDetails from './KycDetails';
 import NewBookings from './NewBookings';
+import TripsTab from './TripsTab';
+import Trip from './Trip';
+import Booking from './Booking';
 // import Kyc from '../pages/Kyc';
 
 const RouteWithLoader = ({ element }) => {
@@ -293,6 +296,9 @@ export default function HomePage() {
       <Route path={RoutePaths.RiderDetails.path} element={<RouteWithSidebar element={<Riders />} />} />
       <Route path={RoutePaths.NewBooking.path} element={<RouteWithSidebar element={<NewBookings />} />} />
       <Route path={RoutePaths.Bookings.path} element={<RouteWithSidebar element={<BookingTab />} />} />
+      <Route path={RoutePaths.Booking.path} element={<RouteWithSidebar element={<Booking />} />} />
+      <Route path={RoutePaths.TripsTab.path} element={<RouteWithSidebar element={<TripsTab />} />} />
+      <Route path={RoutePaths.Trip.path} element={<RouteWithSidebar element={<Trip />} />} />
       <Route path={RoutePaths.Riders.path} element={<RouteWithSidebar element={<RidersTab />} />} />
       <Route path={RoutePaths.Settings.path} element={<RouteWithSidebar element={<Settings />} />} />
       <Route path={RoutePaths.BootstrapTables.path} element={<RouteWithSidebar element={<BootstrapTables />} />} />
