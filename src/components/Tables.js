@@ -264,7 +264,7 @@ export const TransactionsTable = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const recordsPerPage = 10;
-
+  const navigate = useNavigate();
   // api from backend
 
   // useEffect(() => {
@@ -292,6 +292,7 @@ export const TransactionsTable = () => {
     return statusOrder[a.status] - statusOrder[b.status];
   });
 
+ 
   const totalTransactions = sortedTransactions.length;
 
   // Calculate total pages
@@ -309,6 +310,12 @@ export const TransactionsTable = () => {
     setCurrentPage(pageNumber);
   };
 
+  const handleEditTransaction= (transactionId)=>{
+    // api to be called for chnaging transaction status
+    console.log("change the status to ch")
+    console.log("transaction id here ",transactionId)
+  }
+
   const TableRow = ({
     trip_id,
     rider_name,
@@ -318,6 +325,8 @@ export const TransactionsTable = () => {
     issueDate,
     dueDate,
     status,
+    bookingId,
+    _id
   }) => {
     const statusVariant =
       status === "Paid"
@@ -369,7 +378,372 @@ export const TransactionsTable = () => {
               </span>
             </Dropdown.Toggle>
             <Dropdown.Menu>
-              <Dropdown.Item>
+              {/* <Dropdown.Item>
+                <FontAwesomeIcon icon={faEye} className="me-2" /> View Details
+              </Dropdown.Item> */}
+              <Dropdown.Item onClick={()=>handleEditTransaction(_id)}>
+                <FontAwesomeIcon 
+                icon={faEdit}  /> Edit
+              </Dropdown.Item>
+              {/* <Dropdown.Item className="text-danger">
+                <FontAwesomeIcon icon={faTrashAlt} className="me-2" /> Remove
+              </Dropdown.Item> */}
+            </Dropdown.Menu>
+          </Dropdown>
+        </td>
+      </tr>
+    );
+  };
+
+  return (
+    <Card border="light" className="table-wrapper table-responsive shadow-sm">
+      <Card.Body className="pt-0">
+
+     
+
+
+        <Table hover className="user-table align-items-center">
+          <thead>
+            <tr>
+              <th className="border-bottom">Trip Id</th>
+              <th className="border-bottom">Rider Name</th>
+              <th className="border-bottom">PickUp Location</th>
+              <th className="border-bottom">Drop Location</th>
+              <th className="border-bottom">Issue Date</th>
+              <th className="border-bottom">Due Date</th>
+              <th className="border-bottom">Total</th>
+              <th className="border-bottom">Status</th>
+              <th className="border-bottom">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {currentTransactions.map((t) => (
+              <TableRow key={`transaction-${t.trip_id}`} {...t} />
+            ))}
+          </tbody>
+        </Table>
+        <Card.Footer className="px-3 border-0 d-lg-flex align-items-center justify-content-between">
+          <Nav>
+            <Pagination className="mb-2 mb-lg-0">
+              <Pagination.Prev
+                onClick={() => handlePageChange(currentPage - 1)}
+                disabled={currentPage === 1}
+              >
+                Previous
+              </Pagination.Prev>
+
+              {[...Array(totalPages).keys()].map((number) => (
+                <Pagination.Item
+                  key={number + 1}
+                  active={number + 1 === currentPage}
+                  onClick={() => handlePageChange(number + 1)}
+                >
+                  {number + 1}
+                </Pagination.Item>
+              ))}
+
+              <Pagination.Next
+                onClick={() => handlePageChange(currentPage + 1)}
+                disabled={currentPage === totalPages}
+              >
+                Next
+              </Pagination.Next>
+            </Pagination>
+          </Nav>
+          <small className="fw-bold">
+            Showing <b>{currentTransactions.length}</b> out of{" "}
+            <b>{totalTransactions}</b> entries
+          </small>
+        </Card.Footer>
+      </Card.Body>
+    </Card>
+  );
+};
+
+
+export const RiderEarningTable = () => {
+  // const [transactions, seTransactions] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const recordsPerPage = 5;
+  const navigate = useNavigate();
+  // api from backend
+
+  // useEffect(() => {
+  //   const fetchRidersdata = async () => {
+  //     try {
+  //       const response = await getAllTransactions();
+  //       const allTransactions = response;
+  //       console.log("riders : ", allTransactions);
+
+  //       seTransactions(allTransactions);
+  // setIsLoading(false); 
+  //     } catch (error) {
+  //       console.log("Error while fetching the data", error);
+  // setIsLoading(false); 
+  //     }
+  //   };
+
+  //   fetchRidersdata();
+
+  //   console.log("kyc rediers : ", riderKycList);
+  // }, []);
+
+  const sortedTransactions = transactions.sort((a, b) => {
+    const statusOrder = { Due: 1, Paid: 2, Canceled: 3 };
+    return statusOrder[a.status] - statusOrder[b.status];
+  });
+
+ 
+  const totalTransactions = sortedTransactions.length;
+
+  // Calculate total pages
+  const totalPages = Math.ceil(totalTransactions / recordsPerPage);
+
+  const indexOfLastRecord = currentPage * recordsPerPage;
+  const indexOfFirstRecord = indexOfLastRecord - recordsPerPage; 
+
+  const currentTransactions = sortedTransactions.slice(
+    indexOfFirstRecord,
+    indexOfLastRecord
+  );
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
+  const handleEditTransaction= (transactionId)=>{
+    // api to be called for chnaging transaction status
+    console.log("change the status to ch")
+    console.log("transaction id here ",transactionId)
+  }
+
+  const TableRow = ({
+    trip_id,
+    pickup_loc,
+    drop_loc,
+    price,
+    issueDate,
+    dueDate,
+    status,
+    bookingId,
+    _id
+  }) => {
+    const statusVariant =
+      status === "Paid"
+        ? "success"
+        : status === "Due"
+        ? "warning"
+        : status === "Canceled"
+        ? "danger"
+        : "primary";
+
+    return (
+      <tr>
+        <td>
+          <Card.Link as={Link} to={Routes.Invoice.path} className="fw-normal">
+            {trip_id}
+          </Card.Link>
+        </td>
+        
+        <td>
+          <span className="fw-normal">{pickup_loc}</span>
+        </td>
+        <td>
+          <span className="fw-normal">{drop_loc}</span>
+        </td>
+        <td>
+          <span className="fw-normal">{issueDate}</span>
+        </td>
+       
+        <td>
+          <span className="fw-normal">${parseFloat(price).toFixed(2)}</span>
+        </td>
+        <td>
+          <span className={`fw-normal text-${statusVariant}`}>{status}</span>
+        </td>
+       
+      </tr>
+    );
+  };
+
+  return (
+    <Card border="light" className="table-wrapper table-responsive shadow-sm">
+      <h4 className="p-3">Riders Earning </h4>
+      <Card.Body className="pt-0">
+
+     
+
+
+        <Table hover className="user-table align-items-center">
+          
+          <thead>
+            <tr>
+              <th className="border-bottom">Trip Id</th>
+              <th className="border-bottom">PickUp Location</th>
+              <th className="border-bottom">Drop Location</th>
+              <th className="border-bottom">Trip Date</th>
+              <th className="border-bottom">Total</th>
+              <th className="border-bottom">Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {currentTransactions.map((t) => (
+              <TableRow key={`transaction-${t.trip_id}`} {...t} />
+            ))}
+          </tbody>
+        </Table>
+        <Card.Footer className="px-3 border-0 d-lg-flex align-items-center justify-content-between">
+          <Nav>
+            <Pagination className="mb-2 mb-lg-0">
+              <Pagination.Prev
+                onClick={() => handlePageChange(currentPage - 1)}
+                disabled={currentPage === 1}
+              >
+                Previous
+              </Pagination.Prev>
+
+              {[...Array(totalPages).keys()].map((number) => (
+                <Pagination.Item
+                  key={number + 1}
+                  active={number + 1 === currentPage}
+                  onClick={() => handlePageChange(number + 1)}
+                >
+                  {number + 1}
+                </Pagination.Item>
+              ))}
+
+              <Pagination.Next
+                onClick={() => handlePageChange(currentPage + 1)}
+                disabled={currentPage === totalPages}
+              >
+                Next
+              </Pagination.Next>
+            </Pagination>
+          </Nav>
+          <small className="fw-bold">
+            Showing <b>{currentTransactions.length}</b> out of{" "}
+            <b>{totalTransactions}</b> entries
+          </small>
+        </Card.Footer>
+      </Card.Body>
+    </Card>
+  );
+};
+
+
+export const TripsTable = () => {
+  // const [transactions, seTransactions] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const recordsPerPage = 10;
+  const navigate = useNavigate();
+  // api from backend
+
+  // useEffect(() => {
+  //   const fetchRidersdata = async () => {
+  //     try {
+  //       const response = await getAllTransactions();
+  //       const allTransactions = response;
+  //       console.log("riders : ", allTransactions);
+
+  //       seTransactions(allTransactions);
+  // setIsLoading(false); 
+  //     } catch (error) {
+  //       console.log("Error while fetching the data", error);
+  // setIsLoading(false); 
+  //     }
+  //   };
+
+  //   fetchRidersdata();
+
+  //   console.log("kyc rediers : ", riderKycList);
+  // }, []);
+
+
+
+  const handleViewDetails = (tripId) => {
+    console.log("inside view details with id ", tripId);
+    navigate(`/trip/${tripId}`);
+  };
+
+  const sortedTransactions = transactions.sort((a, b) => {
+    //to be change into ongoing or ended trip
+    const statusOrder = { Due: 1, Paid: 2, Canceled: 3 };
+    return statusOrder[a.status] - statusOrder[b.status];
+  });
+
+  const totalTransactions = sortedTransactions.length;
+
+  // Calculate total pages
+  const totalPages = Math.ceil(totalTransactions / recordsPerPage);
+
+  const indexOfLastRecord = currentPage * recordsPerPage;
+  const indexOfFirstRecord = indexOfLastRecord - recordsPerPage; 
+
+  const currentTransactions = sortedTransactions.slice(
+    indexOfFirstRecord,
+    indexOfLastRecord
+  );
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
+  const TableRow = ({
+    trip_id,
+    rider_name,
+    pickup_loc,
+    drop_loc,
+    price,
+    status,
+  }) => {
+    const statusVariant =
+      status === "Completed"
+        ? "success"
+        : status === "On going"
+        ? "warning"
+        : status === "Canceled"
+        ? "danger"
+        : "primary";
+
+    return (
+      <tr>
+        <td>
+          <Card.Link as={Link} to={Routes.Invoice.path} className="fw-normal">
+            {trip_id}
+          </Card.Link>
+        </td>
+        <td>
+          <span className="fw-normal">{rider_name}</span>
+        </td>
+        <td>
+          <span className="fw-normal">{pickup_loc}</span>
+        </td>
+        <td>
+          <span className="fw-normal">{drop_loc}</span>
+        </td>
+       
+        <td>
+          <span className="fw-normal">${parseFloat(price).toFixed(2)}</span>
+        </td>
+        <td>
+          <span className={`fw-normal text-${statusVariant}`}>{status}</span>
+        </td>
+        <td>
+          <Dropdown as={ButtonGroup}>
+            <Dropdown.Toggle
+              as={Button}
+              split
+              variant="link"
+              className="text-dark m-0 p-0"
+            >
+              <span className="icon icon-sm">
+                <FontAwesomeIcon icon={faEllipsisH} className="icon-dark" />
+              </span>
+            </Dropdown.Toggle>
+            <Dropdown.Menu>
+              <Dropdown.Item onClick={() => handleViewDetails(trip_id)}>
                 <FontAwesomeIcon icon={faEye} className="me-2" /> View Details
               </Dropdown.Item>
               <Dropdown.Item>
@@ -399,8 +773,6 @@ export const TransactionsTable = () => {
               <th className="border-bottom">Rider Name</th>
               <th className="border-bottom">PickUp Location</th>
               <th className="border-bottom">Drop Location</th>
-              <th className="border-bottom">Issue Date</th>
-              <th className="border-bottom">Due Date</th>
               <th className="border-bottom">Total</th>
               <th className="border-bottom">Status</th>
               <th className="border-bottom">Action</th>
@@ -1107,9 +1479,11 @@ export const RiderTable = () => {
 export const BookingTable = () => {
   const [bookingsList, setBookingsList] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-
+  const navigate = useNavigate();
   const recordsPerPage = 10;
 
+
+  
   useEffect(() => {
     const fetchBookingsdata = async () => {
       try {
@@ -1141,6 +1515,11 @@ export const BookingTable = () => {
     setCurrentPage(pageNumber);
   };
 
+  const handleViewBooking = (bookingId ) => {
+    console.log("booking id : ",bookingId);
+    navigate(`/booking/${bookingId}` );
+
+  }
   const totalBookings = activeBookings.length;
 
   const TableRow = ({ orderId, status, trip_distance, _id }) => {
@@ -1186,7 +1565,7 @@ export const BookingTable = () => {
               </span>
             </Dropdown.Toggle>
             <Dropdown.Menu>
-              <Dropdown.Item>
+              <Dropdown.Item  onClick={()=>handleViewBooking(_id)}>
                 <FontAwesomeIcon icon={faEye} className="me-2" /> View Details
               </Dropdown.Item>
               <Dropdown.Item onClick={() => handleEdit(_id)}>

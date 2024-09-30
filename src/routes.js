@@ -1,8 +1,8 @@
 
 export const Routes = {
     // pages
-    Presentation: { path: "/" },
-    DashboardOverview: { path: "/dashboard/overview" },
+    // Presentation: { path: "/" },
+    DashboardOverview: { path: "/" },
     Transactions: { path: "/transactions" },
     Kyc: { path: "/Kyc" },
     KycDetails: { path: "/rider-kyc/:id" },
@@ -10,6 +10,9 @@ export const Routes = {
     RiderDetails: { path: "/rider/:id" },
     Bookings : { path: "/Bookings" },
     NewBooking : { path: "/new-Booking" },
+    Booking : { path: "/Booking/:BookingId" },
+    TripsTab : { path: "/Trips" },
+    Trip : { path: "/Trip/:tripId" },
     Settings: { path: "/settings" },
     Upgrade: { path: "/upgrade" },
     BootstrapTables: { path: "/tables/bootstrap-tables" },

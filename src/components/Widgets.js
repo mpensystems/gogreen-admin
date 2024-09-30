@@ -13,23 +13,39 @@ import teamMembers from "../data/teamMembers";
 
 
 export const ProfileCardWidget = () => {
+  // call rider api here for profile
   return (
     <Card border="light" className="text-center p-0 mb-4">
-      <div style={{ backgroundImage: `url(${ProfileCover})` }} className="profile-cover rounded-top" />
+      <div style={{ backgroundColor:"#61DAFB" }} className="profile-cover rounded-top" />
       <Card.Body className="pb-5">
-        <Card.Img src={Profile1} alt="Neil Portrait" className="user-avatar large-avatar rounded-circle mx-auto mt-n7 mb-4" />
+        <Card.Img src={Profile1} alt="Neil Portrait" className="user-avatar large-avatar rounded-circle mx-auto mt-n7 mb-1" />
         <Card.Title>Neil Sims</Card.Title>
-        <Card.Subtitle className="fw-normal">Senior Software Engineer</Card.Subtitle>
-        <Card.Text className="text-gray mb-4">New York, USA</Card.Text>
+        {/* <Card.Subtitle className="fw-normal">Senior Software Engineer</Card.Subtitle> */}
+        <Card.Text className="text-gray mb-4">City of Operation : Mumbai</Card.Text>
+        <Card.Text className="text-gray mb-4">Vehicle No : MH 43 A 1234</Card.Text>
 
-        <Button variant="primary" size="sm" className="me-2">
+        {/* <Button variant="primary" size="sm" className="me-2">
           <FontAwesomeIcon icon={faUserPlus} className="me-1" /> Connect
-        </Button>
-        <Button variant="secondary" size="sm">Send Message</Button>
+        </Button> */}
+        {/* <Button variant="secondary" size="sm">Send Message</Button> */}
       </Card.Body>
     </Card>
   );
 };
+export const KycCardWidget = ({Document}) => {
+  // call rider api here for profile
+  return (
+    <Card border="light" className="text-center pb-0 mb-4">
+      {/* <div style={{ backgroundColor:"#61DAFB" }} className="profile-cover rounded-top" /> */}
+      <Card.Body className="pb-2">
+        <Card.Img src={Profile1} alt="Neil Portrait" className=" large-avatar  mx-auto " />
+        <br/>
+        <Card.Title className="pt-3" >{Document}</Card.Title>
+      </Card.Body>
+    </Card>
+  );
+};
+
 
 export const ChoosePhotoWidget = (props) => {
   const { title, photo } = props;
@@ -62,7 +78,7 @@ export const ChoosePhotoWidget = (props) => {
   );
 };
 
-export const CounterWidget = (props) => {
+export const RidersWidget = (props) => {
   const { icon, iconColor, category, title, period, percentage } = props;
   const percentageIcon = percentage < 0 ? faAngleDown : faAngleUp;
   const percentageColor = percentage < 0 ? "text-danger" : "text-success";
@@ -72,26 +88,21 @@ export const CounterWidget = (props) => {
       <Card.Body>
         <Row className="d-block d-xl-flex align-items-center">
           <Col xl={5} className="text-xl-center d-flex align-items-center justify-content-xl-center mb-3 mb-xl-0">
-            <div className={`icon icon-shape icon-md icon-${iconColor} rounded me-4 me-sm-0`}>
+            <div className={`icon icon-shape icon-md icon-${iconColor} rounded me-4 me-sm-0 ` } >
               <FontAwesomeIcon icon={icon} />
             </div>
             <div className="d-sm-none">
               <h5>{category}</h5>
-              <h3 className="mb-1">{title}</h3>
+              <h3 className="mb-1"  >{title}</h3>
             </div>
           </Col>
           <Col xs={12} xl={7} className="px-xl-0">
             <div className="d-none d-sm-block">
-              <h5>{category}</h5>
-              <h3 className="mb-1">{title}</h3>
+              <h5 style={{ color: `${iconColor}` }}> {category}</h5>
+              <h3 className="mb-1" >{title}</h3>
             </div>
-            <small>{period}, <FontAwesomeIcon icon={faGlobeEurope} size="xs" /> WorldWide</small>
-            <div className="small mt-2">
-              <FontAwesomeIcon icon={percentageIcon} className={`${percentageColor} me-1`} />
-              <span className={`${percentageColor} fw-bold`}>
-                {percentage}%
-              </span> Since last month
-            </div>
+            
+            
           </Col>
         </Row>
       </Card.Body>

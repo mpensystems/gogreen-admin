@@ -4,11 +4,19 @@ import { faBoxOpen, faCartArrowDown, faChartPie, faChevronDown, faClipboard, faC
 import { Col, Row, Button, Dropdown } from '@themesberg/react-bootstrap';
 import { ChoosePhotoWidget, ProfileCardWidget } from "../components/Widgets";
 import { GeneralInfoForm } from "../components/Forms";
+import toast, { Toaster } from 'react-hot-toast';
 
-import Profile3 from "../assets/img/team/profile-picture-3.jpg";
-
+import { useNavigate } from "react-router-dom";
+import {
+  faArrowLeft
+} from "@fortawesome/free-solid-svg-icons";
 
 export default () => {
+  const navigate = useNavigate()
+  const handleBackBookings = ()=>{
+    navigate(`/Bookings`);
+
+  }
   return (
     <>
       <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-4">
@@ -67,8 +75,18 @@ export default () => {
       </div>
 
       <Row>
+      <Col xs={12} xl={1}>
+          {/* <ProfileCardWidget /> */}
+
+          <Button onClick={handleBackBookings} variant="light" className="shadow-sm mb-4 d-flex align-items-center">
+            <FontAwesomeIcon icon={faArrowLeft} /> 
+            <span className="ms-2">Back</span>
+          </Button>
+        </Col>
         <Col xs={12} xl={12}>
           <GeneralInfoForm />
+          <Toaster />
+
         </Col>
 
         {/* <Col xs={12} xl={4}>
