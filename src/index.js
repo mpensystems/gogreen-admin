@@ -28,11 +28,15 @@ import { Toaster } from 'react-hot-toast';
 
 // import HomePage from "./pages/HomePage";
 import ScrollToTop from "./components/ScrollToTop";
+import { AuthProvider } from './context/AuthContext';
 
 ReactDOM.render(
   <HashRouter>
     <ScrollToTop />
+    <AuthProvider>
     <HomePage/>
+
+    </AuthProvider>
     <Toaster />
   </HashRouter>,
   document.getElementById("root")

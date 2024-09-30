@@ -221,6 +221,7 @@ import Trip from './Trip';
 import Booking from './Booking';
 import Map from './Map';
 import MapDirection from './MapDirection';
+import PrivateRoute from './examples/PrivateRoute';
 // import Kyc from '../pages/Kyc';
 
 const RouteWithLoader = ({ element }) => {
@@ -301,7 +302,7 @@ export default function HomePage() {
       {/* {/* <Route path={RoutePaths.Presentation.path} element={<RouteWithLoader element={<Presentation />} />} /> */} */}
       {/* <Route path={RoutePaths.Presentation.path} element={<Map markers={markers} pickup={pickup} dropoff={dropoff} />} /> */}
 
-      <Route path={RoutePaths.Presentation.path} element={<Signin/>} />
+      <Route path="/signin" element={<Signin/>} />
 
       {/* <Route path={RoutePaths.Kyc.path} element={<RouteWithLoader element={<Kyc/>} />} />
       <Route path={RoutePaths.Riders.path} element={<RouteWithLoader element={<Riders/>} />} /> */}
@@ -313,8 +314,14 @@ export default function HomePage() {
       <Route path={RoutePaths.NotFound.path} element={<RouteWithLoader element={<NotFoundPage />} />} />
       <Route path={RoutePaths.ServerError.path} element={<RouteWithLoader element={<ServerError />} />} />
 
+
+
+      {/* <Route
+        path={RoutePaths.DashboardOverview.path}
+        element={<PrivateRoute requiredRole="admin" element={<RouteWithSidebar element={<DashboardOverview />} />} />}
+      /> */}
       {/* pages */}
-      <Route path={RoutePaths.DashboardOverview.path} element={<RouteWithSidebar element={<DashboardOverview />} />} />
+      {/* <Route path={RoutePaths.DashboardOverview.path} element={<RouteWithSidebar element={<DashboardOverview/>} />} /> */}
       <Route path={RoutePaths.Upgrade.path} element={<RouteWithSidebar element={<Upgrade />} />} />
       <Route path={RoutePaths.Transactions.path} element={<RouteWithSidebar element={<Transactions />} />} />
       <Route path={RoutePaths.Kyc.path} element={<RouteWithSidebar element={<Kyc />} />} />
@@ -329,7 +336,7 @@ export default function HomePage() {
       <Route path={RoutePaths.Settings.path} element={<RouteWithSidebar element={<Settings />} />} />
       <Route path={RoutePaths.BootstrapTables.path} element={<RouteWithSidebar element={<BootstrapTables />} />} />
       <Route path="/map/map" element={Map} />
-
+    
 
       {/* components */}
       <Route path={RoutePaths.Accordions.path} element={<RouteWithSidebar element={<Accordion />} />} />
