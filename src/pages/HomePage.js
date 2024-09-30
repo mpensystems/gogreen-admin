@@ -216,6 +216,8 @@ import BookingTab from './BookingTab';
 import RidersTab from './RidersTab';
 import KycDetails from './KycDetails';
 import NewBookings from './NewBookings';
+import Map from './Map';
+import MapDirection from './MapDirection';
 // import Kyc from '../pages/Kyc';
 
 const RouteWithLoader = ({ element }) => {
@@ -269,11 +271,35 @@ const RouteWithSidebar = ({ element }) => {
     </>
   );
 };
+const pickup = { lat: 28.6139, lng: 77.2090 }; // Example pickup location (Central Delhi)
+const dropoff = { lat: 28.6150, lng: 77.2120 }; // Example dropoff location (Nearby area in Delhi)
+
+const markers = [
+  {
+    position: { lat: 28.6139, lng: 77.2090 },
+    riderName: 'Captain America',
+    description: 'Avenger '
+  },
+  {
+    position: { lat: 19.0760, lng: 72.8777 },
+    riderName: 'Thor',
+    description: 'Asgaurd'
+  },
+  {
+    position: { lat: 13.0827, lng: 80.2707 },
+    riderName: 'IronMan',
+    description: 'Avenger Tony Stark'
+  },
+];
 
 export default function HomePage() {
   return (
     <Routes>
-      <Route path={RoutePaths.Presentation.path} element={<RouteWithLoader element={<Presentation />} />} />
+      {/* <Route path={RoutePaths.Presentation.path} element={<RouteWithLoader element={<Presentation />} />} /> */}
+      {/* <Route path={RoutePaths.Presentation.path} element={<Map markers={markers} pickup={pickup} dropoff={dropoff} />} /> */}
+
+      <Route path={RoutePaths.Presentation.path} element={<Signin/>} />
+
       {/* <Route path={RoutePaths.Kyc.path} element={<RouteWithLoader element={<Kyc/>} />} />
       <Route path={RoutePaths.Riders.path} element={<RouteWithLoader element={<Riders/>} />} /> */}
       <Route path={RoutePaths.Signin.path} element={<RouteWithLoader element={<Signin />} />} />
@@ -296,6 +322,8 @@ export default function HomePage() {
       <Route path={RoutePaths.Riders.path} element={<RouteWithSidebar element={<RidersTab />} />} />
       <Route path={RoutePaths.Settings.path} element={<RouteWithSidebar element={<Settings />} />} />
       <Route path={RoutePaths.BootstrapTables.path} element={<RouteWithSidebar element={<BootstrapTables />} />} />
+      <Route path="/map/map" element={Map} />
+
 
       {/* components */}
       <Route path={RoutePaths.Accordions.path} element={<RouteWithSidebar element={<Accordion />} />} />
