@@ -276,7 +276,7 @@ const RouteWithSidebar = ({ element }) => {
 export default function HomePage() {
   return (
     <Routes>
-      <Route path={RoutePaths.Presentation.path} element={<RouteWithLoader element={<Presentation />} />} />
+      {/* <Route path={RoutePaths.Presentation.path} element={<RouteWithLoader element={<Presentation />} />} /> */}
       {/* <Route path={RoutePaths.Kyc.path} element={<RouteWithLoader element={<Kyc/>} />} />
       <Route path={RoutePaths.Riders.path} element={<RouteWithLoader element={<Riders/>} />} /> */}
       <Route path={RoutePaths.Signin.path} element={<RouteWithLoader element={<Signin />} />} />

@@ -1,5 +1,6 @@
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
+import toast from 'react-hot-toast';
 
 // Function to export transactions as Excel
 export const downloadExcel = (data) => {
@@ -44,6 +45,7 @@ export const handleFileUpload = (uploadedFile) => {
       }));
       
       // Console log the formatted data
+      toast.success("File Uploaded successfully !");
       console.log("Uploaded File Data:", formattedData);
     };
     

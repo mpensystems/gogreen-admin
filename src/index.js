@@ -23,6 +23,8 @@ import "./scss/volt.scss";
 // vendor styles
 import "react-datetime/css/react-datetime.css";
 import HomePage from './pages/HomePage';
+import { Toaster } from 'react-hot-toast';
+
 
 // import HomePage from "./pages/HomePage";
 import ScrollToTop from "./components/ScrollToTop";
@@ -31,6 +33,7 @@ ReactDOM.render(
   <HashRouter>
     <ScrollToTop />
     <HomePage/>
+    <Toaster />
   </HashRouter>,
   document.getElementById("root")
 );
