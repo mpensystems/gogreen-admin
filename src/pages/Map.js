@@ -3,13 +3,12 @@ import { GoogleMap, useJsApiLoader, Marker, InfoWindow } from '@react-google-map
 import motorbike from "../assets/motorbike.png";
 import { customMapStyle } from '../Utils/MapStyle';
 
-
 const containerStyle = {
-  width: '100%', 
+  width: '100%',
   height: '500px'
 };
 
-const CustomMap = ({ markers }) => {
+const Map = ({ markers }) => {
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAP_API  // Replace with your actual API key
@@ -36,13 +35,11 @@ const CustomMap = ({ markers }) => {
     setMap(null);
   }, []);
 
-
-
   // Function to handle double-click on marker
   const handleMarkerDblClick = (position) => {
     if (map) {
-      map.setCenter(position); 
-      map.setZoom(8); 
+      map.setCenter(position);
+      map.setZoom(8);
       setSelectedMarker(null);
     }
   };
@@ -51,31 +48,30 @@ const CustomMap = ({ markers }) => {
     <GoogleMap
       mapContainerStyle={containerStyle}
       center={center}
-      zoom={4} 
+      zoom={4}
       onLoad={onLoad}
       onUnmount={onUnmount}
       options={{
         styles: customMapStyle
       }}
     >
-      {markers && markers?.map((marker, index) => (
-        <Marker 
-          key={index} 
+      {markers === 0 && markers?.map((marker, index) => (
+        <Marker
+          key={index}
           icon={{
             url: motorbike,
-            scaledSize: new window.google.maps.Size(50, 50), 
+            scaledSize: new window.google.maps.Size(50, 50),
           }}
-          position={marker.position} 
+          position={marker.position}
           onDblClick={() => handleMarkerDblClick(marker.position)} // Center map on double click
           onClick={() => setSelectedMarker(marker)} // Show InfoWindow on click
         />
 
-        
       ))}
       {selectedMarker && (
         <InfoWindow
           position={selectedMarker.position}
-          onCloseClick={() => setSelectedMarker(null)} 
+          onCloseClick={() => setSelectedMarker(null)}
         >
           <div>
             <h2>{selectedMarker.title}</h2>
@@ -87,4 +83,5 @@ const CustomMap = ({ markers }) => {
   ) : <></>;
 };
 
-export default React.memo(CustomMap);
+export default React.memo(Map);
+
