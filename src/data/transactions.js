@@ -3,7 +3,7 @@ import moment from "moment-timezone";
 
 export default [
     {
-        "trip_id": 300500,
+        "rider_id": 300500,
         "status": "Paid",
         "pickup_loc":"Mumbai",
         "drop_loc":"Thane",
@@ -13,7 +13,7 @@ export default [
         "dueDate": moment().subtract(1, "days").add(1, "month").format("DD MMM YYYY")
     },
     {
-        "trip_id": 300500,
+        "rider_id": 300500,
         "status": "Paid",
         "pickup_loc":"Mumbai",
         "drop_loc":"Thane",
@@ -23,7 +23,7 @@ export default [
         "dueDate": moment().subtract(1, "days").add(1, "month").format("DD MMM YYYY")
     },
     {
-        "trip_id": 300500,
+        "rider_id": 300500,
         "status": "Paid",
         "pickup_loc":"Mumbai",
         "drop_loc":"Thane",
@@ -33,7 +33,7 @@ export default [
         "dueDate": moment().subtract(1, "days").add(1, "month").format("DD MMM YYYY")
     },
     {
-        "trip_id": 300500,
+        "rider_id": 300500,
         "status": "Paid",
         "pickup_loc":"Mumbai",
         "drop_loc":"Thane",
@@ -43,7 +43,7 @@ export default [
         "dueDate": moment().subtract(1, "days").add(1, "month").format("DD MMM YYYY")
     },
     {
-        "trip_id": 300500,
+        "rider_id": 300500,
         "status": "Paid",
         "pickup_loc":"Mumbai",
         "drop_loc":"Thane",
@@ -53,7 +53,7 @@ export default [
         "dueDate": moment().subtract(1, "days").add(1, "month").format("DD MMM YYYY")
     },
     {
-        "trip_id": 300500,
+        "rider_id": 300500,
         "status": "Paid",
         "pickup_loc":"Mumbai",
         "drop_loc":"Thane",
@@ -63,7 +63,7 @@ export default [
         "dueDate": moment().subtract(1, "days").add(1, "month").format("DD MMM YYYY")
     },
     {
-        "trip_id": 300500,
+        "rider_id": 300500,
         "status": "Paid",
         "pickup_loc":"Mumbai",
         "drop_loc":"Thane",
@@ -73,7 +73,7 @@ export default [
         "dueDate": moment().subtract(1, "days").add(1, "month").format("DD MMM YYYY")
     },
     {
-        "trip_id": 300500,
+        "rider_id": 300500,
         "status": "Paid",
         "pickup_loc":"Mumbai",
         "drop_loc":"Thane",
@@ -83,7 +83,7 @@ export default [
         "dueDate": moment().subtract(1, "days").add(1, "month").format("DD MMM YYYY")
     },
     {
-        "trip_id": 300500,
+        "rider_id": 300500,
         "status": "Paid",
         "pickup_loc":"Mumbai",
         "drop_loc":"Thane",
@@ -93,7 +93,7 @@ export default [
         "dueDate": moment().subtract(1, "days").add(1, "month").format("DD MMM YYYY")
     },
     {
-        "trip_id": 300500,
+        "rider_id": 300500,
         "status": "Paid",
         "pickup_loc":"Mumbai",
         "drop_loc":"Thane",
@@ -103,7 +103,7 @@ export default [
         "dueDate": moment().subtract(1, "days").add(1, "month").format("DD MMM YYYY")
     },
     {
-        "trip_id": 300500,
+        "rider_id": 300500,
         "status": "Due",
         "pickup_loc":"Mumbai",
         "drop_loc":"Thane",
@@ -113,7 +113,7 @@ export default [
         "dueDate": moment().subtract(1, "days").add(1, "month").format("DD MMM YYYY")
     },
     {
-        "trip_id": 300500,
+        "rider_id": 300500,
         "status": "Canceled",
         "pickup_loc":"Mumbai",
         "drop_loc":"Thane",
@@ -123,7 +123,7 @@ export default [
         "dueDate": moment().subtract(1, "days").add(1, "month").format("DD MMM YYYY")
     },
     {
-        "trip_id": 300500,
+        "rider_id": 300500,
         "status": "Due",
         "pickup_loc":"Mumbai",
         "drop_loc":"Thane",
@@ -133,7 +133,7 @@ export default [
         "dueDate": moment().subtract(1, "days").add(1, "month").format("DD MMM YYYY")
     },
     {
-        "trip_id": 300500,
+        "rider_id": 300500,
         "status": "Due",
         "pickup_loc":"Mumbai",
         "drop_loc":"Thane",
@@ -143,7 +143,7 @@ export default [
         "dueDate": moment().subtract(1, "days").add(1, "month").format("DD MMM YYYY")
     },
     {
-        "trip_id": 300500,
+        "rider_id": 300500,
         "status": "Due",
         "pickup_loc":"Mumbai",
         "drop_loc":"Thane",
@@ -153,7 +153,7 @@ export default [
         "dueDate": moment().subtract(1, "days").add(1, "month").format("DD MMM YYYY")
     },
     {
-        "trip_id": 300500,
+        "rider_id": 300500,
         "status": "Due",
         "pickup_loc":"Mumbai",
         "drop_loc":"Thane",
@@ -163,7 +163,7 @@ export default [
         "dueDate": moment().subtract(1, "days").add(1, "month").format("DD MMM YYYY")
     },
     {
-        "trip_id": 300500,
+        "rider_id": 300500,
         "status": "Paid",
         "pickup_loc":"Mumbai",
         "drop_loc":"Thane",
@@ -173,7 +173,7 @@ export default [
         "dueDate": moment().subtract(1, "days").add(1, "month").format("DD MMM YYYY")
     },
     {
-        "trip_id": 300500,
+        "rider_id": 300500,
         "status": "Canceled",
         "pickup_loc":"Mumbai",
         "drop_loc":"Thane",
@@ -183,7 +183,7 @@ export default [
         "dueDate": moment().subtract(1, "days").add(1, "month").format("DD MMM YYYY")
     },
     {
-        "trip_id": 300500,
+        "rider_id": 300500,
         "status": "Canceled",
         "pickup_loc":"Mumbai",
         "drop_loc":"Thane",
@@ -193,7 +193,7 @@ export default [
         "dueDate": moment().subtract(1, "days").add(1, "month").format("DD MMM YYYY")
     },
     {
-        "trip_id": 300500,
+        "rider_id": 300500,
         "status": "Canceled",
         "pickup_loc":"Mumbai",
         "drop_loc":"Thane",
@@ -203,7 +203,7 @@ export default [
         "dueDate": moment().subtract(1, "days").add(1, "month").format("DD MMM YYYY")
     },
     {
-        "trip_id": 300500,
+        "rider_id": 300500,
         "status": "Paid",
         "pickup_loc":"Mumbai",
         "drop_loc":"Thane",

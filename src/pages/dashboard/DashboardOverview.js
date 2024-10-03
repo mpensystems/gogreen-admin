@@ -7,8 +7,33 @@ import { Col, Row, Button, Dropdown, ButtonGroup } from '@themesberg/react-boots
 import { CounterWidget, CircleChartWidget, BarChartWidget, TeamMembersWidget, ProgressTrackWidget, RankingWidget, SalesValueWidget, SalesValueWidgetPhone, AcquisitionWidget, RidersWidget } from "../../components/Widgets";
 import { PageVisitsTable } from "../../components/Tables";
 import { trafficShares, totalOrders } from "../../data/charts";
+import MapDirection from "../MapDirection";
+import Map from "../Map";
+
+
 
 export default () => {
+
+  const pickup = { lat: 28.6139, lng: 77.2090 }; // Example pickup location (Central Delhi)
+const dropoff = { lat: 28.6150, lng: 77.2120 }; // Example dropoff location (Nearby area in Delhi)
+
+const markers = [
+  {
+    position: { lat: 28.6139, lng: 77.2090 },
+    riderName: 'Captain America',
+    description: 'Avenger '
+  },
+  {
+    position: { lat: 19.0760, lng: 72.8777 },
+    riderName: 'Thor',
+    description: 'Asgaurd'
+  },
+  {
+    position: { lat: 13.0827, lng: 80.2707 },
+    riderName: 'IronMan',
+    description: 'Avenger Tony Stark'
+  },
+];
   return (
     <>
       <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-4">
@@ -44,7 +69,7 @@ export default () => {
       
       <Row className="justify-content-md-center">
         <Col xs={12} className="mb-4 d-none d-sm-block">
-        map component
+        <Map markers={markers} pickup={pickup} dropoff={dropoff} />
         </Col>
         </Row>
 

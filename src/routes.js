@@ -1,15 +1,19 @@
+import InviteUser from "./pages/examples/InviteUser";
+import UserManagment from "./pages/UserManagment";
 
 export const Routes = {
     // pages
     // Presentation: { path: "/" },
     DashboardOverview: { path: "/" },
     Transactions: { path: "/transactions" },
+    UserManagment: {path: '/UserManagment'},
     Kyc: { path: "/Kyc" },
+    InviteUser : {path : "/UserManagment/InviteUser"},
     KycDetails: { path: "/rider-kyc/:id" },
     Riders : { path: "/Riders" },
     RiderDetails: { path: "/rider/:id" },
     Bookings : { path: "/Bookings" },
-    NewBooking : { path: "/new-Booking" },
+    NewBooking : { path: "Bookings/new-Booking" },
     Booking : { path: "/Booking/:BookingId" },
     TripsTab : { path: "/Trips" },
     Trip : { path: "/Trip/:tripId" },

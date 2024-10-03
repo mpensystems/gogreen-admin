@@ -317,7 +317,7 @@ export const TransactionsTable = () => {
   }
 
   const TableRow = ({
-    trip_id,
+    rider_id,
     rider_name,
     pickup_loc,
     drop_loc,
@@ -341,7 +341,7 @@ export const TransactionsTable = () => {
       <tr>
         <td>
           <Card.Link as={Link} to={Routes.Invoice.path} className="fw-normal">
-            {trip_id}
+            {rider_id}
           </Card.Link>
         </td>
         <td>
@@ -405,7 +405,7 @@ export const TransactionsTable = () => {
         <Table hover className="user-table align-items-center">
           <thead>
             <tr>
-              <th className="border-bottom">Trip Id</th>
+              <th className="border-bottom">Rider Id</th>
               <th className="border-bottom">Rider Name</th>
               <th className="border-bottom">PickUp Location</th>
               <th className="border-bottom">Drop Location</th>
@@ -1653,6 +1653,190 @@ export const BookingTable = () => {
           </Card.Footer>
         </Card.Body>
       </Card>
+    </>
+  );
+};
+
+
+export const UserManagmentTable = () => {
+  const [ridersList, setRidersList] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const navigate = useNavigate();
+
+  const recordsPerPage = 10;
+
+  useEffect(() => {
+    const fetchRidersdata = async () => {
+      try {
+        const response = await getAllRiders();
+        const allRiders = response.riders;
+        console.log("riders : ", allRiders);
+
+        // Sort the ridersKyc by kycVerified status
+        
+        console.log("sorterd riders : ", allRiders);
+
+       
+
+        setRidersList(allRiders);
+      } catch (error) {
+        console.log("Error while fetching the data", error);
+      }
+    };
+
+    fetchRidersdata();
+
+    console.log("kyc rediers : ", ridersList);
+  }, []);
+
+  const handleViewDetails = (riderId) => {
+    console.log("inside view details with id ", riderId);
+    navigate(`/rider/${riderId}`);
+  };
+
+
+  const totalPages = Math.ceil(ridersList.length / recordsPerPage);
+  const indexOfLastRecord = currentPage * recordsPerPage;
+  const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
+  const currentRecords = ridersList.slice(
+    indexOfFirstRecord,
+    indexOfLastRecord
+  );
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
+  const totalRiders = ridersList.length;
+
+  const TableRow = ({
+    mobile,
+    first_name,
+    last_name,
+    
+    _id,
+  }) => {
+    // const statusVariant =
+    //   kyc_approved === "approved"
+    //     ? "success"
+    //     : kyc_approved === "pending"
+    //     ? "warning"
+    //     : kyc_approved === "rejected"
+    //     ? "danger"
+    //     : "primary";
+
+    // const navigate = useNavigate();
+
+    // Function to handle navigation to edit page
+    const handleEdit = (riderId) => {
+      console.log("inside edit rider : ", riderId);
+      // navigate(`/edit-rider/${riderId}`);  // Navigate to edit page with riderId
+    };
+
+    return (
+      <tr>
+        <td>
+          <Card.Link as={Link} to={Routes.Invoice.path} className="fw-normal">
+            {first_name + "  " + last_name}
+          </Card.Link>
+        </td>
+        <td>
+          <span className={`fw-normal text`}>
+            role
+          </span>
+        </td>
+        {/* <td>
+          <span className="fw-normal">{vehicle?.vehicle_no}</span>
+        </td>
+        <td>
+          <span className="fw-normal">{mobile}</span>
+        </td> */}
+        <td>
+          <Dropdown as={ButtonGroup}>
+            <Dropdown.Toggle
+              as={Button}
+              split
+              variant="link"
+              className="text-dark m-0 p-0"
+            >
+              <span className="icon icon-sm">
+                <FontAwesomeIcon icon={faEllipsisH} className="icon-dark" />
+              </span>
+            </Dropdown.Toggle>
+            <Dropdown.Menu>
+              {/* <Dropdown.Item onClick={() => handleViewDetails(riderId)}> */}
+              <Dropdown.Item onClick={() => handleViewDetails(_id)}>
+                <FontAwesomeIcon icon={faEye} className="me-2" /> View Details
+              </Dropdown.Item>
+              <Dropdown.Item onClick={() => handleEdit(_id)}>
+                <FontAwesomeIcon icon={faEdit} className="me-2" /> Edit
+              </Dropdown.Item>
+              <Dropdown.Item className="text-danger">
+                <FontAwesomeIcon icon={faTrashAlt} className="me-2" /> Remove
+              </Dropdown.Item>
+            </Dropdown.Menu>
+          </Dropdown>
+        </td>
+      </tr>
+    );
+  };
+
+  return (
+    <>
+      <Card border="light" className="table-wrapper table-responsive shadow-sm">
+        <Card.Body className="pt-0">
+          <Table hover className="user-table align-items-center">
+            <thead>
+              <tr>
+                <th className="border-bottom">User Name</th>
+                <th className="border-bottom">Role</th>
+                <th className="border-bottom">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {currentRecords.map((rider) => (
+                <TableRow key={rider.riderId} {...rider} />
+              ))}
+            </tbody>
+          </Table>
+          <Card.Footer className="px-3 border-0 d-lg-flex align-items-center justify-content-between">
+            <Nav>
+              <Pagination className="mb-2 mb-lg-0">
+                <Pagination.Prev
+                  onClick={() => handlePageChange(currentPage - 1)}
+                  disabled={currentPage === 1}
+                >
+                  Previous
+                </Pagination.Prev>
+
+                {[...Array(totalPages).keys()].map((number) => (
+                  <Pagination.Item
+                    key={number + 1}
+                    active={number + 1 === currentPage}
+                    onClick={() => handlePageChange(number + 1)}
+                  >
+                    {number + 1}
+                  </Pagination.Item>
+                ))}
+
+                <Pagination.Next
+                  onClick={() => handlePageChange(currentPage + 1)}
+                  disabled={currentPage === totalPages}
+                >
+                  Next
+                </Pagination.Next>
+              </Pagination>
+            </Nav>
+            <small className="fw-bold">
+              Showing <b>{currentRecords.length}</b> out of <b>{totalRiders}</b>{" "}
+              entries
+            </small>
+          </Card.Footer>
+        </Card.Body>
+      </Card>
+
+      
     </>
   );
 };

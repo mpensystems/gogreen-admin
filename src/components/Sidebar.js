@@ -4,7 +4,8 @@ import SimpleBar from 'simplebar-react';
 import { useLocation } from "react-router-dom";
 import { CSSTransition } from 'react-transition-group';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBook, faBoxOpen, faChartPie, faCog, faFileAlt, faFile,faUser, faBox,faMotorcycle,faSignOutAlt, faTable, faTimes, faCalendarAlt, faMapPin, faInbox, faRocket ,faReceipt} from "@fortawesome/free-solid-svg-icons";
+
+import { faBook, faBoxOpen, faChartPie, faCog, faFileAlt, faFile,faUser,faUsers, faBox,faMotorcycle,faSignOutAlt, faTable, faTimes, faCalendarAlt, faMapPin, faInbox, faRocket ,faReceipt} from "@fortawesome/free-solid-svg-icons";
 import { Nav, Badge, Image, Button, Dropdown, Accordion, Navbar } from '@themesberg/react-bootstrap';
 import { Link } from 'react-router-dom';
 import { Routes } from "../routes";
@@ -107,6 +108,8 @@ export default (props = {}) => {
               <NavItem title="Riders" icon={faUser} link={Routes.Riders.path} />
               
               <NavItem title="Bookings" icon={faBox} link={Routes.Bookings.path} />
+              <NavItem title="User Managment" icon={faUsers} link={Routes.UserManagment.path} />
+              
               {/* <NavItem title="Settings" icon={faCog} link={Routes.Settings.path} /> */}
 
               {/* <NavItem external title="Calendar" link="https://demo.themesberg.com/volt-pro-react/#/calendar" target="_blank" badgeText="Pro" icon={faCalendarAlt} />

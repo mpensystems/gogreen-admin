@@ -21,10 +21,32 @@ import { useNavigate } from "react-router-dom";
 
 import Profile3 from "../assets/img/team/profile-picture-3.jpg";
 import { CardWidget } from "../components/Card";
+import MapDirection from "./MapDirection";
 
 // import { faLeftLong } from '@fortawesome/free-solid-svg-icons';
 
 export default () => {
+  const pickup = { lat: 28.6139, lng: 77.2090 }; // Example pickup location (Central Delhi)
+const dropoff = { lat: 28.6150, lng: 77.2120 }; // Example dropoff location (Nearby area in Delhi)
+
+const markers = [
+  {
+    position: { lat: 28.6139, lng: 77.2090 },
+    riderName: 'Captain America',
+    description: 'Avenger '
+  },
+  {
+    position: { lat: 19.0760, lng: 72.8777 },
+    riderName: 'Thor',
+    description: 'Asgaurd'
+  },
+  {
+    position: { lat: 13.0827, lng: 80.2707 },
+    riderName: 'IronMan',
+    description: 'Avenger Tony Stark'
+  },
+];
+
   const navigate = useNavigate();
 
   const handleBackTrip = ()=>{
@@ -51,8 +73,7 @@ export default () => {
           {/* <ProfileCardWidget /> */}
 
           <Card border="light" className="bg-white shadow-sm mb-4">
-            map component
-          </Card>
+          <MapDirection markers={markers} pickup={pickup} dropoff={dropoff} />          </Card>
         </Col>
 
         <Col xs={12} xl={12}>
@@ -72,10 +93,7 @@ export default () => {
           </Row>
         </Col>
 
-        <Col xs={12} xl={12}>
-          {/* booking details compopnent */}
-          <Card>booking details</Card>
-        </Col>
+       
       </Row>
     </>
   );

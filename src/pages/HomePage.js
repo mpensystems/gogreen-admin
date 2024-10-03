@@ -222,6 +222,8 @@ import Booking from './Booking';
 import Map from './Map';
 import MapDirection from './MapDirection';
 import PrivateRoute from './examples/PrivateRoute';
+import UserManagment from './UserManagment';
+import InviteUser from './examples/InviteUser';
 // import Kyc from '../pages/Kyc';
 
 const RouteWithLoader = ({ element }) => {
@@ -299,7 +301,7 @@ const markers = [
 export default function HomePage() {
   return (
     <Routes>
-      {/* {/* <Route path={RoutePaths.Presentation.path} element={<RouteWithLoader element={<Presentation />} />} /> */} */}
+      {/* {/* <Route path={RoutePaths.Presentation.path} element={<RouteWithLoader element={<Presentation />} />} /> */} 
       {/* <Route path={RoutePaths.Presentation.path} element={<Map markers={markers} pickup={pickup} dropoff={dropoff} />} /> */}
 
       <Route path="/signin" element={<Signin/>} />
@@ -308,6 +310,7 @@ export default function HomePage() {
       <Route path={RoutePaths.Riders.path} element={<RouteWithLoader element={<Riders/>} />} /> */}
       <Route path={RoutePaths.Signin.path} element={<RouteWithLoader element={<Signin />} />} />
       <Route path={RoutePaths.Signup.path} element={<RouteWithLoader element={<Signup />} />} />
+      <Route path={RoutePaths.InviteUser.path} element={<RouteWithLoader element={<InviteUser />} />} />
       <Route path={RoutePaths.ForgotPassword.path} element={<RouteWithLoader element={<ForgotPassword />} />} />
       <Route path={RoutePaths.ResetPassword.path} element={<RouteWithLoader element={<ResetPassword />} />} />
       <Route path={RoutePaths.Lock.path} element={<RouteWithLoader element={<Lock />} />} />
@@ -321,7 +324,9 @@ export default function HomePage() {
         element={<PrivateRoute requiredRole="admin" element={<RouteWithSidebar element={<DashboardOverview />} />} />}
       /> */}
       {/* pages */}
-      {/* <Route path={RoutePaths.DashboardOverview.path} element={<RouteWithSidebar element={<DashboardOverview/>} />} /> */}
+      <Route path={RoutePaths.DashboardOverview.path} element={<RouteWithSidebar element={<DashboardOverview/>} />} />
+      {/* <Route path={RoutePaths.DashboardOverview.path} element={<RouteWithSidebar  element={<MapDirection markers={markers} pickup={pickup} dropoff={dropoff} />}/>} /> */}
+
       <Route path={RoutePaths.Upgrade.path} element={<RouteWithSidebar element={<Upgrade />} />} />
       <Route path={RoutePaths.Transactions.path} element={<RouteWithSidebar element={<Transactions />} />} />
       <Route path={RoutePaths.Kyc.path} element={<RouteWithSidebar element={<Kyc />} />} />
@@ -333,6 +338,7 @@ export default function HomePage() {
       <Route path={RoutePaths.TripsTab.path} element={<RouteWithSidebar element={<TripsTab />} />} />
       <Route path={RoutePaths.Trip.path} element={<RouteWithSidebar element={<Trip />} />} />
       <Route path={RoutePaths.Riders.path} element={<RouteWithSidebar element={<RidersTab />} />} />
+      <Route path={RoutePaths.UserManagment.path} element={<RouteWithSidebar element={<UserManagment />} />} />
       <Route path={RoutePaths.Settings.path} element={<RouteWithSidebar element={<Settings />} />} />
       <Route path={RoutePaths.BootstrapTables.path} element={<RouteWithSidebar element={<BootstrapTables />} />} />
       <Route path="/map/map" element={Map} />

@@ -16,7 +16,7 @@ export default () => {
 
     const handleNewBooking = ()=>{
         console.log("inside handle new booking function");
-        navigate(`/new-Booking`);
+        navigate(`/Bookings/new-Booking`);
     }
   
   return (
