@@ -225,6 +225,7 @@ import PrivateRoute from './examples/PrivateRoute';
 import UserManagment from './UserManagment';
 import InviteUser from './examples/InviteUser';
 import { geocodeAddress } from '../Utils/GeocodeService';
+import MapLocationFinder from './MapLocationFinder';
 // import Kyc from '../pages/Kyc';
 
 const RouteWithLoader = ({ element }) => {
@@ -317,8 +318,8 @@ export default function HomePage() {
 
   return (
     <Routes>
-      {/* {/* <Route path={RoutePaths.Presentation.path} element={<RouteWithLoader element={<Presentation />} />} /> */} */}
-      <Route path={RoutePaths.Presentation.path} element={<Map markers={markers} setMarkers={setMarkers} pickup={pickup} dropoff={dropoff} />} />
+      {/* <Route path={RoutePaths.Presentation.path} element={<RouteWithLoader element={<Presentation />} />} /> */}
+      {/* <Route path={RoutePaths.Presentation.path} element={<MapLocationFinder markers={markers} setMarkers={setMarkers} pickup={pickup} dropoff={dropoff} />} /> */}
 
       <Route path="/signin" element={<Signin/>} />
 

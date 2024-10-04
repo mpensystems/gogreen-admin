@@ -1,9 +1,14 @@
 import axios from 'axios';
 export const geocodeAddress = async (address) => {
+    console.log(address,"ADDRESS");
+    
     try {
         const response = await axios.get(
             `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(address)}&key=${process.env.REACT_APP_GOOGLE_MAP_API}`
         );
+
+        console.log(response,"RESPONSE");
+        
         
         if (response.data.status === 'OK') {
             const { lat, lng } = response.data.results[0].geometry.location;
