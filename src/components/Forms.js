@@ -91,6 +91,7 @@ export const GeneralInfoForm = () => {
   };
   // Handle form submission
   const onSubmit = (data) => {
+    console.log("inside form submit")
     // Group pickup and drop location data
     const pickupLocation = {
       name: data.pickupName,
@@ -120,8 +121,8 @@ export const GeneralInfoForm = () => {
       zip: data.dropZip,
     };
 
-    setDropLoc(dropLocation);
-    setPickupLoc(pickupLocation);
+    // setDropLoc(dropLocation);
+    // setPickupLoc(pickupLocation);
 
 
     const formData = {
@@ -130,8 +131,6 @@ export const GeneralInfoForm = () => {
       ...data, 
     };
 
-    console.log("Form data to send to API:", formData);
-    console.log("Form data to send to API:", pickupLoc);
     console.log("Form data to send to API:", formData);
  
     // Reset form and navigate

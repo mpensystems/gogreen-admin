@@ -217,9 +217,11 @@ const MapLocationFinder = ({ markers, setMarkers, pickupLoc, dropLoc, onCoordina
     let dropLatLng = null;
 
     if (pickupCoords) {
+      const address = await reverseGeocode(dropCoords.lat , dropCoords.lng);
+
       newMarkers.push({
         position: pickupCoords,
-        title: `Pickup: ${formatAddress(pickupLoc)}`,
+        title: `Pickup: ${address}`,
       });
       pickupLatLng = pickupCoords;
     
@@ -227,9 +229,14 @@ const MapLocationFinder = ({ markers, setMarkers, pickupLoc, dropLoc, onCoordina
     }
 
     if (dropCoords) {
+      // call api and pass reverse coords for showing address on map
+console.log("dropCoords here : ",dropCoords);
+
+    const address = await reverseGeocode(dropCoords.lat , dropCoords.lng);
+
       newMarkers.push({
         position: dropCoords,
-        title: `Drop: ${formatAddress(dropLoc)}`,
+        title: `Drop: ${address}`,
       });
       dropLatLng = dropCoords;
   
