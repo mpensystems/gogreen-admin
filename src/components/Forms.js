@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Col, Row, Card, Form } from "@themesberg/react-bootstrap";
+import { Col, Row, Card, Form ,Button} from "@themesberg/react-bootstrap";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import toast from 'react-hot-toast';
 import { CITY_STATE_PIN_DATA } from '../data/Zip'; 
 import Modal from "./Modal";
+// import { Button } from "bootstrap";
 
 // Define validation schema
 const schema = yup.object().shape({
@@ -16,32 +17,32 @@ const schema = yup.object().shape({
     .matches(/^[0-9]{10}$/, "Pickup Mobile must be exactly 10 digits")
     .required("Pickup Mobile is required"),
   pickupAddress1: yup.string().required("Pickup Address Line 1 is required"),
-  pickupLatitude: yup
-    .number()
-    .min(-90, "Latitude must be between -90 and 90")
-    .max(90, "Latitude must be between -90 and 90")
-    .required("Pickup Latitude is required"),
-  pickupLongitude: yup
-    .number()
-    .min(-180, "Longitude must be between -180 and 180")
-    .max(180, "Longitude must be between -180 and 180")
-    .required("Pickup Longitude is required"),
+  // pickupLatitude: yup
+  //   .number()
+  //   .min(-90, "Latitude must be between -90 and 90")
+  //   .max(90, "Latitude must be between -90 and 90")
+  //   .required("Pickup Latitude is required"),
+  // pickupLongitude: yup
+  //   .number()
+  //   .min(-180, "Longitude must be between -180 and 180")
+  //   .max(180, "Longitude must be between -180 and 180")
+  //   .required("Pickup Longitude is required"),
   dropName: yup.string().required("Drop Name is required"),
   dropMobile: yup
     .string()
     .matches(/^[0-9]{10}$/, "Drop Mobile must be exactly 10 digits")
     .required("Drop Mobile is required"),
   dropAddress1: yup.string().required("Drop Address Line 1 is required"),
-  dropLatitude: yup
-    .number()
-    .min(-90, "Latitude must be between -90 and 90")
-    .max(90, "Latitude must be between -90 and 90")
-    .required("Drop Latitude is required"),
-  dropLongitude: yup
-    .number()
-    .min(-180, "Longitude must be between -180 and 180")
-    .max(180, "Longitude must be between -180 and 180")
-    .required("Drop Longitude is required"),
+  // dropLatitude: yup
+  //   .number()
+  //   .min(-90, "Latitude must be between -90 and 90")
+  //   .max(90, "Latitude must be between -90 and 90")
+  //   .required("Drop Latitude is required"),
+  // dropLongitude: yup
+  //   .number()
+  //   .min(-180, "Longitude must be between -180 and 180")
+  //   .max(180, "Longitude must be between -180 and 180")
+  //   .required("Drop Longitude is required"),
 });
 
 export const GeneralInfoForm = () => {
@@ -91,7 +92,8 @@ export const GeneralInfoForm = () => {
   };
   // Handle form submission
   const onSubmit = (data) => {
-    console.log("inside form submit")
+    
+    console.log("inside form submit");
     // Group pickup and drop location data
     const pickupLocation = {
       name: data.pickupName,
@@ -100,8 +102,8 @@ export const GeneralInfoForm = () => {
       address2: data.pickupAddress2,
       house: data.pickupHouse,
       landmark: data.pickupLandmark,
-      latitude: data.pickupLatitude,
-      longitude: data.pickupLongitude,
+      latitude: pickupCoordinates.lat,
+      longitude: pickupCoordinates.lng,
       city: data.pickupCity,
       state: data.pickupState,
       zip: data.pickupZip,
@@ -114,20 +116,28 @@ export const GeneralInfoForm = () => {
       address2: data.dropAddress2,
       house: data.dropHouse,
       landmark: data.dropLandmark,
-      latitude: data.dropLatitude,
-      longitude: data.dropLongitude,
+      latitude: dropCoordinates.lat,
+      longitude: dropCoordinates.lng,
       city: data.dropCity,
       state: data.dropState,
       zip: data.dropZip,
     };
 
-    // setDropLoc(dropLocation);
-    // setPickupLoc(pickupLocation);
 
-
+  const pickup_geo ={
+     lat: pickupCoordinates.lat,
+     lng: pickupCoordinates.lng
+}
+  const drop_geo ={
+     lat: dropCoordinates.lat,
+     lng: dropCoordinates.lng
+}
+console.log("chrck lat lng : ",pickup_geo);
     const formData = {
-      pickupLocation,
-      dropLocation,
+      // pickupLocation,
+      // dropLocation,
+      pickup_geo,
+      drop_geo,
       ...data, 
     };
 
@@ -213,7 +223,9 @@ useEffect(()=>{
     console.log("Updated Drop Coordinates:", dropCoords);
   };
 
-  const [markers , setMarkers]  = useState([])
+  const [markers , setMarkers]  = useState([]);
+  
+
   return (
     <Card border="light" className="bg-white shadow-sm mb-4">
       <Card.Body>
@@ -536,7 +548,7 @@ useEffect(()=>{
 
           <Row>
             <Col md={12} className="mb-3"  >
-              <button type="none" className="btn btn-primary" onClick={openModal}  >Select Location</button>
+              <div type="none" className="btn btn-primary" onClick={openModal}  >Select Location</div>
             </Col>
 
 
@@ -547,11 +559,11 @@ useEffect(()=>{
           </Row>
           <hr/>
 
-          <div className="mt-3">
-            <button className="btn btn-primary" type="submit">
+          {/* <div className="mt-3"> */}
+            <Button className="btn btn-primary" type="submit">
               Submit
-            </button>
-          </div>
+            </Button>
+          {/* </div> */}
         </Form>
       </Card.Body>
     </Card>
