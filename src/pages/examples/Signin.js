@@ -20,21 +20,26 @@ import {
   Container,
   InputGroup,
 } from "@themesberg/react-bootstrap";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import { Routes } from "../../routes";
 import BgImage from "../../assets/img/illustrations/signin.svg";
 import { useAuth } from "../../context/AuthContext";
+import { login } from "../../api/adminApis";
+import toast from "react-hot-toast";
 
 export default () => {
   const [loginDetails, setLoginDetails] = useState({
-    username: null,
-    password: null,
+    username: '',
+    password: '',
   });
 
   const {updateAuth} = useAuth();
+  const navigate = useNavigate()
 
   const  handleValueChange = (e)=>{
+    console.log(e.target.value);
+    
 
     const {name,value} = e.target;
 
@@ -45,17 +50,31 @@ export default () => {
 
   }
 
-  const handleSubmit = (e) =>{
-    e.preventDefault();
-    //call login api
-    // if(res?.status === 200){
 
-       
-    //   const { token, role } = res.data; 
-    //   updateAuth(token, role);
-    // }
-    
-  }
+  
+  const handleSubmit = async (e) => {
+      e.preventDefault();
+      try {
+          const response = await login(loginDetails);
+          const { st, role , validUntil } = response.data; 
+          console.log(response,"RESPONSE_LOGIN");
+          if(response?.status === 200){
+
+            updateAuth(st, role , validUntil);
+  
+            toast.success('Login successful!');
+            navigate('/dashboard');
+
+          }
+  
+         
+          
+      } catch (error) {
+          console.error(error);
+          toast.error('Login failed. Please check your credentials.');
+      }
+  };
+  
 
   return (
     <main>
@@ -123,7 +142,7 @@ export default () => {
                       <Card.Link className="small text-end">Lost password?</Card.Link>
                     </div> */}
                   </Form.Group>
-                  <Button onSubmit={handleSubmit} variant="primary" type="submit" className="w-100">
+                  <Button onClick={handleSubmit} variant="primary" type="submit" className="w-100">
                     Sign in
                   </Button>
                 </Form>

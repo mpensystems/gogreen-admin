@@ -160,7 +160,7 @@
 
 
 import React, { useState, useEffect } from 'react';
-import { Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 import { Routes as RoutePaths } from "../routes";
 
 // pages
@@ -226,6 +226,7 @@ import UserManagment from './UserManagment';
 import InviteUser from './examples/InviteUser';
 import { geocodeAddress } from '../Utils/GeocodeService';
 import MapLocationFinder from './MapLocationFinder';
+import { useAuth } from '../context/AuthContext';
 // import Kyc from '../pages/Kyc';
 
 const RouteWithLoader = ({ element }) => {
@@ -313,15 +314,30 @@ const dropoff = { lat: 28.6150, lng: 77.2120 }; // Example dropoff location (Nea
 //   console.log("CALLED")
 // },[])
 
+
+
 export default function HomePage() {
+
+  const { auth } = useAuth();
   const [markers , setMarkers]  = useState([])
 
+
+  // Redirect authenticated users to the dashboard
+  // if (auth?.token) {
+  //   return <Navigate to="/dashboard" />;
+  // }
+
+  console.log(auth,"AUTH");
+  
   return (
     <Routes>
       {/* <Route path={RoutePaths.Presentation.path} element={<RouteWithLoader element={<Presentation />} />} /> */}
       {/* <Route path={RoutePaths.Presentation.path} element={<MapLocationFinder markers={markers} setMarkers={setMarkers} pickup={pickup} dropoff={dropoff} />} /> */}
 
-      <Route path="/signin" element={<Signin/>} />
+      {/* <Route path="/" element={<Signin/>} /> */}
+      <Route path="/" element={auth?.token ? <Navigate to="/dashboard" /> : <Navigate to="/signin" />} />
+
+
 
       {/* <Route path={RoutePaths.Kyc.path} element={<RouteWithLoader element={<Kyc/>} />} />
       <Route path={RoutePaths.Riders.path} element={<RouteWithLoader element={<Riders/>} />} /> */}
@@ -336,12 +352,12 @@ export default function HomePage() {
 
 
 
-      {/* <Route
-        path={RoutePaths.DashboardOverview.path}
+       <Route
+        path="/dashboard"
         element={<PrivateRoute requiredRole="admin" element={<RouteWithSidebar element={<DashboardOverview />} />} />}
-      /> */}
+      /> 
       {/* pages */}
-      <Route path={RoutePaths.DashboardOverview.path} element={<RouteWithSidebar element={<DashboardOverview/>} />} />
+      {/* <Route path={RoutePaths.DashboardOverview.path} element={<RouteWithSidebar element={<DashboardOverview/>} />} /> */}
       <Route path={RoutePaths.Upgrade.path} element={<RouteWithSidebar element={<Upgrade />} />} />
       <Route path={RoutePaths.Transactions.path} element={<RouteWithSidebar element={<Transactions />} />} />
       <Route path={RoutePaths.Kyc.path} element={<RouteWithSidebar element={<Kyc />} />} />
