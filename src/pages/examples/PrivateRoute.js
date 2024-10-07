@@ -6,6 +6,9 @@ import { useAuth } from '../../context/AuthContext'; // Import the authenticatio
 const PrivateRoute = ({ element, requiredRole }) => {
   const { auth } = useAuth(); 
 
+  console.log(auth,"AUTH");
+  
+
   if (!auth?.token) {
     return <Navigate to="/signin" />;
   }

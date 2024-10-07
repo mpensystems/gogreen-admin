@@ -21,34 +21,57 @@ import {
   Container,
   InputGroup,
 } from "@themesberg/react-bootstrap";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import { Routes } from "../../routes";
 import BgImage from "../../assets/img/illustrations/signin.svg";
+import { userRegister } from "../../api/adminApis";
+import { useAuth } from "../../context/AuthContext";
+import toast from "react-hot-toast";
 
 export default () => {
+  const { auth, updateAuth } = useAuth(); // Get auth context, including the token
+
   const [signupDetails, setSignupDetails] = useState({
-    username: null,
-    role:null,
-    password: null,
-    confirmPassword: null,
+    username: '',
+    role:'',
+    password: '',
+    email: '',
+    phoneno:'',
+    first_name:'',
+    last_name:'',
   });
+  const navigate = useNavigate()
 
   const handleChange = (e) => {
-    const { name, value } = e.target.value;
+    const { name, value } = e.target;
 
     setSignupDetails((prevDetails) => ({ ...prevDetails, [name]: value }));
   };
 
-  const handleSubmit = (e) =>{
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    const token = auth?.token;
+    console.log(token,"TOKEN");
+    
+    try {
+        const response = await userRegister(signupDetails,token);
+        console.log(response,"USER_REGISTER");
+        if(response?.status === 200){
 
-    //apiCall
+          navigate('/UserManagement')
+          toast.success('User Register successful!');
 
-    // if(res?.status === 200){
-    //   //navigate to login
-    // }
-  }
+        }
+
+        
+
+        
+    } catch (error) {
+        console.error(error);
+        toast.error('User registeration fail');
+    }
+};
   return (
     <main>
       <section className="d-flex align-items-center my-5 mt-lg-6 mb-lg-5">
@@ -98,10 +121,78 @@ export default () => {
                         autoFocus
                         required
                         type="text"
-                        placeholder="user role"
+                        placeholder="role"
                       />
                     </InputGroup>
                   </Form.Group>
+
+                  <Form.Group id="firstname" className="mb-4">
+                    <Form.Label>First Name</Form.Label>
+                    <InputGroup>
+                      <InputGroup.Text>
+                        <FontAwesomeIcon icon={faUnlockAlt} />
+                      </InputGroup.Text>
+                      <Form.Control
+                        name="first_name"
+                        value={signupDetails.firstname}
+                        onChange={handleChange}
+                        required
+                        type="text"
+                        placeholder="first Name"
+                      />
+                    </InputGroup>
+                  </Form.Group>
+             
+                  <Form.Group id="lastname" className="mb-4">
+                    <Form.Label>Last Name</Form.Label>
+                    <InputGroup>
+                      <InputGroup.Text>
+                        <FontAwesomeIcon icon={faUnlockAlt} />
+                      </InputGroup.Text>
+                      <Form.Control
+                        name="last_name"
+                        value={signupDetails.lastname}
+                        onChange={handleChange}
+                        required
+                        type="text"
+                        placeholder="Last Name"
+                      />
+                    </InputGroup>
+                  </Form.Group>
+                  <Form.Group id="email" className="mb-4">
+                    <Form.Label>Email</Form.Label>
+                    <InputGroup>
+                      <InputGroup.Text>
+                        <FontAwesomeIcon icon={faUnlockAlt} />
+                      </InputGroup.Text>
+                      <Form.Control
+                        name="email"
+                        value={signupDetails.email}
+                        onChange={handleChange}
+                        required
+                        type="email"
+                        placeholder="Email"
+                      />
+                    </InputGroup>
+                  </Form.Group>
+                  <Form.Group id="phoneno" className="mb-4">
+                    <Form.Label>Phone No</Form.Label>
+                    <InputGroup>
+                      <InputGroup.Text>
+                        <FontAwesomeIcon icon={faUnlockAlt} />
+                      </InputGroup.Text>
+                      <Form.Control
+                        name="phoneno"
+                        value={signupDetails.phoneno}
+                        onChange={handleChange}
+                        required
+                        type="tel"
+                        placeholder="Phone No"
+                      />
+                    </InputGroup>
+                  </Form.Group>
+
+
                   <Form.Group id="password" className="mb-4">
                     <Form.Label> Password</Form.Label>
                     <InputGroup>
@@ -118,36 +209,21 @@ export default () => {
                       />
                     </InputGroup>
                   </Form.Group>
-                  <Form.Group id="confirmPassword" className="mb-4">
-                    <Form.Label>Confirm Password</Form.Label>
-                    <InputGroup>
-                      <InputGroup.Text>
-                        <FontAwesomeIcon icon={faUnlockAlt} />
-                      </InputGroup.Text>
-                      <Form.Control
-                        name="confirmPassword"
-                        value={signupDetails.confirmPassword}
-                        onChange={handleChange}
-                        required
-                        type="password"
-                        placeholder="Confirm Password"
-                      />
-                    </InputGroup>
-                  </Form.Group>
-                  <FormCheck type="checkbox" className="d-flex mb-4">
+                  
+                  {/* <FormCheck type="checkbox" className="d-flex mb-4">
                     <FormCheck.Input required id="terms" className="me-2" />
                     <FormCheck.Label htmlFor="terms">
                       I agree to the <Card.Link>terms and conditions</Card.Link>
                     </FormCheck.Label>
-                  </FormCheck>
+                  </FormCheck> */}
 
                   <Button
-                    onSubmit={handleSubmit}
+                    onClick={handleSubmit}
                     variant="primary"
                     type="submit"
                     className="w-100"
                   >
-                    Sign up
+                    Register User
                   </Button>
                 </Form>
 

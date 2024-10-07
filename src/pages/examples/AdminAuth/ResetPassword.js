@@ -8,7 +8,7 @@ import { useAuth } from "../../context/AuthContext"; // Import your AuthContext
 import { userChangePassword } from "../../api/adminApis"; // Import your API function
 import toast from "react-hot-toast"; // Import toast for notifications
 
-const ForgotPassword =  () => {
+const ResetPassword =  () => {
   const { auth } = useAuth(); 
   const [oldPassword, setOldPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
@@ -85,4 +85,4 @@ const ForgotPassword =  () => {
 };
 
 
-export default ForgotPassword
+export default ResetPassword
