@@ -193,12 +193,18 @@ const MapLocationFinder = ({ markers, setMarkers, pickupLoc, dropLoc, onCoordina
   }, []);
 
   const formatAddress = (location, isPickup) => {
-    console.log(isPickup,"ISPICKUP");
+    console.log(location,"location in api google");
     
     if (isPickup) {
-      return `${location.pickupAddress1}, ${location.pickupAddress2}, ${location.pickupHouse}, ${location.pickupCity}`;
+      return `${location.pickup_address1},
+       ${location.pickup_address2},
+        ${location.pickup_house},
+         ${location.pickup_city},
+      ${location.pickup_landmark},
+      ${location.pickup_state}` ;
+
     } else {
-      return `${location.dropAddress1}, ${location.dropAddress2}, ${location.dropHouse}, ${location.dropCity}`;
+      return `${location.drop_address1}, ${location.drop_address2}, ${location.drop_house}, ${location.drop_city},${location.drop_landmark}, ${location.drop_state}`;
     }
   };
 
