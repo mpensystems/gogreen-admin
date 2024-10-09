@@ -397,3 +397,36 @@ export const getAllTransactions = async () => {
     throw error;
   }
 };
+
+
+// create booking 
+export const createNewBooking = async (formData) => {
+  try {
+    const response = await axios.post(
+      `${BASE_URL}/v1/bookings/create`,
+      formData,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    console.log("Booking created successfully : ", response.data);
+
+    return response;
+  } catch (error) {
+    if (error.response) {
+      console.error("Error Creating booking:", error.response.data);
+      throw new Error(
+        `Error: ${error.response.data.message || "Network response was not ok"}`
+      );
+    } else if (error.request) {
+      console.error("No response received:", error.request);
+      throw new Error("No response received from the server");
+    } else {
+      console.error("Error:", error.message);
+      throw error;
+    }
+  }
+};

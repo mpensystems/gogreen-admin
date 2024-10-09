@@ -227,6 +227,9 @@ import InviteUser from './examples/InviteUser';
 import { geocodeAddress } from '../Utils/GeocodeService';
 import MapLocationFinder from './MapLocationFinder';
 import { useAuth } from '../context/AuthContext';
+import Unauthorized from '../pages/examples/Unauthorized';
+import InitialAccess from './examples/InitialAccess';
+
 // import Kyc from '../pages/Kyc';
 
 const RouteWithLoader = ({ element }) => {
@@ -316,26 +319,27 @@ const dropoff = { lat: 28.6150, lng: 77.2120 }; // Example dropoff location (Nea
 
 
 
-export default function HomePage() {
+export  function HomePage() {
 
   const { auth } = useAuth();
   const [markers , setMarkers]  = useState([])
 
 
   // Redirect authenticated users to the dashboard
-  // if (auth?.token) {
-  //   return <Navigate to="/dashboard" />;
-  // }
+
+  if (auth?.token) {
+    return <Navigate to="/dashboard" />;
+  }
 
   console.log(auth,"AUTH");
   
   return (
     <Routes>
       {/* <Route path={RoutePaths.Presentation.path} element={<RouteWithLoader element={<Presentation />} />} /> */}
-      {/* <Route path={RoutePaths.Presentation.path} element={<MapLocationFinder markers={markers} setMarkers={setMarkers} pickup={pickup} dropoff={dropoff} />} /> */}
+      {/* <Route path={RoutePaths.Presentation.path} element={<MapLocationFinder markers={markers}  setMarkers={setMarkers} pickup={pickup} dropoff={dropoff} />} /> */}
 
       {/* <Route path="/" element={<Signin/>} /> */}
-      <Route path="/" element={auth?.token ? <Navigate to="/dashboard" /> : <Navigate to="/signin" />} />
+      {/* <Route path="/" element={auth?.token ? <Navigate to="/dashboard" /> : <Navigate to="/signin" />} /> */}
 
 
 
@@ -343,6 +347,9 @@ export default function HomePage() {
       <Route path={RoutePaths.Riders.path} element={<RouteWithLoader element={<Riders/>} />} /> */}
       <Route path={RoutePaths.Signin.path} element={<RouteWithLoader element={<Signin />} />} />
       <Route path={RoutePaths.Signup.path} element={<RouteWithLoader element={<Signup />} />} />
+      <Route path={RoutePaths.unauthorized.path} element={<RouteWithLoader element={<Unauthorized/>} />} />
+      <Route path={RoutePaths.InitialAccess.path} element={<RouteWithLoader element={<InitialAccess/>} />} />
+
       <Route path={RoutePaths.InviteUser.path} element={<RouteWithLoader element={<InviteUser />} />} />
       <Route path={RoutePaths.ForgotPassword.path} element={<RouteWithLoader element={<ForgotPassword />} />} />
       <Route path={RoutePaths.ResetPassword.path} element={<RouteWithLoader element={<ResetPassword />} />} />
@@ -352,12 +359,13 @@ export default function HomePage() {
 
 
 
-       <Route
+       {/* <Route
         path="/dashboard"
         element={<PrivateRoute requiredRole="admin" element={<RouteWithSidebar element={<DashboardOverview />} />} />}
-      /> 
+      />  */}
+
       {/* pages */}
-      {/* <Route path={RoutePaths.DashboardOverview.path} element={<RouteWithSidebar element={<DashboardOverview/>} />} /> */}
+      <Route path={RoutePaths.DashboardOverview.path} element={<RouteWithSidebar element={<DashboardOverview/>} />} />
       <Route path={RoutePaths.Upgrade.path} element={<RouteWithSidebar element={<Upgrade />} />} />
       <Route path={RoutePaths.Transactions.path} element={<RouteWithSidebar element={<Transactions />} />} />
       <Route path={RoutePaths.Kyc.path} element={<RouteWithSidebar element={<Kyc />} />} />

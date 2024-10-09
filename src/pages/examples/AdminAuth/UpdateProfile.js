@@ -19,10 +19,10 @@ const UpdateProfile = () => {
   useEffect(() => {
     const fetchUserProfile = async () => {
       const token = auth?.token;
-      if (!token) return; // Prevent fetch if no token
+      if (!token) return; 
 
       try {
-        const response = await getUserProfile({}, token); // Fetch user profile
+        const response = await getUserProfile({}, token); 
         if (response?.status === 200) {
           const userProfile = response?.data;
           setProfileDetails(userProfile); 
@@ -44,7 +44,7 @@ const UpdateProfile = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const token = auth?.token;
-    if (!token) return; // Prevent submit if no token
+    if (!token) return; 
 
     try {
       const response = await userUpdateProfile(auth.aid, profileDetails, token); // Pass aid and profileDetails
