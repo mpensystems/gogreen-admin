@@ -8,6 +8,7 @@ import toast from "react-hot-toast";
 import { CITY_STATE_PIN_DATA } from "../data/Zip";
 import Modal from "./Modal";
 import { createNewBooking } from "../api/adminApis";
+import { useAuth } from "../context/AuthContext";
 
 const schema = yup.object().shape({
   pickup_name: yup.string().required("Pickup Name is required"),
@@ -28,6 +29,7 @@ const schema = yup.object().shape({
 });
 
 export const GeneralInfoForm = () => {
+  const { auth } = useAuth();
   const navigate = useNavigate();
   const [pickupLoc, setPickupLoc] = useState({
     pickup_address1: "",
@@ -70,7 +72,7 @@ export const GeneralInfoForm = () => {
   const closeModal = () => {
     setIsModalOpen(false);
   };
-  const onSubmit = (data) => {
+  const onSubmit = async(data) => {
     console.log("inside form submit");
 
     const pickup_geo = {
@@ -89,6 +91,7 @@ export const GeneralInfoForm = () => {
       step_period,
       dist_increment,
       start_dist,
+      
       ...rest
     } = data;
 
@@ -111,11 +114,32 @@ export const GeneralInfoForm = () => {
     console.log("Form data to send to API:", formData);
 
     // api call
-    createNewBooking(formData);
+    // createNewBooking(formData);
 
+
+
+      const token = auth?.token;
+      console.log("token inside try of booking : ",token);
+      try {
+        const response = await createNewBooking(formData,token);
+         
+
+        if(response?.status === 200){
+           console.log("booking created successfully !");
+           
     reset();
     toast.success("Booking Created!");
     navigate(`/Bookings`);
+        }
+    
+      } catch (error) {
+        console.error("Failed to create new booking:", error);
+        toast.error('Failed to create new booking');
+        reset();
+       navigate(`/Bookings`);
+      }
+    
+
   };
 
   useEffect(() => {
@@ -275,15 +299,16 @@ export const GeneralInfoForm = () => {
           </Row>
 
           <Row>
+            
             <Col md={6} className="mb-3">
-              <Form.Group id="pickup_city">
-                <Form.Label>Pickup City</Form.Label>
+              <Form.Group id="pickup_district">
+                <Form.Label>pickup district</Form.Label>
                 <Form.Control
                   type="text"
-                  name="pickup_city"
-                  placeholder="Enter city"
-                  {...register("pickup_city")}
-                  readOnly
+                  name="pickup_district"
+                  placeholder="Enter pickup district"
+                  {...register("pickup_district")}
+                  
                 />
               </Form.Group>
             </Col>
@@ -313,6 +338,18 @@ export const GeneralInfoForm = () => {
                   name="pickup_state"
                   placeholder="Enter state"
                   {...register("pickup_state")}
+                  readOnly
+                />
+              </Form.Group>
+            </Col>
+            <Col md={6} className="mb-3">
+              <Form.Group id="pickup_city">
+                <Form.Label>Pickup City</Form.Label>
+                <Form.Control
+                  type="text"
+                  name="pickup_city"
+                  placeholder="Enter city"
+                  {...register("pickup_city")}
                   readOnly
                 />
               </Form.Group>
@@ -402,14 +439,16 @@ export const GeneralInfoForm = () => {
           </Row>
 
           <Row>
+           
             <Col md={6} className="mb-3">
-              <Form.Group id="drop_city">
-                <Form.Label>Drop City</Form.Label>
+              <Form.Group id="drop_district">
+                <Form.Label>drop district</Form.Label>
                 <Form.Control
                   type="text"
-                  placeholder="Enter city"
-                  {...register("drop_city")}
-                  readOnly
+                  name="drop_district"
+                  placeholder="Enter drop district"
+                  {...register("drop_district")}
+                  
                 />
               </Form.Group>
             </Col>
@@ -437,6 +476,17 @@ export const GeneralInfoForm = () => {
                   type="text"
                   placeholder="Enter state"
                   {...register("drop_state")}
+                  readOnly
+                />
+              </Form.Group>
+            </Col>
+            <Col md={6} className="mb-3">
+              <Form.Group id="drop_city">
+                <Form.Label>Drop City</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="Enter city"
+                  {...register("drop_city")}
                   readOnly
                 />
               </Form.Group>

@@ -27,6 +27,7 @@ export const login = async (credentials) => {
 
 export const userRegister = async (credentials, token) => {
   console.log(credentials, "CREDENTIALS");
+  console.log(token, "token");
 
   try {
     const response = await axios.post(
@@ -113,63 +114,90 @@ export const userChangePassword = async (credentials, token) => {
   }
 };
 
-export const getUserProfile = async (credentials, token) => {
+export const getLoggedInUser = async (token) => {
   try {
-    const response = await axios.post(`${BASE_URL}/user/profile`, credentials, {
+    console.log('token in rider get api for single rider : ',token);
+    const response = await fetch(`${BASE_URL}/user/profile`, {
+      method: "GET",
       headers: {
         "Content-Type": "application/json",
-        Authorization: token,
+        Authorization: `Bearer ${token}` ,
       },
     });
-
-    console.log("User profile retrieved successfully:", response.data);
-    return response;
-  } catch (error) {
-    if (error.response) {
-      throw new Error(
-        `Error: ${error.response.data.message || "Network response was not ok"}`
-      );
-    } else if (error.request) {
-      throw new Error("Error: No response received from server.");
-    } else {
-      throw new Error(`Error: ${error.message}`);
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
     }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error fetching user:", error);
+    throw error;
   }
 };
 
-///user management
 
-export const adminUpdateProfile = async (aid, profileData, token) => {
-  try {
-    const response = await axios.post(
-      `${BASE_URL}/v1/user-mgmt/${aid}/update-profile`,
-      profileData,
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`, // Use dynamic token
-        },
-      }
-    );
+// export const getUserProfile = async (token) => {
+//   console.log("token in user get : ",token);
+//   try {
+//     const response = await axios.get(`${BASE_URL}/user/profile`, {
+//       headers: {
+//         // "Content-Type": "application/json",
+//         Authorization:`Bearer ${token}`, 
+//       },
+//     });
 
-    console.log("Profile updated successfully, user data:", response.data);
+//     console.log("User profile retrieved successfully:", response.data);
 
-    return response;
-  } catch (error) {
-    if (error.response) {
-      console.error("Error updating profile:", error.response.data);
-      throw new Error(
-        `Error: ${error.response.data.message || "Network response was not ok"}`
-      );
-    } else if (error.request) {
-      console.error("No response received:", error.request);
-      throw new Error("No response received from the server");
-    } else {
-      console.error("Error:", error.message);
-      throw error;
-    }
-  }
-};
+//     return response;
+//   } catch (error) {
+//     console.log(error);
+    
+//     if (error.response) {
+//       throw new Error(
+//         `Error: ${error.response.data.message || "Network response was not ok"}`
+//       );
+//     } else if (error.request) {
+//       throw new Error("Error: No response received from server.");
+//     } else {
+//       throw new Error(`Error: ${error.message}`);
+//     }
+//   }
+// };
+
+
+//user management Api's
+
+// export const adminUpdateProfile = async (aid, profileData, token) => {
+//   try {
+//     const response = await axios.post(
+//       `${BASE_URL}/v1/user-mgmt/${aid}/update-profile`,
+//       profileData,
+//       {
+//         headers: {
+//           "Content-Type": "application/json",
+//           Authorization: `Bearer ${token}`, // Use dynamic token
+//         },
+//       }
+//     );
+
+//     console.log("Profile updated successfully, user data:", response.data);
+
+//     return response;
+//   } catch (error) {
+//     if (error.response) {
+//       console.error("Error updating profile:", error.response.data);
+//       throw new Error(
+//         `Error: ${error.response.data.message || "Network response was not ok"}`
+//       );
+//     } else if (error.request) {
+//       console.error("No response received:", error.request);
+//       throw new Error("No response received from the server");
+//     } else {
+//       console.error("Error:", error.message);
+//       throw error;
+//     }
+//   }
+// };
 
 export const adminResetPassword = async (aid, profileData, token) => {
   try {
@@ -229,92 +257,163 @@ export const firstRegister = async (token) => {
   }
 };
 
-export const adminGetUserProfile = async (aid, token) => {
+// export const adminGetUserProfile = async (aid, token) => {
+//   try {
+//     const response = await axios.get(
+//       `${BASE_URL}/v1/user-mgmt/${aid}/profile`,
+//       {
+//         headers: {
+//           "Content-Type": "application/json",
+//           Authorization: `Bearer ${token}`, 
+//         },
+//       }
+//     );
+
+//     return response;
+//   } catch (error) {
+//     if (error.response) {
+//       console.error("Error updating profile:", error.response.data);
+//       throw new Error(
+//         `Error: ${error.response.data.message || "Network response was not ok"}`
+//       );
+//     } else if (error.request) {
+//       console.error("No response received:", error.request);
+//       throw new Error("No response received from the server");
+//     } else {
+//       console.error("Error:", error.message);
+//       throw error;
+//     }
+//   }
+// };
+
+
+
+
+
+// export const listUsers = async (token) => {
+//   try {
+//     const response = await axios.get(`${BASE_URL}/v1/user-mgmt/list-users`, {
+//       headers: {
+//         "Content-Type": "application/json",
+//         Authorization: `Bearer ${token}`, // Use dynamic token
+//       },
+//     });
+
+//     return response;
+//   } catch (error) {
+//     if (error.response) {
+//       console.error("Error updating profile:", error.response.data);
+//       throw new Error(
+//         `Error: ${error.response.data.message || "Network response was not ok"}`
+//       );
+//     } else if (error.request) {
+//       console.error("No response received:", error.request);
+//       throw new Error("No response received from the server");
+//     } else {
+//       console.error("Error:", error.message);
+//       throw error;
+//     }
+//   }
+// };
+
+
+
+
+// Rider  Api's
+
+// export const getRidersKYCDoc = async () => {
+//   try {
+//     // console.log('url : ',url);
+//     const response = await fetch(`${URL}/v1/routes/admin/getRidersKYCDoc`, {
+//       method: "GET",
+//       headers: {
+//         "Content-Type": "application/json",
+//         Authorization: "Bearer your-token-here",
+//       },
+//     });
+//     if (!response.ok) {
+//       throw new Error("Network response was not ok");
+//     }
+//     const data = await response.json();
+//     console.log("data in api ", data);
+//     return data;
+//   } catch (error) {
+//     console.error("Error fetching orders:", error);
+//     throw error;
+//   }
+// };
+
+// for transaction table
+// export const getAllTransactions = async () => {
+//   try {
+//     // console.log('url : ',url);
+//     const response = await fetch(`${URL}/v1/rider/get-transactions`, {
+//       method: "GET",
+//       headers: {
+//         "Content-Type": "application/json",
+//         Authorization: "Bearer your-token-here",
+//       },
+//     });
+//     if (!response.ok) {
+//       throw new Error("Network response was not ok");
+//     }
+//     const data = await response.json();
+//     console.log("get all Transactions data", data);
+
+//     return data;
+//   } catch (error) {
+//     console.error("Error fetching Transactions:", error);
+//     throw error;
+//   }
+// };
+
+
+// booking Apis 
+
+export const createNewBooking = async (formData,token) => {
+  console.log("token : ",token);
+  console.log("formData inside create booking api : ",formData);
+
   try {
-    const response = await axios.get(
-      `${BASE_URL}/v1/user-mgmt/${aid}/profile`,
+    const response = await axios.post(
+      `${BASE_URL}/bookings/create`,
+      formData,
       {
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`, // Use dynamic token
+          Authorization:`Bearer ${token}`,  
         },
       }
     );
 
-    return response;
-  } catch (error) {
-    if (error.response) {
-      console.error("Error updating profile:", error.response.data);
-      throw new Error(
-        `Error: ${error.response.data.message || "Network response was not ok"}`
-      );
-    } else if (error.request) {
-      console.error("No response received:", error.request);
-      throw new Error("No response received from the server");
-    } else {
-      console.error("Error:", error.message);
-      throw error;
-    }
-  }
-};
-
-export const listUsers = async (token) => {
-  try {
-    const response = await axios.get(`${BASE_URL}/v1/user-mgmt/list-users`, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`, // Use dynamic token
-      },
-    });
+    console.log("Booking created successfully : ", response.data);
 
     return response;
   } catch (error) {
     if (error.response) {
-      console.error("Error updating profile:", error.response.data);
-      throw new Error(
-        `Error: ${error.response.data.message || "Network response was not ok"}`
-      );
+      const errorMessage = error.response.data?.message || "Unknown error occurred";
+      console.error("Error Creating booking:", errorMessage);
+      throw new Error(`Error: ${errorMessage}`);
     } else if (error.request) {
-      console.error("No response received:", error.request);
-      throw new Error("No response received from the server");
+      console.error("Error Creating booking: No response received");
+      throw new Error("Error: No response received from the server");
     } else {
-      console.error("Error:", error.message);
-      throw error;
+      console.error("Error Creating booking:", error.message);
+      throw new Error(`Error: ${error.message}`);
     }
   }
 };
 
-export const getAllRiders = async () => {
+export const getAllBookings = async (token) => {
+
+  console.log("token in api booking: ",token);
+
   try {
-    // console.log('url : ',url);
-    const response = await fetch(`${URL}/v1/rider/getAllRiders`, {
+    const response = await fetch(`${BASE_URL}/bookings/latest`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        Authorization: "Bearer your-token-here",
-      },
-    });
-    if (!response.ok) {
-      throw new Error("Network response was not ok");
-    }
-    const data = await response.json();
-    console.log("get all riders data", data);
-
-    return data;
-  } catch (error) {
-    console.error("Error fetching orders:", error);
-    throw error;
-  }
-};
-
-export const getAllBookings = async () => {
-  try {
-    // console.log('url : ',url);
-    const response = await fetch(`${URL}/v1/booking/getAllBookings`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer your-token-here",
+        Authorization: `Bearer ${token}`,
       },
     });
     if (!response.ok) {
@@ -330,14 +429,64 @@ export const getAllBookings = async () => {
   }
 };
 
-export const getRiderById = async () => {
+export const getBookingByID = async (token,bid) => {
+
+  console.log("token in api booking: ",token);
+
   try {
-    // console.log('url : ',url);
-    const response = await fetch(`${URL}/v1/routes/admin/getRiderById`, {
+    const response = await fetch(`${BASE_URL}/bookings/${bid}/get`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        Authorization: "Bearer your-token-here",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
+    }
+    const data = await response.json();
+    console.log("get Booking data by id", data);
+
+    return data;
+  } catch (error) {
+    console.error("Error fetching Booking with id:", error);
+    throw error;
+  }
+};
+
+
+// Rider Api's
+export const getAllRiders = async (token) => {
+  try {
+    // console.log('url : ',url);
+    const response = await fetch(`${BASE_URL}/riders/get-all`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
+    }
+    const data = await response.json();
+    console.log("get all riders data", data);
+
+    return data;
+  } catch (error) {
+    console.error("Error fetching orders:", error);
+    throw error;
+  }
+};
+
+export const getRiderById = async (rid,token) => {
+  try {
+    console.log('token in rider get api for single rider : ',token);
+    const response = await fetch(`${BASE_URL}/riders/${rid}/get`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}` ,
       },
     });
     if (!response.ok) {
@@ -351,21 +500,84 @@ export const getRiderById = async () => {
   }
 };
 
-export const getRidersKYCDoc = async () => {
+
+
+// Kyc Api's
+export const getKycApproved = async (token, rid, bodyData) => {
   try {
-    // console.log('url : ',url);
-    const response = await fetch(`${URL}/v1/routes/admin/getRidersKYCDoc`, {
+    console.log('url in getKycApproved: ', `${BASE_URL}/kyc/${rid}/approve`);
+
+    const response = await fetch(`${BASE_URL}/kyc/${rid}/approve`, {
+      method: "POST",      
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(bodyData), 
+    });
+
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
+    }
+
+    const text = await response.text(); 
+    const data = text ? JSON.parse(text) : {}; 
+    console.log("KYC approved data", data);
+
+    return data;
+  } catch (error) {
+    console.error("Error approving KYC:", error);
+    throw error;
+  }
+};
+
+
+export const rejectKyc = async (token, rid, error_msg) => {
+  try {
+    console.log('url in rejectKyc: ', `${BASE_URL}/kyc/${rid}/reject`);
+
+    const response = await fetch(`${BASE_URL}/kyc/${rid}/reject`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ error_msg }),
+    });
+
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
+    }
+
+    const text = await response.text();
+    const data = text ? JSON.parse(text) : {};
+    console.log("KYC reject data", data);
+
+    return data;
+  } catch (error) {
+    console.error("Error rejecting KYC:", error);
+    throw error;
+  }
+};
+
+
+
+// user Manangment
+export const getUserList = async (token) => {
+  try {
+    const response = await fetch(`${BASE_URL}/user-mgmt/list-users`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        Authorization: "Bearer your-token-here",
+        Authorization: `Bearer ${token}`,
       },
     });
     if (!response.ok) {
       throw new Error("Network response was not ok");
     }
     const data = await response.json();
-    console.log("data in api ", data);
+    console.log("get all users data", data);
+
     return data;
   } catch (error) {
     console.error("Error fetching orders:", error);
@@ -373,60 +585,153 @@ export const getRidersKYCDoc = async () => {
   }
 };
 
-// for transaction table
 
-export const getAllTransactions = async () => {
+export const getUserByID = async (token,aid) => {
+
+  console.log("token in api user get: ",token);
+
   try {
-    // console.log('url : ',url);
-    const response = await fetch(`${URL}/v1/rider/get-transactions`, {
+    const response = await fetch(`${BASE_URL}/user-mgmt/${aid}/profile`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        Authorization: "Bearer your-token-here",
+        Authorization: `Bearer ${token}`,
       },
     });
     if (!response.ok) {
       throw new Error("Network response was not ok");
     }
     const data = await response.json();
-    console.log("get all Transactions data", data);
+    console.log("get user data by id", data);
 
     return data;
   } catch (error) {
-    console.error("Error fetching Transactions:", error);
+    console.error("Error fetching user with id:", error);
     throw error;
   }
 };
 
 
-// create booking 
-export const createNewBooking = async (formData) => {
+export const updateUserProfile = async (formData,token,aid) => {
+  console.log("token : ",token);
+  console.log("formData inside Updating User profile api : ",formData);
+
   try {
     const response = await axios.post(
-      `${BASE_URL}/v1/bookings/create`,
+      `${BASE_URL}/user-mgmt/${aid}/update-profile`,
       formData,
       {
         headers: {
           "Content-Type": "application/json",
+          Authorization:`Bearer ${token}`,  
         },
       }
     );
 
-    console.log("Booking created successfully : ", response.data);
+    console.log("profile Updated successfully : ", response.data);
 
     return response;
   } catch (error) {
     if (error.response) {
-      console.error("Error Creating booking:", error.response.data);
-      throw new Error(
-        `Error: ${error.response.data.message || "Network response was not ok"}`
-      );
-    } else if (error.request) {
-      console.error("No response received:", error.request);
-      throw new Error("No response received from the server");
-    } else {
-      console.error("Error:", error.message);
-      throw error;
+      const errorMessage = error.response.data?.message || "Unknown error occurred";
+      console.error("Error Updating User profile:", errorMessage);
+
+      throw new Error(`Error: ${errorMessage}`);
+    }  else {
+      console.error("Error Updating User profile:", error.message);
+      throw new Error(`Error: ${error.message}`);
     }
+  }
+};
+
+
+
+
+
+// user get in login
+
+// export const getCurrentUser = async (token) => {
+//   console.log("token in user get : ",token);
+//   try {
+//     const response = await axios.get(`${BASE_URL}/user/profile`, {
+//       headers: {
+//         // "Content-Type": "application/json",
+//         Authorization:`Bearer ${token}`, 
+//       },
+//     });
+
+//     console.log("User profile retrieved successfully:", response.data);
+
+//     return response;
+//   } catch (error) {
+//     console.log(error);
+    
+//     if (error.response) {
+//       throw new Error(
+//         `Error: ${error.response.data.message || "Network response was not ok"}`
+//       );
+//     } else if (error.request) {
+//       throw new Error("Error: No response received from server.");
+//     } else {
+//       throw new Error(`Error: ${error.message}`);
+//     }
+//   }
+// };
+
+
+export const updateCurrentUser = async ( token,formdata) => {
+  try {
+    console.log("inside frontend api call");
+    const response = await axios.post(
+      `${BASE_URL}/user/update-profile`,
+      formdata,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization:`Bearer ${token}`, 
+        },
+      }
+    );
+
+    console.log("Profile updated successfully:", response.data);
+    return response;
+  } catch (error) {
+    if (error.response) {
+      const errorMessage =
+        error.response.data.message || "Network response was not ok";
+  
+      throw new Error(errorMessage);
+    } else {
+      console.error("Error registering user:", error.message);
+      throw new Error("Network error, please try again later.");
+    }
+  }
+};
+
+
+// Home Statistics
+
+export const getHomeStatistics = async (token,aid) => {
+
+  console.log("token in api user get: ",token);
+
+  try {
+    const response = await fetch(`${BASE_URL}/home/stats`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
+    }
+    const data = await response.json();
+    console.log("get home stat data in api : ", data);
+
+    return data;
+  } catch (error) {
+    console.error("Error fetching user with id:", error);
+    throw error;
   }
 };

@@ -12,17 +12,26 @@ import ProfileCover from "../assets/img/profile-cover.jpg";
 import teamMembers from "../data/teamMembers";
 
 
-export const ProfileCardWidget = () => {
+export const ProfileCardWidget = ({profileData}) => {
+  const { fullName, city, vehicleNumber,state ,district,mobile} = profileData;
+  
+  const address = city + " " + "," + " "+state;
+ 
+  // const fullName = rider ? `${rider.first_name} ${rider.last_name}` : ''; 
+
   // call rider api here for profile
   return (
     <Card border="light" className="text-center p-0 mb-4">
       <div style={{ backgroundColor:"#61DAFB" }} className="profile-cover rounded-top" />
       <Card.Body className="pb-5">
         <Card.Img src={Profile1} alt="Neil Portrait" className="user-avatar large-avatar rounded-circle mx-auto mt-n7 mb-1" />
-        <Card.Title>Neil Sims</Card.Title>
+        <Card.Title>{fullName}</Card.Title>
         {/* <Card.Subtitle className="fw-normal">Senior Software Engineer</Card.Subtitle> */}
-        <Card.Text className="text-gray mb-4">City of Operation : Mumbai</Card.Text>
-        <Card.Text className="text-gray mb-4">Vehicle No : MH 43 A 1234</Card.Text>
+        {/* <Card.Text className="text-gray mb-4">City of Operation : {city +","+ state}</Card.Text> */}
+        <Card.Text className="text-gray mb-3">Vehicle No :{vehicleNumber}</Card.Text>
+        <Card.Text className="text-gray mb-3">City of Operation : {address }</Card.Text>
+        
+        <Card.Text className="text-gray mb-0">Mobile Number  : {mobile}</Card.Text>
 
         {/* <Button variant="primary" size="sm" className="me-2">
           <FontAwesomeIcon icon={faUserPlus} className="me-1" /> Connect
@@ -86,20 +95,20 @@ export const RidersWidget = (props) => {
   return (
     <Card border="light" className="shadow-sm">
       <Card.Body>
-        <Row className="d-block d-xl-flex align-items-center">
-          <Col xl={5} className="text-xl-center d-flex align-items-center justify-content-xl-center mb-3 mb-xl-0">
-            <div className={`icon icon-shape icon-md icon-${iconColor} rounded me-4 me-sm-0 ` } >
-              <FontAwesomeIcon icon={icon} />
+        <Row className="d-block d-xl-flex align-items-center" >
+          <Col xl={4} className="text-xl-center d-flex align-items-center justify-content-xl-center mb-3 mb-xl-0">
+            <div className={`icon icon-shape icon-md icon-${iconColor} rounded me-4 me-sm-0 ` }  >
+              <FontAwesomeIcon icon={icon}   />
             </div>
             <div className="d-sm-none">
               <h5>{category}</h5>
               <h3 className="mb-1"  >{title}</h3>
             </div>
           </Col>
-          <Col xs={12} xl={7} className="px-xl-0">
-            <div className="d-none d-sm-block">
-              <h5 style={{ color: `${iconColor}` }}> {category}</h5>
-              <h3 className="mb-1" >{title}</h3>
+          <Col xs={2} xl={8} className="px-xl-0"  >
+            <div className="d-xl-flex align-items-center justify-content-xl-center flex-column" >
+              <h5  style={{ color: `${iconColor}` }}> {category} </h5>
+              <h5  className="mb-1 d-xl-flex align-items-center justify-content-xl-center"  >{title}</h5>
             </div>
             
             

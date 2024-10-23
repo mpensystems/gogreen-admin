@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faBoxOpen,
@@ -19,14 +19,59 @@ import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import Profile3 from "../assets/img/team/profile-picture-3.jpg";
 import { RiderEarningTable, TransactionsTable } from "../components/Tables";
 import { CardWidget } from "../components/Card";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { getRiderById } from "../api/adminApis";
+import { useAuth } from "../context/AuthContext";
 
 export default () => {
   const navigate = useNavigate();
+  const [rider,setRider] =useState({});
+  const {auth} = useAuth();
+
+  
+  const { id } = useParams();
+  console.log("rid here  in rider component: ",id);
+
+  useEffect(() => {
+
+    
+    const token = auth?.token;
+    console.log("token inside try for rider : ",token);
+
+    const fetchRiderdata = async () => {
+
+      try {
+
+        const response = await getRiderById(id,token);
+        const rider = response;
+        console.log("riders in table : ", rider);
+
+        // Sort the ridersKyc by kycVerified status
+        
+        // console.log("sorterd riders : ", allRiders);
+
+       
+
+        setRider(rider);
+      } catch (error) {
+        console.log("Error while fetching the data", error);
+      }
+    };
+
+    fetchRiderdata();
+
+  }, [id, auth]);
+
+
 
   const handleBackToRiders = () => {
     navigate(`/riders`);
   };
+
+
+  const fullName = rider ? `${rider.first_name} ${rider.last_name}` : ''; 
+  console.log("fullname : ",fullName);
+
   return (
     <>
       <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-4"></div>
@@ -50,9 +95,24 @@ export default () => {
 
         <Col xs={12} xl={4}>
           <Row>
-            <Col xs={12}>
-              <ProfileCardWidget />
-            </Col>
+            <Col xs={18}>
+              {/* <ProfileCardWidget name={rider.first_name} /> */}
+              {rider ? (
+                <ProfileCardWidget 
+                profileData={{
+                  fullName,
+                  city: rider.city, 
+                  vehicleNumber: rider?.vehicle_no ,
+                  state: rider?.state ,
+                  district: rider?.district ,
+                  mobile: rider?.mobile ,
+                }}
+                
+                />
+              ) : (
+                <p>Loading...</p>
+              )}
+              </Col>
             {/* <Col xs={12}>
               <ChoosePhotoWidget
                 title="Select profile photo"

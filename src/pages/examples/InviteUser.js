@@ -30,7 +30,7 @@ import { useAuth } from "../../context/AuthContext";
 import toast from "react-hot-toast";
 
 export default () => {
-  const { auth, updateAuth } = useAuth(); // Get auth context, including the token
+  const { auth, updateAuth } = useAuth(); 
 
   const [signupDetails, setSignupDetails] = useState({
     username: '',
@@ -59,9 +59,9 @@ export default () => {
         console.log(response,"USER_REGISTER");
         if(response?.status === 200){
 
-          navigate('/UserManagement')
+          
           toast.success('User Register successful!');
-
+          navigate('/UserManagment');
         }
 
         

@@ -57,7 +57,8 @@ export default () => {
       try {
           const response = await login(loginDetails);
           const { st, role , validUntil } = response.data; 
-          console.log(response,"RESPONSE_LOGIN");
+
+          console.log("RESPONSE_LOGIN : ",response.data);
           if(response?.status === 200){
 
             updateAuth(st, role , validUntil);
@@ -72,6 +73,7 @@ export default () => {
       } catch (error) {
           console.error(error);
           toast.error('Login failed. Please check your credentials.');
+          navigate('/signin');
       }
   };
   

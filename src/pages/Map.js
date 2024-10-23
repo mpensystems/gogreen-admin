@@ -11,7 +11,7 @@ const containerStyle = {
 const Map = ({ markers }) => {
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
-    googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAP_API  // Replace with your actual API key
+    googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAP_API  
   });
 
   const [map, setMap] = useState(null);

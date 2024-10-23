@@ -106,12 +106,25 @@ import { faCheck, faArrowLeft, faClipboard } from "@fortawesome/free-solid-svg-i
 import { Col, Row, Button, Dropdown, Form } from "@themesberg/react-bootstrap";
 import { KycCardWidget } from "../components/Widgets";
 import { CardWidget } from "../components/Card";
+import { Navigate, useNavigate, useParams } from "react-router-dom";
+import { getKycApproved, rejectKyc } from "../api/adminApis";
+import { useAuth } from "../context/AuthContext";
+import toast from "react-hot-toast";
 
 export default () => {
   const [showRejectReason, setShowRejectReason] = useState(false);
   const [rejectReason, setRejectReason] = useState("");
+  const navigate = useNavigate();
+  const {auth} = useAuth();
+  const token = auth?.token;
+
+  console.log("token in kyc details for approve api : ",token);
+  
+  const {rid} = useParams();
+  console.log("rid here in kyc params: ",rid);
 
   const handleBackToKycs = () => {
+    navigate("/Kyc");
     console.log("handle kyc is ");
   };
 
@@ -123,13 +136,36 @@ export default () => {
     }
   };
 
-  const handleRejectSubmit = () => {
+  const handleRejectSubmit = async() => {
     if (!rejectReason.trim()) {
       alert("Please provide a reason for rejection.");
     } else {
       console.log("Rejected with reason:", rejectReason);
-      // Perform rejection logic here
+      console.log("rid in params for kyc : ",rid);
+
+      const reject = await rejectKyc(token,rid,rejectReason);
+     toast("Kyc Rejected Successfully! ");
+     setShowRejectReason(false); 
     }
+  };
+
+
+  const handleApprove = async() =>{
+   console.log("rid in params for kyc : ",rid);
+   const approve = await getKycApproved(token,rid);
+  toast.success("Kyc Approved Successfully! ");
+  console.log(approve);
+  
+
+  };
+
+  const handleRejectKyc = async() =>{
+   console.log("rid in params for kyc : ",rid);
+   const approve = await rejectKyc(token,rid);
+  toast.success("Kyc Approved Successfully! ");
+  console.log(approve);
+  
+
   };
 
   return (
@@ -153,7 +189,7 @@ export default () => {
               <span className="icon icon-small ms-1"></span>
             </Dropdown.Toggle>
             <Dropdown.Menu className="dashboard-dropdown dropdown-menu-left mt-1">
-              <Dropdown.Item eventKey="approve" className="flex justify-content-center align-item-center" style={{ color: "green", display: "flex" }}>
+              <Dropdown.Item eventKey="approve" className="flex justify-content-center align-item-center" style={{ color: "green", display: "flex" }} onClick={handleApprove}>
                 Approve
               </Dropdown.Item>
               <Dropdown.Item eventKey="deny" className="flex justify-content-center align-item-center" style={{ color: "red", display: "flex" }}>

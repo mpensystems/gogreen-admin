@@ -8,7 +8,7 @@ import { CircleChart, BarChart, SalesValueChart, SalesValueChartphone } from "./
 
 
 
-export const CardWidget = ({Title,Content}) => {
+export const CardWidget = ({Title,Content,booking}) => {
     return (
       <Card border="light" className="text-center p-0 mb-4">
         <Card.Body className="pb-5">
@@ -17,7 +17,27 @@ export const CardWidget = ({Title,Content}) => {
           {/* <Card.Text className="text-gray ">New York, USA</Card.Text> */}
   
           
-          <Button variant="secondary" size="sm" className="p-3">{Content}</Button>
+          
+          <Button variant="secondary" size="sm" className="p-3">
+  {Content == "currentStep" ? (
+    <div>{booking?.bidConfig?.current_step}</div>
+  ) : 
+    Content == "currentBid" ? 
+      (
+      <div>{booking?.bidConfig?.current_step}</div>
+    )
+    :
+    (
+      <div>
+        {/* {booking?.( booking.trip_distance/ 1000).toFixed(2) } Kms */}
+        {booking?.trip_distance ? (booking.trip_distance / 1000).toFixed(2) : 0} Kms
+
+      </div>
+    )
+  
+  }
+</Button>
+
         </Card.Body>
       </Card>
     );

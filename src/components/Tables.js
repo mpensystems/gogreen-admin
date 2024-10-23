@@ -33,11 +33,13 @@ import commands from "../data/commands";
 import {
   getAllBookings,
   getAllRiders,
-  getAllTransactions,
-  getRidersKYCDoc,
+  // getAllTransactions,
+  // getRidersKYCDoc,
+  getUserList,
 } from "../api/adminApis";
 import CustomModal from "./CustomModal";
 import { Oval } from "react-loader-spinner";
+import { useAuth } from "../context/AuthContext";
 
 const ValueChange = ({ value, suffix }) => {
   const valueIcon = value < 0 ? faAngleDown : faAngleUp;
@@ -569,7 +571,7 @@ export const RiderEarningTable = () => {
 
   return (
     <Card border="light" className="table-wrapper table-responsive shadow-sm">
-      <h4 className="p-3">Riders Earning </h4>
+      <h4 className="p-4">Riders Earning </h4>
       <Card.Body className="pt-0">
 
      
@@ -1092,14 +1094,18 @@ export const KycTable = () => {
   const [showModal, setShowModal] = useState(false);
 
   const navigate = useNavigate();
-
+  const {auth} = useAuth();
   const recordsPerPage = 10;
 
   useEffect(() => {
+
+    const token = auth?.token;
+    console.log("token in kyc table : ",token);
+    
     const fetchRidersdata = async () => {
       try {
-        const response = await getAllRiders();
-        const allRiders = response.riders;
+        const response = await getAllRiders(token);
+        const allRiders = response;
         console.log("riders : ", allRiders);
 
         // Sort the ridersKyc by kycVerified status
@@ -1107,6 +1113,7 @@ export const KycTable = () => {
           const order = { pending: 1, approved: 2, rejected: 3 };
           return order[a.kycVerified] - order[b.kycVerified];
         });
+
         console.log("sorterd riders : ", sortedRiders);
 
         const pendinKycRiders = allRiders.filter(
@@ -1114,7 +1121,7 @@ export const KycTable = () => {
         );
         console.log("pendinKycRiders riders : ", pendinKycRiders);
 
-        setRiderKycList(pendinKycRiders);
+        setRiderKycList(sortedRiders);
       } catch (error) {
         console.log("Error while fetching the data", error);
       }
@@ -1122,12 +1129,15 @@ export const KycTable = () => {
 
     fetchRidersdata();
 
-    console.log("kyc rediers : ", riderKycList);
   }, []);
+
+  console.log("kyc rediers : ", riderKycList);
+
 
   const handleViewDetails = (riderId) => {
     console.log("inside view details with id ", riderId);
-    navigate(`/rider-kyc/${riderId}`);
+    navigate(`/kyc/${riderId}/get`);
+
   };
 
   console.log("here data : ", riderKycList);
@@ -1153,6 +1163,7 @@ export const KycTable = () => {
     kyc_approved,
     vehicle,
     status,
+    rid,
     _id,
   }) => {
     const statusVariant =
@@ -1204,7 +1215,7 @@ export const KycTable = () => {
             </Dropdown.Toggle>
             <Dropdown.Menu>
               {/* <Dropdown.Item onClick={() => handleViewDetails(riderId)}> */}
-              <Dropdown.Item onClick={() => handleViewDetails(_id)}>
+              <Dropdown.Item onClick={() => handleViewDetails(rid)}>
                 <FontAwesomeIcon icon={faEye} className="me-2" /> View Details
               </Dropdown.Item>
               <Dropdown.Item onClick={() => handleEdit(_id)}>
@@ -1292,17 +1303,25 @@ export const KycTable = () => {
 export const RiderTable = () => {
   const [ridersList, setRidersList] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const { auth } = useAuth();
 
   const navigate = useNavigate();
 
   const recordsPerPage = 10;
 
   useEffect(() => {
+
+    
+    const token = auth?.token;
+    console.log("token inside try of booking : ",token);
+
     const fetchRidersdata = async () => {
+
       try {
-        const response = await getAllRiders();
-        const allRiders = response.riders;
-        console.log("riders : ", allRiders);
+
+        const response = await getAllRiders(token);
+        const allRiders = response;
+        console.log("riders in table : ", allRiders);
 
         // Sort the ridersKyc by kycVerified status
         
@@ -1323,7 +1342,8 @@ export const RiderTable = () => {
 
   const handleViewDetails = (riderId) => {
     console.log("inside view details with id ", riderId);
-    navigate(`/rider/${riderId}`);
+    // navigate(`/rider/${riderId}`);
+    navigate(`/riders/${riderId}/get`);
   };
 
 
@@ -1342,11 +1362,15 @@ export const RiderTable = () => {
   const totalRiders = ridersList.length;
 
   const TableRow = ({
+    index,
+    rid,
     mobile,
     first_name,
     last_name,
     kyc_approved,
-    vehicle,
+    vehicle_no,
+    city,
+    state,
     status,
     _id,
   }) => {
@@ -1371,6 +1395,11 @@ export const RiderTable = () => {
       <tr>
         <td>
           <Card.Link as={Link} to={Routes.Invoice.path} className="fw-normal">
+            {index+1}
+          </Card.Link>
+        </td>
+        <td>
+          <Card.Link as={Link} to={Routes.Invoice.path} className="fw-normal">
             {first_name + "  " + last_name}
           </Card.Link>
         </td>
@@ -1380,7 +1409,14 @@ export const RiderTable = () => {
           </span>
         </td>
         <td>
-          <span className="fw-normal">{vehicle?.vehicle_no}</span>
+          <span className="fw-normal">{vehicle_no}</span>
+        </td>
+        <td>
+          <span className="fw-normal">
+            {/* {city + " , " + state} */}
+            {city + (state ? " , " + state : "")}
+
+             </span>
         </td>
         <td>
           <span className="fw-normal">{mobile}</span>
@@ -1399,10 +1435,10 @@ export const RiderTable = () => {
             </Dropdown.Toggle>
             <Dropdown.Menu>
               {/* <Dropdown.Item onClick={() => handleViewDetails(riderId)}> */}
-              <Dropdown.Item onClick={() => handleViewDetails(_id)}>
+              <Dropdown.Item onClick={() => handleViewDetails(rid)}>
                 <FontAwesomeIcon icon={faEye} className="me-2" /> View Details
               </Dropdown.Item>
-              <Dropdown.Item onClick={() => handleEdit(_id)}>
+              <Dropdown.Item onClick={() => handleEdit(rid)}>
                 <FontAwesomeIcon icon={faEdit} className="me-2" /> Edit
               </Dropdown.Item>
               <Dropdown.Item className="text-danger">
@@ -1422,16 +1458,18 @@ export const RiderTable = () => {
           <Table hover className="user-table align-items-center">
             <thead>
               <tr>
+                <th className="border-bottom">Id</th>
                 <th className="border-bottom">Riders Name</th>
                 <th className="border-bottom">KYC Status</th>
                 <th className="border-bottom">Vehicle Number</th>
+                <th className="border-bottom">City</th>
                 <th className="border-bottom">Phone</th>
                 <th className="border-bottom">Action</th>
               </tr>
             </thead>
             <tbody>
-              {currentRecords.map((rider) => (
-                <TableRow key={rider.riderId} {...rider} />
+              {currentRecords.map((rider,idx) => (
+                <TableRow key={rider.riderId} {...rider} index={(currentPage - 1) * recordsPerPage + idx}   />
               ))}
             </tbody>
           </Table>
@@ -1481,14 +1519,18 @@ export const BookingTable = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const navigate = useNavigate();
   const recordsPerPage = 10;
+  const { auth } = useAuth();
 
 
   
   useEffect(() => {
+    const token = auth?.token;
+    console.log("token inside try of booking : ",token);
+
     const fetchBookingsdata = async () => {
       try {
-        const response = await getAllBookings();
-        const allBookings = response.bookings;
+        const response = await getAllBookings(token);
+        const allBookings = response;
         console.log("bookings : ", allBookings);
         setBookingsList(allBookings);
       } catch (error) {
@@ -1515,17 +1557,21 @@ export const BookingTable = () => {
     setCurrentPage(pageNumber);
   };
 
-  const handleViewBooking = (bookingId ) => {
-    console.log("booking id : ",bookingId);
-    navigate(`/booking/${bookingId}` );
+  const handleViewBooking = (bid ) => {
+    console.log("booking id : ",bid);
+
+    // navigate(`/booking/${bid}` );
+    navigate(`${bid}/get` );
 
   }
   const totalBookings = activeBookings.length;
+  
+  const TableRow = ({ index,pickup_address2,drop_address2, status, trip_distance, _id,bidConfig ,bid}) => {
 
-  const TableRow = ({ orderId, status, trip_distance, _id }) => {
     const handleEdit = (riderId) => {
       console.log("inside edit rider : ", riderId);
     };
+
 
     const statusVariant =
     status === "active"
@@ -1536,21 +1582,32 @@ export const BookingTable = () => {
       ? "danger"
       : "warning";
 
+
+      const distanceInKm = (trip_distance / 1000).toFixed(2);
     return (
       <tr>
         <td>
           <Card.Link as={Link} to={Routes.Invoice.path} className="fw-normal">
-            {orderId}
+            {index+1}
           </Card.Link>
         </td>
         <td>
           <span className={`fw-normal text-${statusVariant}`}>{status}</span>
         </td>
         <td>
-          <span className="fw-normal">{trip_distance}</span>
+          <span className="fw-normal">{pickup_address2}</span>
         </td>
         <td>
-          <span className={`fw-normal text`}>"current bid"</span>
+          <span className="fw-normal">{drop_address2}</span>
+        </td>
+        <td>
+          <span className="fw-normal">{distanceInKm}</span>
+        </td>
+        <td>
+          <span className={`fw-normal text`}>{bidConfig.current_step}</span>
+        </td>
+        <td>
+          <span className={`fw-normal text`}>{bidConfig.current_bid}</span>
         </td>
         <td>
           <Dropdown as={ButtonGroup}>
@@ -1565,7 +1622,7 @@ export const BookingTable = () => {
               </span>
             </Dropdown.Toggle>
             <Dropdown.Menu>
-              <Dropdown.Item  onClick={()=>handleViewBooking(_id)}>
+              <Dropdown.Item  onClick={()=>handleViewBooking(bid)}>
                 <FontAwesomeIcon icon={faEye} className="me-2" /> View Details
               </Dropdown.Item>
               <Dropdown.Item onClick={() => handleEdit(_id)}>
@@ -1588,17 +1645,22 @@ export const BookingTable = () => {
           <Table hover className="user-table align-items-center">
             <thead>
               <tr>
-                <th className="border-bottom">Order Id</th>
+                <th className="border-bottom"> Id</th>
                 <th className="border-bottom">Booking Status</th>
+                <th className="border-bottom">Pickup Location</th>
+                <th className="border-bottom">Drop Location</th>
                 <th className="border-bottom">Trip Distance</th>
+                <th className="border-bottom">Current Step</th>
                 <th className="border-bottom">Current Bid</th>
                 <th className="border-bottom">Action</th>
               </tr>
             </thead>
             <tbody>
               {currentRecords.length > 0 ? (
-                currentRecords.map((booking) => (
-                  <TableRow key={booking._id} {...booking} />
+                currentRecords.map((booking,idx) => (
+                  <TableRow key={booking._id} {...booking} 
+                  index={(currentPage - 1) * recordsPerPage + idx}
+                  />
                 ))
               ) : (
                 <tr style={{ textAlign: "center", height: "200px" }}>
@@ -1659,47 +1721,39 @@ export const BookingTable = () => {
 
 
 export const UserManagmentTable = () => {
-  const [ridersList, setRidersList] = useState([]);
+  const [usersList, setUsersList] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
 
   const navigate = useNavigate();
-
+  const {auth } = useAuth();
+ 
+  
   const recordsPerPage = 10;
+  const token = auth?.token;
+  console.log("token in user managment Table : ", token);
 
   useEffect(() => {
-    const fetchRidersdata = async () => {
+    const fetchUsersdata = async () => {
       try {
-        const response = await getAllRiders();
-        const allRiders = response.riders;
-        console.log("riders : ", allRiders);
+        const response = await getUserList(token);
+        const  users = response ;
+        console.log("response here : ", users);       
 
-        // Sort the ridersKyc by kycVerified status
-        
-        console.log("sorterd riders : ", allRiders);
-
-       
-
-        setRidersList(allRiders);
+        setUsersList(users);
       } catch (error) {
         console.log("Error while fetching the data", error);
       }
     };
 
-    fetchRidersdata();
+    fetchUsersdata();
 
-    console.log("kyc rediers : ", ridersList);
   }, []);
 
-  const handleViewDetails = (riderId) => {
-    console.log("inside view details with id ", riderId);
-    navigate(`/rider/${riderId}`);
-  };
 
-
-  const totalPages = Math.ceil(ridersList.length / recordsPerPage);
+  const totalPages = Math.ceil(usersList.length / recordsPerPage);
   const indexOfLastRecord = currentPage * recordsPerPage;
   const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
-  const currentRecords = ridersList.slice(
+  const currentRecords = usersList.slice(
     indexOfFirstRecord,
     indexOfLastRecord
   );
@@ -1708,14 +1762,16 @@ export const UserManagmentTable = () => {
     setCurrentPage(pageNumber);
   };
 
-  const totalRiders = ridersList.length;
+  const totalRiders = usersList.length;
 
   const TableRow = ({
-    mobile,
+    phone,
     first_name,
     last_name,
-    
-    _id,
+    role,
+    email,
+    username,
+    aid,
   }) => {
     // const statusVariant =
     //   kyc_approved === "approved"
@@ -1729,9 +1785,9 @@ export const UserManagmentTable = () => {
     // const navigate = useNavigate();
 
     // Function to handle navigation to edit page
-    const handleEdit = (riderId) => {
-      console.log("inside edit rider : ", riderId);
-      // navigate(`/edit-rider/${riderId}`);  // Navigate to edit page with riderId
+    const handleEdit = (aid) => {
+      console.log("inside edit rider : ", aid);
+      navigate(`/UserManagment/${aid}/update-profile`);  
     };
 
     return (
@@ -1743,15 +1799,20 @@ export const UserManagmentTable = () => {
         </td>
         <td>
           <span className={`fw-normal text`}>
-            role
+           { username}
           </span>
         </td>
-        {/* <td>
-          <span className="fw-normal">{vehicle?.vehicle_no}</span>
+        <td>
+          <span className={`fw-normal text`}>
+           { role}
+          </span>
         </td>
         <td>
-          <span className="fw-normal">{mobile}</span>
-        </td> */}
+          <span className="fw-normal">{email}</span>
+        </td>
+        <td>
+          <span className="fw-normal">{phone}</span>
+        </td>
         <td>
           <Dropdown as={ButtonGroup}>
             <Dropdown.Toggle
@@ -1766,11 +1827,11 @@ export const UserManagmentTable = () => {
             </Dropdown.Toggle>
             <Dropdown.Menu>
               {/* <Dropdown.Item onClick={() => handleViewDetails(riderId)}> */}
-              <Dropdown.Item onClick={() => handleViewDetails(_id)}>
+              {/* <Dropdown.Item onClick={() => handleViewDetails(_id)}>
                 <FontAwesomeIcon icon={faEye} className="me-2" /> View Details
-              </Dropdown.Item>
-              <Dropdown.Item onClick={() => handleEdit(_id)}>
-                <FontAwesomeIcon icon={faEdit} className="me-2" /> Edit
+              </Dropdown.Item> */}
+              <Dropdown.Item onClick={() => handleEdit(aid)}>
+                <FontAwesomeIcon icon={faEdit} className="me-2" /> Update Profile
               </Dropdown.Item>
               <Dropdown.Item className="text-danger">
                 <FontAwesomeIcon icon={faTrashAlt} className="me-2" /> Remove
@@ -1789,14 +1850,17 @@ export const UserManagmentTable = () => {
           <Table hover className="user-table align-items-center">
             <thead>
               <tr>
+                <th className="border-bottom">Name</th>
                 <th className="border-bottom">User Name</th>
                 <th className="border-bottom">Role</th>
+                <th className="border-bottom">Email Id</th>
+                <th className="border-bottom">Phone Number</th>
                 <th className="border-bottom">Action</th>
               </tr>
             </thead>
             <tbody>
               {currentRecords.map((rider) => (
-                <TableRow key={rider.riderId} {...rider} />
+                <TableRow key={rider.riderId}  {...rider} />
               ))}
             </tbody>
           </Table>

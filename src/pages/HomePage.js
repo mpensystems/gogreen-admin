@@ -218,6 +218,7 @@ import KycDetails from './KycDetails';
 import NewBookings from './NewBookings';
 import TripsTab from './TripsTab';
 import Trip from './Trip';
+// import Booking from './bookings/:bid/get';
 import Booking from './Booking';
 import Map from './Map';
 import MapDirection from './MapDirection';
@@ -229,6 +230,8 @@ import MapLocationFinder from './MapLocationFinder';
 import { useAuth } from '../context/AuthContext';
 import Unauthorized from '../pages/examples/Unauthorized';
 import InitialAccess from './examples/InitialAccess';
+import UpdateUserProfile from './UpdateUserProfile';
+import UpdateProfile from './UpdateProfile';
 
 // import Kyc from '../pages/Kyc';
 
@@ -284,38 +287,6 @@ const RouteWithSidebar = ({ element }) => {
     </>
   );
 };
-const pickup = { lat: 28.6139, lng: 77.2090 }; // Example pickup location (Central Delhi)
-const dropoff = { lat: 28.6150, lng: 77.2120 }; // Example dropoff location (Nearby area in Delhi)
-
-// const markers = [
-//   {
-//     position: { lat: 28.6139, lng: 77.2090 },
-//     riderName: 'Captain America',
-//     description: 'Avenger '
-//   },
-//   {
-//     position: { lat: 19.0760, lng: 72.8777 },
-//     riderName: 'Thor',
-//     description: 'Asgaurd'
-//   },
-//   {
-//     position: { lat: 13.0827, lng: 80.2707 },
-//     riderName: 'IronMan',
-//     description: 'Avenger Tony Stark'
-//   },
-// ];
-
-// const getLatLng = async() =>{
-//   const address = "Room 2 bhartiyar chawl near tamilsangam ka road jarimari sakinaka 400072";
-//   const   latlng = await geocodeAddress(address);
-//   console.log(latlng,"LATLNG");
-  
-// }
-
-// useEffect(()=>{
-//   getLatLng();
-//   console.log("CALLED")
-// },[])
 
 
 
@@ -327,9 +298,9 @@ export  function HomePage() {
 
   // Redirect authenticated users to the dashboard
 
-  if (auth?.token) {
-    return <Navigate to="/dashboard" />;
-  }
+  // if (auth?.token) {
+  //   return <Navigate to="/" />;
+  // }
 
   console.log(auth,"AUTH");
   
@@ -338,8 +309,8 @@ export  function HomePage() {
       {/* <Route path={RoutePaths.Presentation.path} element={<RouteWithLoader element={<Presentation />} />} /> */}
       {/* <Route path={RoutePaths.Presentation.path} element={<MapLocationFinder markers={markers}  setMarkers={setMarkers} pickup={pickup} dropoff={dropoff} />} /> */}
 
-      {/* <Route path="/" element={<Signin/>} /> */}
-      {/* <Route path="/" element={auth?.token ? <Navigate to="/dashboard" /> : <Navigate to="/signin" />} /> */}
+      <Route path="/signin" element={<Signin/>} />
+      <Route path="/" element={auth?.token ? <Navigate to="/dashboard" /> : <Navigate to="/signin" />} />
 
 
 
@@ -359,13 +330,17 @@ export  function HomePage() {
 
 
 
-       {/* <Route
+       <Route
+        // path={RoutePaths.DashboardOverview.path}
         path="/dashboard"
-        element={<PrivateRoute requiredRole="admin" element={<RouteWithSidebar element={<DashboardOverview />} />} />}
-      />  */}
+        // element={<PrivateRoute requiredRole="admin" element={<RouteWithSidebar element={<DashboardOverview />} />} />}
+
+        // for testing
+        element={<PrivateRoute requiredRole="user"  element={<RouteWithSidebar element={<DashboardOverview />} />} />}
+      /> 
 
       {/* pages */}
-      <Route path={RoutePaths.DashboardOverview.path} element={<RouteWithSidebar element={<DashboardOverview/>} />} />
+      {/* <Route path={RoutePaths.DashboardOverview.path} element={<RouteWithSidebar element={<DashboardOverview/>} />} /> */}
       <Route path={RoutePaths.Upgrade.path} element={<RouteWithSidebar element={<Upgrade />} />} />
       <Route path={RoutePaths.Transactions.path} element={<RouteWithSidebar element={<Transactions />} />} />
       <Route path={RoutePaths.Kyc.path} element={<RouteWithSidebar element={<Kyc />} />} />
@@ -378,8 +353,10 @@ export  function HomePage() {
       <Route path={RoutePaths.Trip.path} element={<RouteWithSidebar element={<Trip />} />} />
       <Route path={RoutePaths.Riders.path} element={<RouteWithSidebar element={<RidersTab />} />} />
       <Route path={RoutePaths.UserManagment.path} element={<RouteWithSidebar element={<UserManagment />} />} />
+      <Route path={RoutePaths.UpdateUserProfile.path} element={<RouteWithSidebar element={<UpdateUserProfile />} />} />
       <Route path={RoutePaths.Settings.path} element={<RouteWithSidebar element={<Settings />} />} />
       <Route path={RoutePaths.BootstrapTables.path} element={<RouteWithSidebar element={<BootstrapTables />} />} />
+      <Route path={RoutePaths.UpdateProfile.path} element={<RouteWithSidebar element={<UpdateProfile />} />} />
       <Route path="/map/map" element={Map} />
     
 
