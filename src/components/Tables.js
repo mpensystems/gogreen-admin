@@ -10,7 +10,10 @@ import {
   faExternalLinkAlt,
   faEye,
   faTrashAlt,
+  // faIndianRupeeSign
 } from "@fortawesome/free-solid-svg-icons";
+import { faRupeeSign } from '@fortawesome/free-solid-svg-icons';
+
 import {
   Col,
   Row,
@@ -24,7 +27,7 @@ import {
   Pagination,
   ButtonGroup,
 } from "@themesberg/react-bootstrap";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { Routes } from "../routes";
 import { pageVisits, pageTraffic, pageRanking } from "../data/tables";
@@ -33,6 +36,7 @@ import commands from "../data/commands";
 import {
   getAllBookings,
   getAllRiders,
+  getRiderTrips,
   // getAllTransactions,
   // getRidersKYCDoc,
   getUserList,
@@ -277,10 +281,10 @@ export const TransactionsTable = () => {
   //       console.log("riders : ", allTransactions);
 
   //       seTransactions(allTransactions);
-  // setIsLoading(false); 
+  // setIsLoading(false);
   //     } catch (error) {
   //       console.log("Error while fetching the data", error);
-  // setIsLoading(false); 
+  // setIsLoading(false);
   //     }
   //   };
 
@@ -294,14 +298,13 @@ export const TransactionsTable = () => {
     return statusOrder[a.status] - statusOrder[b.status];
   });
 
- 
   const totalTransactions = sortedTransactions.length;
 
   // Calculate total pages
   const totalPages = Math.ceil(totalTransactions / recordsPerPage);
 
   const indexOfLastRecord = currentPage * recordsPerPage;
-  const indexOfFirstRecord = indexOfLastRecord - recordsPerPage; 
+  const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
 
   const currentTransactions = sortedTransactions.slice(
     indexOfFirstRecord,
@@ -312,11 +315,11 @@ export const TransactionsTable = () => {
     setCurrentPage(pageNumber);
   };
 
-  const handleEditTransaction= (transactionId)=>{
+  const handleEditTransaction = (transactionId) => {
     // api to be called for chnaging transaction status
-    console.log("change the status to ch")
-    console.log("transaction id here ",transactionId)
-  }
+    console.log("change the status to ch");
+    console.log("transaction id here ", transactionId);
+  };
 
   const TableRow = ({
     rider_id,
@@ -328,7 +331,7 @@ export const TransactionsTable = () => {
     dueDate,
     status,
     bookingId,
-    _id
+    _id,
   }) => {
     const statusVariant =
       status === "Paid"
@@ -383,9 +386,8 @@ export const TransactionsTable = () => {
               {/* <Dropdown.Item>
                 <FontAwesomeIcon icon={faEye} className="me-2" /> View Details
               </Dropdown.Item> */}
-              <Dropdown.Item onClick={()=>handleEditTransaction(_id)}>
-                <FontAwesomeIcon 
-                icon={faEdit}  /> Edit
+              <Dropdown.Item onClick={() => handleEditTransaction(_id)}>
+                <FontAwesomeIcon icon={faEdit} /> Edit
               </Dropdown.Item>
               {/* <Dropdown.Item className="text-danger">
                 <FontAwesomeIcon icon={faTrashAlt} className="me-2" /> Remove
@@ -400,10 +402,6 @@ export const TransactionsTable = () => {
   return (
     <Card border="light" className="table-wrapper table-responsive shadow-sm">
       <Card.Body className="pt-0">
-
-     
-
-
         <Table hover className="user-table align-items-center">
           <thead>
             <tr>
@@ -463,171 +461,152 @@ export const TransactionsTable = () => {
 };
 
 
+
+
+
+
+
+
+
+
 export const RiderEarningTable = () => {
-  // const [transactions, seTransactions] = useState([]);
+  const [trips, setTrips] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
-  const recordsPerPage = 5;
+  const recordsPerPage = 5; // Adjust the number of records per page if needed
+
   const navigate = useNavigate();
-  // api from backend
+  const { auth } = useAuth();
+  const token = auth?.token;
+  const { id } = useParams(); // Rider ID from URL params
 
-  // useEffect(() => {
-  //   const fetchRidersdata = async () => {
-  //     try {
-  //       const response = await getAllTransactions();
-  //       const allTransactions = response;
-  //       console.log("riders : ", allTransactions);
+  // Fetch trips data from backend
+  useEffect(() => {
+    const fetchRidersTripdata = async () => {
+      const startDate = "15-10-2024"; // Example start date
+      const endDate = "20-10-2024"; 
+      try {
+        const response = await getRiderTrips(token, id, startDate, endDate); 
 
-  //       seTransactions(allTransactions);
-  // setIsLoading(false); 
-  //     } catch (error) {
-  //       console.log("Error while fetching the data", error);
-  // setIsLoading(false); 
-  //     }
-  //   };
+        const sortedTrips = response.sort((a, b) => {
+          const dateA = new Date(a.date.split('-').reverse().join('-')); 
+          const dateB = new Date(b.date.split('-').reverse().join('-'));
+          return dateB - dateA;
+        });
 
-  //   fetchRidersdata();
+        setTrips(sortedTrips); // Store the fetched trips
+        setIsLoading(false); // Mark loading as complete
+      } catch (error) {
+        console.log("Error while fetching the data", error);
+        setIsLoading(false);
+      }
+    };
 
-  //   console.log("kyc rediers : ", riderKycList);
-  // }, []);
+    fetchRidersTripdata();
+  }, [token, id]);
 
-  const sortedTransactions = transactions.sort((a, b) => {
-    const statusOrder = { Due: 1, Paid: 2, Canceled: 3 };
-    return statusOrder[a.status] - statusOrder[b.status];
-  });
+  const totalTransactions = trips.length;
 
- 
-  const totalTransactions = sortedTransactions.length;
-
-  // Calculate total pages
+  // Pagination logic
   const totalPages = Math.ceil(totalTransactions / recordsPerPage);
-
   const indexOfLastRecord = currentPage * recordsPerPage;
-  const indexOfFirstRecord = indexOfLastRecord - recordsPerPage; 
-
-  const currentTransactions = sortedTransactions.slice(
-    indexOfFirstRecord,
-    indexOfLastRecord
-  );
+  const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
+  const currentTrips = trips.slice(indexOfFirstRecord, indexOfLastRecord); // Current page's trips
 
   const handlePageChange = (pageNumber) => {
-    setCurrentPage(pageNumber);
+    if (pageNumber >= 1 && pageNumber <= totalPages) {
+      setCurrentPage(pageNumber);
+    }
   };
 
-  const handleEditTransaction= (transactionId)=>{
-    // api to be called for chnaging transaction status
-    console.log("change the status to ch")
-    console.log("transaction id here ",transactionId)
-  }
-
-  const TableRow = ({
-    trip_id,
-    pickup_loc,
-    drop_loc,
-    price,
-    issueDate,
-    dueDate,
-    status,
-    bookingId,
-    _id
-  }) => {
-    const statusVariant =
-      status === "Paid"
-        ? "success"
-        : status === "Due"
-        ? "warning"
-        : status === "Canceled"
-        ? "danger"
-        : "primary";
-
-    return (
-      <tr>
-        <td>
-          <Card.Link as={Link} to={Routes.Invoice.path} className="fw-normal">
-            {trip_id}
-          </Card.Link>
-        </td>
-        
-        <td>
-          <span className="fw-normal">{pickup_loc}</span>
-        </td>
-        <td>
-          <span className="fw-normal">{drop_loc}</span>
-        </td>
-        <td>
-          <span className="fw-normal">{issueDate}</span>
-        </td>
-       
-        <td>
-          <span className="fw-normal">${parseFloat(price).toFixed(2)}</span>
-        </td>
-        <td>
-          <span className={`fw-normal text-${statusVariant}`}>{status}</span>
-        </td>
-       
-      </tr>
-    );
-  };
+  const TableRow = ({ date, balance, credit, debit, tid }) => (
+    <tr>
+      <td>
+        <Card.Link as={Link} to={`/trip-details/${tid}`} className="fw-normal">
+          {tid}
+        </Card.Link>
+      </td>
+      <td>
+        <span className="fw-normal">{date}</span>
+      </td>
+      <td>
+        <span className="fw-normal"><span style={{ marginRight: '8px' }}><FontAwesomeIcon icon={faRupeeSign} /></span> {debit}</span>
+      </td>
+      <td>
+        <span className="fw-normal"><span style={{ marginRight: '8px' }}><FontAwesomeIcon icon={faRupeeSign} /></span>{credit}</span>
+      </td>
+      <td>
+        <span className="fw-normal"><span style={{ marginRight: '8px' }}><FontAwesomeIcon icon={faRupeeSign} /></span>{balance}</span>
+      </td>
+    </tr>
+  );
 
   return (
     <Card border="light" className="table-wrapper table-responsive shadow-sm">
-      <h4 className="p-4">Riders Earning </h4>
+      <h4 className="p-4">Rider's Earnings</h4>
       <Card.Body className="pt-0">
+        {isLoading ? (
+          <p>Loading...</p>
+        ) : (
+          <>
+            <Table hover className="user-table align-items-center">
+              <thead>
+                <tr>
+                  <th className="border-bottom">Trip Id</th>
+                  <th className="border-bottom">Date</th>
+                  <th className="border-bottom">Debit</th>
+                  <th className="border-bottom">Credit</th>
+                  <th className="border-bottom">Balance</th>
+                </tr>
+              </thead>
+              <tbody>
+                {currentTrips.length > 0 ? (
+                  currentTrips.map((trip) => (
+                    <TableRow key={trip.tid} {...trip} />
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="5">No trips found.</td>
+                  </tr>
+                )}
+              </tbody>
+            </Table>
 
-     
+            <Card.Footer className="px-3 border-0 d-lg-flex align-items-center justify-content-between">
+              <Nav>
+                <Pagination className="mb-2 mb-lg-0">
+                  <Pagination.Prev
+                    onClick={() => handlePageChange(currentPage - 1)}
+                    disabled={currentPage === 1}
+                  >
+                    Previous
+                  </Pagination.Prev>
 
+                  {[...Array(totalPages).keys()].map((number) => (
+                    <Pagination.Item
+                      key={number + 1}
+                      active={number + 1 === currentPage}
+                      onClick={() => handlePageChange(number + 1)}
+                    >
+                      {number + 1}
+                    </Pagination.Item>
+                  ))}
 
-        <Table hover className="user-table align-items-center">
-          
-          <thead>
-            <tr>
-              <th className="border-bottom">Trip Id</th>
-              <th className="border-bottom">PickUp Location</th>
-              <th className="border-bottom">Drop Location</th>
-              <th className="border-bottom">Trip Date</th>
-              <th className="border-bottom">Total</th>
-              <th className="border-bottom">Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {currentTransactions.map((t) => (
-              <TableRow key={`transaction-${t.trip_id}`} {...t} />
-            ))}
-          </tbody>
-        </Table>
-        <Card.Footer className="px-3 border-0 d-lg-flex align-items-center justify-content-between">
-          <Nav>
-            <Pagination className="mb-2 mb-lg-0">
-              <Pagination.Prev
-                onClick={() => handlePageChange(currentPage - 1)}
-                disabled={currentPage === 1}
-              >
-                Previous
-              </Pagination.Prev>
-
-              {[...Array(totalPages).keys()].map((number) => (
-                <Pagination.Item
-                  key={number + 1}
-                  active={number + 1 === currentPage}
-                  onClick={() => handlePageChange(number + 1)}
-                >
-                  {number + 1}
-                </Pagination.Item>
-              ))}
-
-              <Pagination.Next
-                onClick={() => handlePageChange(currentPage + 1)}
-                disabled={currentPage === totalPages}
-              >
-                Next
-              </Pagination.Next>
-            </Pagination>
-          </Nav>
-          <small className="fw-bold">
-            Showing <b>{currentTransactions.length}</b> out of{" "}
-            <b>{totalTransactions}</b> entries
-          </small>
-        </Card.Footer>
+                  <Pagination.Next
+                    onClick={() => handlePageChange(currentPage + 1)}
+                    disabled={currentPage === totalPages}
+                  >
+                    Next
+                  </Pagination.Next>
+                </Pagination>
+              </Nav>
+              <small className="fw-bold">
+                Showing <b>{currentTrips.length}</b> out of{" "}
+                <b>{totalTransactions}</b> entries
+              </small>
+            </Card.Footer>
+          </>
+        )}
       </Card.Body>
     </Card>
   );
@@ -650,10 +629,10 @@ export const TripsTable = () => {
   //       console.log("riders : ", allTransactions);
 
   //       seTransactions(allTransactions);
-  // setIsLoading(false); 
+  // setIsLoading(false);
   //     } catch (error) {
   //       console.log("Error while fetching the data", error);
-  // setIsLoading(false); 
+  // setIsLoading(false);
   //     }
   //   };
 
@@ -662,11 +641,9 @@ export const TripsTable = () => {
   //   console.log("kyc rediers : ", riderKycList);
   // }, []);
 
-
-
   const handleViewDetails = (tripId) => {
     console.log("inside view details with id ", tripId);
-    navigate(`/trip/${tripId}`);
+    navigate(`/Trips/${tripId}`);
   };
 
   const sortedTransactions = transactions.sort((a, b) => {
@@ -681,7 +658,7 @@ export const TripsTable = () => {
   const totalPages = Math.ceil(totalTransactions / recordsPerPage);
 
   const indexOfLastRecord = currentPage * recordsPerPage;
-  const indexOfFirstRecord = indexOfLastRecord - recordsPerPage; 
+  const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
 
   const currentTransactions = sortedTransactions.slice(
     indexOfFirstRecord,
@@ -710,26 +687,26 @@ export const TripsTable = () => {
         : "primary";
 
     return (
-      <tr>
-        <td>
+      <tr style={{cursor:"pointer"}}>
+        <td onClick={() => handleViewDetails(trip_id)}>
           <Card.Link as={Link} to={Routes.Invoice.path} className="fw-normal">
             {trip_id}
           </Card.Link>
         </td>
-        <td>
+        <td onClick={() => handleViewDetails(trip_id)}>
           <span className="fw-normal">{rider_name}</span>
         </td>
-        <td>
+        <td onClick={() => handleViewDetails(trip_id)}>
           <span className="fw-normal">{pickup_loc}</span>
         </td>
-        <td>
+        <td onClick={() => handleViewDetails(trip_id)}>
           <span className="fw-normal">{drop_loc}</span>
         </td>
-       
-        <td>
+
+        <td onClick={() => handleViewDetails(trip_id)}>
           <span className="fw-normal">${parseFloat(price).toFixed(2)}</span>
         </td>
-        <td>
+        <td onClick={() => handleViewDetails(trip_id)}>
           <span className={`fw-normal text-${statusVariant}`}>{status}</span>
         </td>
         <td>
@@ -764,10 +741,6 @@ export const TripsTable = () => {
   return (
     <Card border="light" className="table-wrapper table-responsive shadow-sm">
       <Card.Body className="pt-0">
-
-     
-
-
         <Table hover className="user-table align-items-center">
           <thead>
             <tr>
@@ -1087,60 +1060,263 @@ export const CommandsTable = () => {
 //   );
 // };
 
+// export const KycTable = () => {
+//   const [riderKycList, setRiderKycList] = useState([]);
+//   const [currentPage, setCurrentPage] = useState(1);
+//   const [selectedRiderImages, setSelectedRiderImages] = useState(null);
+//   const [showModal, setShowModal] = useState(false);
+
+//   const navigate = useNavigate();
+//   const {auth} = useAuth();
+//   const recordsPerPage = 10;
+
+//   useEffect(() => {
+
+//     const token = auth?.token;
+//     console.log("token in kyc table : ",token);
+
+//     const fetchRidersdata = async () => {
+//       try {
+//         const response = await getAllRiders(token);
+//         const allRiders = response;
+//         console.log("riders : ", allRiders);
+
+//         // Sort the ridersKyc by kycVerified status
+//         const sortedRiders = allRiders.sort((a, b) => {
+//           const order = { pending: 1, approved: 2, rejected: 3 };
+//           return order[a.kycVerified] - order[b.kycVerified];
+//         });
+
+//         console.log("sorterd riders : ", sortedRiders);
+
+//         const pendinKycRiders = allRiders.filter(
+//           (pendingKyc) => pendingKyc?.kyc_approved == "pending"
+//         );
+//         console.log("pendinKycRiders riders : ", pendinKycRiders);
+
+//         setRiderKycList(sortedRiders);
+//       } catch (error) {
+//         console.log("Error while fetching the data", error);
+//       }
+//     };
+
+//     fetchRidersdata();
+
+//   }, []);
+
+//   console.log("kyc rediers : ", riderKycList);
+
+//   const handleViewDetails = (riderId) => {
+//     console.log("inside view details with id ", riderId);
+//     navigate(`/kyc/${riderId}/get`);
+
+//   };
+
+//   console.log("here data : ", riderKycList);
+
+//   const totalPages = Math.ceil(riderKycList.length / recordsPerPage);
+//   const indexOfLastRecord = currentPage * recordsPerPage;
+//   const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
+//   const currentRecords = riderKycList.slice(
+//     indexOfFirstRecord,
+//     indexOfLastRecord
+//   );
+
+//   const handlePageChange = (pageNumber) => {
+//     setCurrentPage(pageNumber);
+//   };
+
+//   const totalRiders = riderKycList.length;
+
+//   const TableRow = ({
+//     mobile,
+//     first_name,
+//     last_name,
+//     kyc_approved,
+//     vehicle,
+//     status,
+//     rid,
+//     _id,
+//   }) => {
+//     const statusVariant =
+//       kyc_approved === "approved"
+//         ? "success"
+//         : kyc_approved === "pending"
+//         ? "warning"
+//         : kyc_approved === "rejected"
+//         ? "danger"
+//         : "primary";
+
+//     // const navigate = useNavigate();
+
+//     // Function to handle navigation to edit page
+//     const handleEdit = (riderId) => {
+//       console.log("inside edit rider : ", riderId);
+//       // navigate(`/edit-rider/${riderId}`);  // Navigate to edit page with riderId
+//     };
+
+//     return (
+//       <tr>
+//         <td>
+//           <Card.Link as={Link} to={Routes.Invoice.path} className="fw-normal">
+//             {first_name + "  " + last_name}
+//           </Card.Link>
+//         </td>
+//         <td>
+//           <span className={`fw-normal text-${statusVariant}`}>
+//             {kyc_approved}
+//           </span>
+//         </td>
+//         <td>
+//           <span className="fw-normal">{vehicle?.vehicle_no}</span>
+//         </td>
+//         <td>
+//           <span className="fw-normal">{mobile}</span>
+//         </td>
+//         <td>
+//           <Dropdown as={ButtonGroup}>
+//             <Dropdown.Toggle
+//               as={Button}
+//               split
+//               variant="link"
+//               className="text-dark m-0 p-0"
+//             >
+//               <span className="icon icon-sm">
+//                 <FontAwesomeIcon icon={faEllipsisH} className="icon-dark" />
+//               </span>
+//             </Dropdown.Toggle>
+//             <Dropdown.Menu>
+//               {/* <Dropdown.Item onClick={() => handleViewDetails(riderId)}> */}
+//               <Dropdown.Item onClick={() => handleViewDetails(rid)}>
+//                 <FontAwesomeIcon icon={faEye} className="me-2" /> View Details
+//               </Dropdown.Item>
+//               <Dropdown.Item onClick={() => handleEdit(_id)}>
+//                 <FontAwesomeIcon icon={faEdit} className="me-2" /> Edit
+//               </Dropdown.Item>
+//               <Dropdown.Item className="text-danger">
+//                 <FontAwesomeIcon icon={faTrashAlt} className="me-2" /> Remove
+//               </Dropdown.Item>
+//             </Dropdown.Menu>
+//           </Dropdown>
+//         </td>
+//       </tr>
+//     );
+//   };
+
+//   return (
+//     <>
+//       <Card border="light" className="table-wrapper table-responsive shadow-sm">
+//         <Card.Body className="pt-0">
+//           <Table hover className="user-table align-items-center">
+//             <thead>
+//               <tr>
+//                 <th className="border-bottom">Riders Name</th>
+//                 <th className="border-bottom">KYC Status</th>
+//                 <th className="border-bottom">Vehicle Number</th>
+//                 <th className="border-bottom">Phone</th>
+//                 <th className="border-bottom">Action</th>
+//               </tr>
+//             </thead>
+//             <tbody>
+//               {currentRecords.map((rider) => (
+//                 <TableRow key={rider.riderId} {...rider} />
+//               ))}
+//             </tbody>
+//           </Table>
+//           <Card.Footer className="px-3 border-0 d-lg-flex align-items-center justify-content-between">
+//             <Nav>
+//               <Pagination className="mb-2 mb-lg-0">
+//                 <Pagination.Prev
+//                   onClick={() => handlePageChange(currentPage - 1)}
+//                   disabled={currentPage === 1}
+//                 >
+//                   Previous
+//                 </Pagination.Prev>
+
+//                 {[...Array(totalPages).keys()].map((number) => (
+//                   <Pagination.Item
+//                     key={number + 1}
+//                     active={number + 1 === currentPage}
+//                     onClick={() => handlePageChange(number + 1)}
+//                   >
+//                     {number + 1}
+//                   </Pagination.Item>
+//                 ))}
+
+//                 <Pagination.Next
+//                   onClick={() => handlePageChange(currentPage + 1)}
+//                   disabled={currentPage === totalPages}
+//                 >
+//                   Next
+//                 </Pagination.Next>
+//               </Pagination>
+//             </Nav>
+//             <small className="fw-bold">
+//               Showing <b>{currentRecords.length}</b> out of <b>{totalRiders}</b>{" "}
+//               entries
+//             </small>
+//           </Card.Footer>
+//         </Card.Body>
+//       </Card>
+
+//       {/* <CustomModal
+//         show={showModal}
+//         handleClose={() => setShowModal(false)}
+//         title="Rider's KYC Documents"
+//         images={selectedRiderImages}
+//         footerButtons={[{ label: 'Close', variant: 'primary', onClick: () => setShowModal(false) }]}
+//       >
+//         <p>Here are the KYC documents for the rider:</p>
+//       </CustomModal> */}
+//     </>
+//   );
+// };
+
 export const KycTable = () => {
   const [riderKycList, setRiderKycList] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [selectedRiderImages, setSelectedRiderImages] = useState(null);
-  const [showModal, setShowModal] = useState(false);
+  const [recordsPerPage] = useState(10); // You can set this as a constant
 
   const navigate = useNavigate();
-  const {auth} = useAuth();
-  const recordsPerPage = 10;
+  const { auth } = useAuth();
 
   useEffect(() => {
+    const fetchRidersData = async () => {
+      const token = auth?.token;
+      console.log("token in kyc table: ", token);
 
-    const token = auth?.token;
-    console.log("token in kyc table : ",token);
-    
-    const fetchRidersdata = async () => {
       try {
         const response = await getAllRiders(token);
         const allRiders = response;
-        console.log("riders : ", allRiders);
 
-        // Sort the ridersKyc by kycVerified status
+        // Sort the ridersKyc by kyc_approved status
+        const order = {
+          pending: 1,
+          approved: 2,
+          rejected: 3,
+          incomplete: 4,
+          empty: 5,
+        };
         const sortedRiders = allRiders.sort((a, b) => {
-          const order = { pending: 1, approved: 2, rejected: 3 };
-          return order[a.kycVerified] - order[b.kycVerified];
+          const statusA = a.kyc_approved || "empty";
+          const statusB = b.kyc_approved || "empty";
+          return order[statusA] - order[statusB];
         });
 
-        console.log("sorterd riders : ", sortedRiders);
-
-        const pendinKycRiders = allRiders.filter(
-          (pendingKyc) => pendingKyc?.kyc_approved == "pending"
-        );
-        console.log("pendinKycRiders riders : ", pendinKycRiders);
-
+        console.log("sorted riders: ", sortedRiders);
         setRiderKycList(sortedRiders);
       } catch (error) {
-        console.log("Error while fetching the data", error);
+        console.error("Error while fetching the data", error);
       }
     };
 
-    fetchRidersdata();
-
-  }, []);
-
-  console.log("kyc rediers : ", riderKycList);
-
+    fetchRidersData();
+  }, [auth]);
 
   const handleViewDetails = (riderId) => {
     console.log("inside view details with id ", riderId);
-    navigate(`/kyc/${riderId}/get`);
-
+    navigate(`/Kyc/${riderId}/get`);
   };
-
-  console.log("here data : ", riderKycList);
 
   const totalPages = Math.ceil(riderKycList.length / recordsPerPage);
   const indexOfLastRecord = currentPage * recordsPerPage;
@@ -1154,17 +1330,13 @@ export const KycTable = () => {
     setCurrentPage(pageNumber);
   };
 
-  const totalRiders = riderKycList.length;
-
   const TableRow = ({
     mobile,
     first_name,
     last_name,
     kyc_approved,
     vehicle,
-    status,
     rid,
-    _id,
   }) => {
     const statusVariant =
       kyc_approved === "approved"
@@ -1173,32 +1345,24 @@ export const KycTable = () => {
         ? "warning"
         : kyc_approved === "rejected"
         ? "danger"
-        : "primary";
-
-    // const navigate = useNavigate();
-
-    // Function to handle navigation to edit page
-    const handleEdit = (riderId) => {
-      console.log("inside edit rider : ", riderId);
-      // navigate(`/edit-rider/${riderId}`);  // Navigate to edit page with riderId
-    };
+        : "#F2D459";
 
     return (
-      <tr>
-        <td>
-          <Card.Link as={Link} to={Routes.Invoice.path} className="fw-normal">
-            {first_name + "  " + last_name}
+      <tr style={{cursor:'pointer'}} >
+        <td onClick={() => handleViewDetails(rid)}>
+          <Card.Link as={Link} to={`/kyc/${rid}/get`} className="fw-normal">
+            {first_name + " " + last_name}
           </Card.Link>
         </td>
-        <td>
+        <td onClick={() => handleViewDetails(rid)}>
           <span className={`fw-normal text-${statusVariant}`}>
             {kyc_approved}
           </span>
         </td>
-        <td>
+        <td onClick={() => handleViewDetails(rid)}>
           <span className="fw-normal">{vehicle?.vehicle_no}</span>
         </td>
-        <td>
+        <td onClick={() => handleViewDetails(rid)}>
           <span className="fw-normal">{mobile}</span>
         </td>
         <td>
@@ -1214,11 +1378,10 @@ export const KycTable = () => {
               </span>
             </Dropdown.Toggle>
             <Dropdown.Menu>
-              {/* <Dropdown.Item onClick={() => handleViewDetails(riderId)}> */}
               <Dropdown.Item onClick={() => handleViewDetails(rid)}>
                 <FontAwesomeIcon icon={faEye} className="me-2" /> View Details
               </Dropdown.Item>
-              <Dropdown.Item onClick={() => handleEdit(_id)}>
+              <Dropdown.Item onClick={() => console.log("Edit Rider", rid)}>
                 <FontAwesomeIcon icon={faEdit} className="me-2" /> Edit
               </Dropdown.Item>
               <Dropdown.Item className="text-danger">
@@ -1246,9 +1409,27 @@ export const KycTable = () => {
               </tr>
             </thead>
             <tbody>
-              {currentRecords.map((rider) => (
-                <TableRow key={rider.riderId} {...rider} />
-              ))}
+
+            {currentRecords.length > 0 ?
+              (currentRecords.map((rider) => (
+                <TableRow key={rider.rid} {...rider} />
+              ))):(
+                <tr style={{ textAlign: "center", height: "200px" }}>
+                <td colSpan="5">
+                  <Oval
+                    visible={true}
+                    height="80"
+                    width="80"
+                    color="#4fa94d"
+                    ariaLabel="oval-loading"
+                    wrapperStyle={{
+                      marginLeft: "500px",
+                    }}
+                  />
+                </td>
+              </tr>
+              )
+            }
             </tbody>
           </Table>
           <Card.Footer className="px-3 border-0 d-lg-flex align-items-center justify-content-between">
@@ -1280,22 +1461,12 @@ export const KycTable = () => {
               </Pagination>
             </Nav>
             <small className="fw-bold">
-              Showing <b>{currentRecords.length}</b> out of <b>{totalRiders}</b>{" "}
-              entries
+              Showing <b>{currentRecords.length}</b> out of{" "}
+              <b>{riderKycList.length}</b> entries
             </small>
           </Card.Footer>
         </Card.Body>
       </Card>
-
-      {/* <CustomModal
-        show={showModal}
-        handleClose={() => setShowModal(false)}
-        title="Rider's KYC Documents"
-        images={selectedRiderImages}
-        footerButtons={[{ label: 'Close', variant: 'primary', onClick: () => setShowModal(false) }]}
-      >
-        <p>Here are the KYC documents for the rider:</p>
-      </CustomModal> */}
     </>
   );
 };
@@ -1310,24 +1481,18 @@ export const RiderTable = () => {
   const recordsPerPage = 10;
 
   useEffect(() => {
-
-    
     const token = auth?.token;
-    console.log("token inside try of booking : ",token);
+    console.log("token inside try of booking : ", token);
 
     const fetchRidersdata = async () => {
-
       try {
-
         const response = await getAllRiders(token);
         const allRiders = response;
         console.log("riders in table : ", allRiders);
 
         // Sort the ridersKyc by kycVerified status
-        
-        console.log("sorterd riders : ", allRiders);
 
-       
+        console.log("sorterd riders : ", allRiders);
 
         setRidersList(allRiders);
       } catch (error) {
@@ -1343,14 +1508,13 @@ export const RiderTable = () => {
   const handleViewDetails = (riderId) => {
     console.log("inside view details with id ", riderId);
     // navigate(`/rider/${riderId}`);
-    navigate(`/riders/${riderId}/get`);
+    navigate(`/Riders/${riderId}/get`);
   };
-
 
   const totalPages = Math.ceil(ridersList.length / recordsPerPage);
   const indexOfLastRecord = currentPage * recordsPerPage;
   const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
-  const currentRecords = ridersList.slice(
+  const currentRecords = ridersList?.slice(
     indexOfFirstRecord,
     indexOfLastRecord
   );
@@ -1392,33 +1556,32 @@ export const RiderTable = () => {
     };
 
     return (
-      <tr>
-        <td>
+      <tr style={{cursor:'pointer'}} >
+        <td onClick={() => handleViewDetails(rid)}>
           <Card.Link as={Link} to={Routes.Invoice.path} className="fw-normal">
-            {index+1}
+            {index + 1}
           </Card.Link>
         </td>
-        <td>
+        <td onClick={() => handleViewDetails(rid)}>
           <Card.Link as={Link} to={Routes.Invoice.path} className="fw-normal">
             {first_name + "  " + last_name}
           </Card.Link>
         </td>
-        <td>
+        <td onClick={() => handleViewDetails(rid)}>
           <span className={`fw-normal text-${statusVariant}`}>
             {kyc_approved}
           </span>
         </td>
-        <td>
+        <td onClick={() => handleViewDetails(rid)}>
           <span className="fw-normal">{vehicle_no}</span>
         </td>
-        <td>
+        <td onClick={() => handleViewDetails(rid)}>
           <span className="fw-normal">
             {/* {city + " , " + state} */}
             {city + (state ? " , " + state : "")}
-
-             </span>
+          </span>
         </td>
-        <td>
+        <td onClick={() => handleViewDetails(rid)}>
           <span className="fw-normal">{mobile}</span>
         </td>
         <td>
@@ -1468,9 +1631,33 @@ export const RiderTable = () => {
               </tr>
             </thead>
             <tbody>
-              {currentRecords.map((rider,idx) => (
-                <TableRow key={rider.riderId} {...rider} index={(currentPage - 1) * recordsPerPage + idx}   />
-              ))}
+            {currentRecords.length > 0 ?(
+              currentRecords.map((rider, idx) => (
+                <TableRow
+                  key={rider.riderId}
+                  {...rider}
+                  index={(currentPage - 1) * recordsPerPage + idx}
+                />
+              ))
+):(
+  <tr style={{ textAlign: "center", height: "200px" }}>
+                  <td colSpan="5">
+                    <Oval
+                      visible={true}
+                      height="80"
+                      width="80"
+                      color="#4fa94d"
+                      ariaLabel="oval-loading"
+                      wrapperStyle={{
+                        marginLeft: "500px",
+                      }}
+                    />
+                  </td>
+                </tr>
+)
+}
+
+
             </tbody>
           </Table>
           <Card.Footer className="px-3 border-0 d-lg-flex align-items-center justify-content-between">
@@ -1508,8 +1695,6 @@ export const RiderTable = () => {
           </Card.Footer>
         </Card.Body>
       </Card>
-
-      
     </>
   );
 };
@@ -1521,11 +1706,9 @@ export const BookingTable = () => {
   const recordsPerPage = 10;
   const { auth } = useAuth();
 
-
-  
   useEffect(() => {
     const token = auth?.token;
-    console.log("token inside try of booking : ",token);
+    console.log("token inside try of booking : ", token);
 
     const fetchBookingsdata = async () => {
       try {
@@ -1557,57 +1740,64 @@ export const BookingTable = () => {
     setCurrentPage(pageNumber);
   };
 
-  const handleViewBooking = (bid ) => {
-    console.log("booking id : ",bid);
+  const handleViewBooking = (bid) => {
+    console.log("booking id : ", bid);
 
     // navigate(`/booking/${bid}` );
-    navigate(`${bid}/get` );
-
-  }
+    navigate(`${bid}/get`);
+  };
   const totalBookings = activeBookings.length;
-  
-  const TableRow = ({ index,pickup_address2,drop_address2, status, trip_distance, _id,bidConfig ,bid}) => {
 
+  const TableRow = ({
+    index,
+    pickup_address2,
+    drop_address2,
+    status,
+    trip_distance,
+    _id,
+    bidConfig,
+    bid,
+  }) => {
     const handleEdit = (riderId) => {
       console.log("inside edit rider : ", riderId);
     };
 
-
     const statusVariant =
-    status === "active"
-      ? "success"
-      : status === "completed"
-      ? "primary"
-      : status === "canceled"
-      ? "danger"
-      : "warning";
+      status === "active"
+        ? "success"
+        : status === "completed"
+        ? "primary"
+        : status === "canceled"
+        ? "danger"
+        : "warning";
 
-
-      const distanceInKm = (trip_distance / 1000).toFixed(2);
+    const distanceInKm = (trip_distance / 1000).toFixed(2);
     return (
-      <tr>
-        <td>
+      <tr style={{cursor:'pointer'}} >
+        <td onClick={() => handleViewBooking(bid)}>
           <Card.Link as={Link} to={Routes.Invoice.path} className="fw-normal">
-            {index+1}
+            {index + 1}
           </Card.Link>
         </td>
-        <td>
+        <td onClick={() => handleViewBooking(bid)} style={{ textAlign: 'center' }}>
           <span className={`fw-normal text-${statusVariant}`}>{status}</span>
         </td>
-        <td>
+        <td onClick={() => handleViewBooking(bid)} style={{ textAlign: 'center' }}>
           <span className="fw-normal">{pickup_address2}</span>
         </td>
-        <td>
+        <td onClick={() => handleViewBooking(bid)} style={{ textAlign: 'center' }}>
           <span className="fw-normal">{drop_address2}</span>
         </td>
-        <td>
-          <span className="fw-normal">{distanceInKm}</span>
+        <td onClick={() => handleViewBooking(bid)} style={{ textAlign: 'center' }}>
+          <span className="fw-normal">{distanceInKm}    <span style={{ marginLeft: '8px' }}>Km</span>
+          </span>
         </td>
-        <td>
+        <td onClick={() => handleViewBooking(bid)} style={{ textAlign: 'center' }}>
           <span className={`fw-normal text`}>{bidConfig.current_step}</span>
         </td>
-        <td>
-          <span className={`fw-normal text`}>{bidConfig.current_bid}</span>
+        <td onClick={() => handleViewBooking(bid)}>
+          <span className={`fw-normal text`}>    <span style={{ marginRight: '8px' }}>{<FontAwesomeIcon icon={faRupeeSign} />} </span>
+          {bidConfig.current_bid}</span>
         </td>
         <td>
           <Dropdown as={ButtonGroup}>
@@ -1622,7 +1812,7 @@ export const BookingTable = () => {
               </span>
             </Dropdown.Toggle>
             <Dropdown.Menu>
-              <Dropdown.Item  onClick={()=>handleViewBooking(bid)}>
+              <Dropdown.Item onClick={() => handleViewBooking(bid)}>
                 <FontAwesomeIcon icon={faEye} className="me-2" /> View Details
               </Dropdown.Item>
               <Dropdown.Item onClick={() => handleEdit(_id)}>
@@ -1645,24 +1835,27 @@ export const BookingTable = () => {
           <Table hover className="user-table align-items-center">
             <thead>
               <tr>
-                <th className="border-bottom"> Id</th>
-                <th className="border-bottom">Booking Status</th>
-                <th className="border-bottom">Pickup Location</th>
-                <th className="border-bottom">Drop Location</th>
-                <th className="border-bottom">Trip Distance</th>
-                <th className="border-bottom">Current Step</th>
-                <th className="border-bottom">Current Bid</th>
-                <th className="border-bottom">Action</th>
+                <th className="border-bottom" style={{ textAlign: 'center' }}>  Id</th>
+                <th className="border-bottom" style={{ textAlign: 'center' }}>Booking Status</th>
+                <th className="border-bottom" style={{ textAlign: 'center' }}>Pickup Location</th>
+                <th className="border-bottom" style={{ textAlign: 'center' }}>Drop Location</th>
+                <th className="border-bottom" style={{ textAlign: 'center' }}>Trip Distance</th>
+                <th className="border-bottom" style={{ textAlign: 'center' }}>Current Step</th>
+                <th className="border-bottom" style={{ textAlign: 'center' }}>Current Bid</th>
+                <th className="border-bottom" style={{ textAlign: 'center' }}>Action</th>
               </tr>
             </thead>
             <tbody>
               {currentRecords.length > 0 ? (
-                currentRecords.map((booking,idx) => (
-                  <TableRow key={booking._id} {...booking} 
-                  index={(currentPage - 1) * recordsPerPage + idx}
+                currentRecords.map((booking, idx) => (
+                  <TableRow
+                    key={booking._id}
+                    {...booking}
+                    index={(currentPage - 1) * recordsPerPage + idx}
                   />
                 ))
-              ) : (
+              ) :
+               (
                 <tr style={{ textAlign: "center", height: "200px" }}>
                   <td colSpan="5">
                     <Oval
@@ -1719,15 +1912,13 @@ export const BookingTable = () => {
   );
 };
 
-
 export const UserManagmentTable = () => {
   const [usersList, setUsersList] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
 
   const navigate = useNavigate();
-  const {auth } = useAuth();
- 
-  
+  const { auth } = useAuth();
+
   const recordsPerPage = 10;
   const token = auth?.token;
   console.log("token in user managment Table : ", token);
@@ -1736,8 +1927,8 @@ export const UserManagmentTable = () => {
     const fetchUsersdata = async () => {
       try {
         const response = await getUserList(token);
-        const  users = response ;
-        console.log("response here : ", users);       
+        const users = response;
+        console.log("response here : ", users);
 
         setUsersList(users);
       } catch (error) {
@@ -1746,17 +1937,12 @@ export const UserManagmentTable = () => {
     };
 
     fetchUsersdata();
-
   }, []);
-
 
   const totalPages = Math.ceil(usersList.length / recordsPerPage);
   const indexOfLastRecord = currentPage * recordsPerPage;
   const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
-  const currentRecords = usersList.slice(
-    indexOfFirstRecord,
-    indexOfLastRecord
-  );
+  const currentRecords = usersList.slice(indexOfFirstRecord, indexOfLastRecord);
 
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
@@ -1787,25 +1973,21 @@ export const UserManagmentTable = () => {
     // Function to handle navigation to edit page
     const handleEdit = (aid) => {
       console.log("inside edit rider : ", aid);
-      navigate(`/UserManagment/${aid}/update-profile`);  
+      navigate(`/UserManagment/${aid}/update-profile`);
     };
 
     return (
-      <tr>
+      <tr style={{cursor:'pointer'}} >
         <td>
           <Card.Link as={Link} to={Routes.Invoice.path} className="fw-normal">
             {first_name + "  " + last_name}
           </Card.Link>
         </td>
         <td>
-          <span className={`fw-normal text`}>
-           { username}
-          </span>
+          <span className={`fw-normal text`}>{username}</span>
         </td>
         <td>
-          <span className={`fw-normal text`}>
-           { role}
-          </span>
+          <span className={`fw-normal text`}>{role}</span>
         </td>
         <td>
           <span className="fw-normal">{email}</span>
@@ -1831,7 +2013,8 @@ export const UserManagmentTable = () => {
                 <FontAwesomeIcon icon={faEye} className="me-2" /> View Details
               </Dropdown.Item> */}
               <Dropdown.Item onClick={() => handleEdit(aid)}>
-                <FontAwesomeIcon icon={faEdit} className="me-2" /> Update Profile
+                <FontAwesomeIcon icon={faEdit} className="me-2" /> Update
+                Profile
               </Dropdown.Item>
               <Dropdown.Item className="text-danger">
                 <FontAwesomeIcon icon={faTrashAlt} className="me-2" /> Remove
@@ -1859,9 +2042,26 @@ export const UserManagmentTable = () => {
               </tr>
             </thead>
             <tbody>
-              {currentRecords.map((rider) => (
-                <TableRow key={rider.riderId}  {...rider} />
-              ))}
+            {currentRecords.length > 0 ?(
+              currentRecords.map((rider) => (
+                <TableRow key={rider.riderId} {...rider} />
+              ))):(
+                <tr style={{ textAlign: "center", height: "200px" }}>
+                <td colSpan="5">
+                  <Oval
+                    visible={true}
+                    height="80"
+                    width="80"
+                    color="#4fa94d"
+                    ariaLabel="oval-loading"
+                    wrapperStyle={{
+                      marginLeft: "500px",
+                    }}
+                  />
+                </td>
+              </tr>
+              )
+            }
             </tbody>
           </Table>
           <Card.Footer className="px-3 border-0 d-lg-flex align-items-center justify-content-between">
@@ -1899,8 +2099,6 @@ export const UserManagmentTable = () => {
           </Card.Footer>
         </Card.Body>
       </Card>
-
-      
     </>
   );
 };

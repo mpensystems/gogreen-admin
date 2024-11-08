@@ -91,6 +91,11 @@ const logoutUser =() =>{
   navigate("/signin");
   toast.success("User Logged out !");
 }
+const manageUser =() =>{
+  console.log("inside /UserManagment ");
+
+  navigate("/UserManagment");
+}
 
   return (
     <Navbar variant="dark" expanded className="ps-0 pe-2 pb-0">
@@ -143,16 +148,16 @@ const logoutUser =() =>{
               <Dropdown.Item className="fw-bold" onClick={updateUserProfile}>
   <FontAwesomeIcon icon={faUserCircle} className="me-2" /> Update Profile
 </Dropdown.Item>
-{/* 
-                <Dropdown.Item className="fw-bold">
+
+                {/* <Dropdown.Item className="fw-bold">
                   <FontAwesomeIcon icon={faCog} className="me-2" /> Settings
                 </Dropdown.Item>
                 <Dropdown.Item className="fw-bold">
                   <FontAwesomeIcon icon={faEnvelopeOpen} className="me-2" /> Messages
-                </Dropdown.Item>
-                <Dropdown.Item className="fw-bold">
-                  <FontAwesomeIcon icon={faUserShield} className="me-2" /> Support
                 </Dropdown.Item> */}
+                <Dropdown.Item className="fw-bold" onClick={manageUser}>
+                  <FontAwesomeIcon icon={faUserShield} className="me-2" /> User Managment
+                </Dropdown.Item>
 
                 <Dropdown.Divider />
 

@@ -1,18 +1,27 @@
 
-import React from "react";
+import React, { useState , useEffect
+
+ } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAngleDown, faAngleUp, faChartArea, faChartBar, faChartLine, faFlagUsa, faFolderOpen, faGlobeEurope, faPaperclip, faUserPlus } from '@fortawesome/free-solid-svg-icons';
 import { faAngular, faBootstrap, faReact, faVuejs } from "@fortawesome/free-brands-svg-icons";
 import { Col, Row, Card, Image, Button, ListGroup, ProgressBar } from '@themesberg/react-bootstrap';
 import { CircleChart, BarChart, SalesValueChart, SalesValueChartphone } from "./Charts";
+import { faRupeeSign } from '@fortawesome/free-solid-svg-icons';
 
 import Profile1 from "../assets/img/team/profile-picture-1.jpg";
 import ProfileCover from "../assets/img/profile-cover.jpg";
 
 import teamMembers from "../data/teamMembers";
+import { getImage } from "../api/adminApis";
+import { useAuth } from "../context/AuthContext";
+// const BASE_URL = process.env.imageUrl;
+// const BASE_URL = "http://34.93.209.158:8004/v1/kyc";
+
 
 
 export const ProfileCardWidget = ({profileData}) => {
+
   const { fullName, city, vehicleNumber,state ,district,mobile} = profileData;
   
   const address = city + " " + "," + " "+state;
@@ -41,20 +50,93 @@ export const ProfileCardWidget = ({profileData}) => {
     </Card>
   );
 };
-export const KycCardWidget = ({Document}) => {
-  // call rider api here for profile
+
+
+
+// export const KycCardWidget = async({ Document, rid, fileid  }) => {
+//   // Use the provided Base64 image or a default image
+//   const { auth } = useAuth();
+//   const token = auth?.token;
+//   const [imageSrc, setImageSrc] = useState(Profile1); // Default profile image
+
+//   useEffect(() => {
+//     const fetchImage = async () => {
+//       if (fileid && rid && token) {
+//         try {
+//           const imageUrl = await getImage(token, rid, fileid);
+//           setImageSrc(imageUrl);
+//         } catch (error) {
+//           console.error("Failed to load image");
+//         }
+//       }
+//     };
+
+//     fetchImage();
+//   }, [rid, fileid, token]);
+
+       
+
+//   console.log("image src : ",imageSrc)
+//   return (
+//     <Card border="light" className="text-center pb-0 mb-4">
+//       <Card.Body className="pb-2">
+//         <Card.Img src={imageSrc} alt="Profile" className="large-avatar mx-auto" />
+//         <br />
+//         <Card.Title className="pt-3">{Document}</Card.Title>
+//       </Card.Body>
+//     </Card>
+//   );
+// };
+
+
+
+export const KycCardWidget = ({ Document, rid, fileid }) => {
+  
+  console.log("rid, fileid : ",rid, fileid);
+  
+  const { auth } = useAuth();
+  const token = auth?.token;
+  const [imageSrc, setImageSrc] = useState(Profile1); 
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchImage = async () => {
+      if (fileid && rid && token) {
+        
+        try {
+          console.log("rid, fileid inside: ",rid, fileid);
+
+          const imageUrl = await getImage(token, rid, fileid);
+          console.log("image url in try: ",imageUrl);
+          setImageSrc(imageUrl); 
+          console.log("insdie kyc widge ");
+        } catch (error) {
+          console.error("Failed to load image");
+        } finally {
+          setLoading(false);
+        }
+      } else {
+        setLoading(false); 
+      }
+    };
+
+    fetchImage();
+  }, [rid, fileid, token]);
+
+  if (loading) {
+    return <div>Loading...</div>; 
+  }
+
   return (
     <Card border="light" className="text-center pb-0 mb-4">
-      {/* <div style={{ backgroundColor:"#61DAFB" }} className="profile-cover rounded-top" /> */}
       <Card.Body className="pb-2">
-        <Card.Img src={Profile1} alt="Neil Portrait" className=" large-avatar  mx-auto " />
-        <br/>
-        <Card.Title className="pt-3" >{Document}</Card.Title>
+        <Card.Img src={imageSrc} alt="Profile" className="large-avatar mx-auto" />
+        <br />
+        <Card.Title className="pt-3">{Document}</Card.Title>
       </Card.Body>
     </Card>
   );
 };
-
 
 export const ChoosePhotoWidget = (props) => {
   const { title, photo } = props;

@@ -121,16 +121,7 @@ export default ({ title, booking, type }) => {
                       </div>
                       )}
 
-                      <div className="text-gray "></div>
-                      <div className="text-gray "></div>
-                      <div className="text-gray "></div>
-                      <div className="text-gray "></div>
-                      <div className="text-gray "></div>
-                      <div className="text-gray "></div>
-                      <div className="text-gray "></div>
-                      <div className="text-gray "></div>
-                      {/* <div className="text-gray ">{booking?.pickup_name}</div> */}
-                      {/* <div className="text-gray ">{booking?.pickup_geo}</div> */}
+                      
                     </div>
                   </div>
                 </div>

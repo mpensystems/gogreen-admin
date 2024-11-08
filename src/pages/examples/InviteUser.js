@@ -193,7 +193,7 @@ export default () => {
                   </Form.Group>
 
 
-                  <Form.Group id="password" className="mb-4">
+                  {/* <Form.Group id="password" className="mb-4">
                     <Form.Label> Password</Form.Label>
                     <InputGroup>
                       <InputGroup.Text>
@@ -208,7 +208,7 @@ export default () => {
                         placeholder="Password"
                       />
                     </InputGroup>
-                  </Form.Group>
+                  </Form.Group> */}
                   
                   {/* <FormCheck type="checkbox" className="d-flex mb-4">
                     <FormCheck.Input required id="terms" className="me-2" />

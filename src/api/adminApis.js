@@ -1,3 +1,4 @@
+// import { fields } from "@hookform/resolvers/ajv/src/__tests__/__fixtures__/data.js";
 import axios from "axios";
 
 const url = process.env.REACT_APP_BACKEND_URL;
@@ -482,6 +483,8 @@ export const getAllRiders = async (token) => {
 export const getRiderById = async (rid,token) => {
   try {
     console.log('token in rider get api for single rider : ',token);
+    console.log('rid in rider get api for single rider : ',rid);
+
     const response = await fetch(`${BASE_URL}/riders/${rid}/get`, {
       method: "GET",
       headers: {
@@ -489,13 +492,80 @@ export const getRiderById = async (rid,token) => {
         Authorization: `Bearer ${token}` ,
       },
     });
+
+
+    // console.log(response,"response here");
+    
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
+    }
+    // const data =  response;
+    const data = await response.json();
+    console.log("response data of rider : ",data);
+    return data;
+  } catch (error) {
+    console.error("Error fetching riders:", error);
+    throw error;
+  }
+};
+
+
+export const fetchAggregation = async (token,rid,aggregation) => {
+
+  console.log("token in api user get: ",token);
+  console.log("id in api user get: ",rid);
+  console.log("aggregation in api user get: ",aggregation);
+
+  try {
+    const response = await fetch(`${BASE_URL}/riders/${rid}/earnings/${aggregation}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
     if (!response.ok) {
       throw new Error("Network response was not ok");
     }
     const data = await response.json();
+    console.log("get aggregation  : ", data);
+
     return data;
   } catch (error) {
-    console.error("Error fetching orders:", error);
+    console.error("Error fetching active riders", error);
+    throw error;
+  }
+};
+
+
+export const getRiderTrips = async (token,rid,startDate,endDate) => {
+  try {
+    console.log('token in rider get api for single trip : ',token);
+    console.log('token in rider get api for single trip : ',rid);
+
+    const requestBody = {
+      start_date: startDate,
+      end_date: endDate,
+    };
+  // console.log("request body : ",requestBody);
+  
+    const response = await fetch(`${BASE_URL}/riders/${rid}/earnings-ledger`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}` ,
+      },
+      body: JSON.stringify(requestBody),
+    });
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
+    }
+    const data = await response.json();
+    console.log("data for each riders trip : ",data);
+    
+    return data;
+  } catch (error) {
+    console.error("Error fetching trips:", error);
     throw error;
   }
 };
@@ -560,6 +630,57 @@ export const rejectKyc = async (token, rid, error_msg) => {
   }
 };
 
+export const getKycDetailsOfRider = async (token, rid) => {
+  try {
+
+    const response = await fetch(`${BASE_URL}/kyc/${rid}/get`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    console.log("data for kyc of rider using rid : ", response)
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
+    }
+
+    const text = await response.text();
+    const data = text ? JSON.parse(text) : {};
+    console.log("KYC reject data", data);
+
+    return data;
+  } catch (error) {
+    console.error("Error rejecting KYC:", error);
+    throw error;
+  }
+};
+
+
+
+export const getImage = async (token, rid, fileid) => {
+  console.log("token rid and fieldId gere in api : ",token , rid, fileid);
+  
+  try {
+    const response = await fetch(`${BASE_URL}/kyc/${rid}/doc/${fileid}`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
+    }
+    const imageUrl = response; 
+    console.log("check hete in api : ",imageUrl);
+    return imageUrl;
+  } catch (error) {
+    console.error("Error fetching image:", error);
+    throw error;
+  }
+};
 
 
 // user Manangment
@@ -732,6 +853,31 @@ export const getHomeStatistics = async (token,aid) => {
     return data;
   } catch (error) {
     console.error("Error fetching user with id:", error);
+    throw error;
+  }
+};
+
+export const getActiveRiders = async (token) => {
+
+  console.log("token in api user get: ",token);
+
+  try {
+    const response = await fetch(`${BASE_URL}/home/active-rider-map`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
+    }
+    const data = await response.json();
+    console.log("get active rider data in api : ", data);
+
+    return data;
+  } catch (error) {
+    console.error("Error fetching active riders", error);
     throw error;
   }
 };

@@ -19,11 +19,13 @@ import { GeneralInfoForm } from "../components/Forms";
 import { Card, Accordion } from '@themesberg/react-bootstrap';
 
 import Profile3 from "../assets/img/team/profile-picture-3.jpg";
-import { CardWidget } from "../components/Card";
+import { CardWidget, CardWidgetForBooking } from "../components/Card";
 import BookingCard from "./components/BookingCard";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { getBookingByID } from "../api/adminApis";
+import { faRupeeSign } from '@fortawesome/free-solid-svg-icons';
+
 
 export default () => {
 
@@ -55,7 +57,7 @@ export default () => {
 
     const navigate= useNavigate()
     const handleBackToBookings = ()=>{
-     navigate('/bookings');
+     navigate('/Bookings');
     }
   return (
     <>
@@ -115,14 +117,19 @@ export default () => {
       <Row>
             
             <Col>
-              <CardWidget Title="Current Step" Content="currentStep" booking={booking} />
+              {/* <CardWidget Title="Current Step" Content="currentStep" booking={booking} /> */}
+              <CardWidgetForBooking Title="Current Step" Content={booking?.bidConfig?.current_step} booking={<FontAwesomeIcon icon={faRupeeSign} />}></CardWidgetForBooking>
             </Col>
             <Col>
               {/* <CardWidget Title="Current Bid Amount" Content={`Rs ${45}`} /> */}
-              <CardWidget Title="Current Bid Amount" Content="currentBid" booking={booking} />
+              {/* <CardWidget Title="Current Bid Amount" Content="currentBid" booking={booking} /> */}
+              <CardWidgetForBooking Title="Current Bid Amount" Content={booking?.bidConfig?.current_bid} unit={"Rupees"} booking={booking}></CardWidgetForBooking>
+
             </Col>
             <Col>
-              <CardWidget Title="Trip Distance" Content="distance" booking={booking}/>
+              {/* <CardWidget Title="Trip Distance" Content="distance" booking={booking}/> */}
+              <CardWidgetForBooking Title="Trip Distance" Content={(booking?.trip_distance)/1000} unit={"km"}></CardWidgetForBooking>
+
             </Col>
           </Row>
     </>

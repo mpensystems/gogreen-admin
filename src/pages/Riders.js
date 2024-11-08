@@ -52,7 +52,7 @@ export default () => {
 
        
 
-        setRider(rider);
+        setRider(response);
       } catch (error) {
         console.log("Error while fetching the data", error);
       }
@@ -63,9 +63,10 @@ export default () => {
   }, [id, auth]);
 
 
+  
 
   const handleBackToRiders = () => {
-    navigate(`/riders`);
+    navigate(`/Riders`);
   };
 
 
@@ -121,7 +122,7 @@ export default () => {
             </Col> */}
           </Row>
         </Col>
-        <Col xs={12} xl={8}>
+        <Col xs={12} xl={8} className="mb-4">
           <RiderEarningTable />
         </Col>
         <Col xs={12} xl={12}>

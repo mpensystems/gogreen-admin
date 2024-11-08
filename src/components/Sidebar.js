@@ -16,6 +16,8 @@ import ProfilePicture from "../assets/img/team/profile-picture-3.jpg";
 export default (props = {}) => {
   const location = useLocation();
   const { pathname } = location;
+  console.log("location here : ",location);
+  
   const [show, setShow] = useState(false);
   const showClass = show ? "show" : "";
 
@@ -23,6 +25,8 @@ export default (props = {}) => {
 
   const CollapsableNavItem = (props) => {
     const { eventKey, title, icon, children = null } = props;
+    console.log("props : ",props);
+    
     const defaultKey = pathname.indexOf(eventKey) !== -1 ? eventKey : "";
 
     return (
@@ -46,8 +50,16 @@ export default (props = {}) => {
 
   const NavItem = (props) => {
     const { title, link, external, target, icon, image, badgeText, badgeBg = "secondary", badgeColor = "primary" } = props;
+    console.log("link from props",link);
+    
     const classNames = badgeText ? "d-flex justify-content-start align-items-center justify-content-between" : "";
-    const navItemClassName = link === pathname ? "active" : "";
+    // const navItemClassName = pathname.includes(link) ? "active" : "";
+    const isActive = link === "/" 
+    ? pathname === "/" // Only mark 'Home' active when exactly at the root
+    : pathname.startsWith(link); // For other paths, allow startsWith check
+
+  const navItemClassName = isActive ? "active" : "";
+
     const linkProps = external ? { href: link } : { as: Link, to: link };
 
     return (
@@ -102,13 +114,13 @@ export default (props = {}) => {
               <NavItem title="Home" link={Routes.DashboardOverview.path} icon={faChartPie} />
               {/* <NavItem external title="Messages" link="https://demo.themesberg.com/volt-pro-react/#/messages" target="_blank" badgeText="Pro" icon={faInbox} /> */}
               <NavItem title="Kyc Details" icon={faFile} link={Routes.Kyc.path} />
-              <NavItem title="Transactions" icon={faReceipt} link={Routes.Transactions.path} />
+              <NavItem title="Aggregate Balance" icon={faReceipt} link={Routes.Transactions.path} />
               <NavItem title="Trips" icon={faMotorcycle} link={Routes.TripsTab.path} />
              
               <NavItem title="Riders" icon={faUser} link={Routes.Riders.path} />
               
               <NavItem title="Bookings" icon={faBox} link={Routes.Bookings.path} />
-              <NavItem title="User Managment" icon={faUsers} link={Routes.UserManagment.path} />
+              {/* <NavItem title="User Managment" icon={faUsers} link={Routes.UserManagment.path} /> */}
               
               {/* <NavItem title="Settings" icon={faCog} link={Routes.Settings.path} /> */}
 

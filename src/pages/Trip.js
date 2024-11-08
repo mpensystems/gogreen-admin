@@ -20,7 +20,7 @@ import { GeneralInfoForm } from "../components/Forms";
 import { useNavigate } from "react-router-dom";
 
 import Profile3 from "../assets/img/team/profile-picture-3.jpg";
-import { CardWidget } from "../components/Card";
+import { CardWidget, CardWidgetForTrip } from "../components/Card";
 import MapDirection from "./MapDirection";
 
 // import { faLeftLong } from '@fortawesome/free-solid-svg-icons';
@@ -50,7 +50,7 @@ const markers = [
   const navigate = useNavigate();
 
   const handleBackTrip = ()=>{
-    navigate(`/trips`);
+    navigate(`/Trips`);
 
   }
 
@@ -82,13 +82,13 @@ const markers = [
               <Card border="light" className="bg-white shadow-sm mb-4"></Card>
             </Col>
             <Col>
-              <CardWidget Title="Trip Distance" Content="23 km" />
+              <CardWidgetForTrip Title="Trip Distance"  Content="23 km" />
             </Col>
             <Col>
-              <CardWidget Title="PickUp location" Content="Mumbai" />
+              <CardWidgetForTrip Title="PickUp location" Content="Mumbai" />
             </Col>
             <Col>
-              <CardWidget Title="Drop location" Content="Pune" />
+              <CardWidgetForTrip Title="Drop location" Content="Pune" />
             </Col>
           </Row>
         </Col>
