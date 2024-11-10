@@ -6,15 +6,11 @@ import {
   InfoWindow,
   DirectionsRenderer,
 } from "@react-google-maps/api";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import motorBike from "../assets/motorbike.png";
 import marker from "../assets/marker.png";
 import customer from "../assets/customer.png";
 import shop from "../assets/shop.png";
 import { customMapStyle } from "../Utils/MapStyle";
-
-
-
 
 const containerStyle = {
   width: "100%",
@@ -24,31 +20,34 @@ const containerStyle = {
 const MapDirection = ({ pickup, dropoff }) => {
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
-    googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAP_API, // Replace with your actual API key
+    googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAP_API,
   });
 
   const [map, setMap] = useState(null);
   const [selectedMarker, setSelectedMarker] = useState(null);
   const [directions, setDirections] = useState(null);
+  const [pickupAddress, setPickupAddress] = useState("");
+  const [dropoffAddress, setDropoffAddress] = useState("");
   const [currentDriverLocation, setCurrentDriverLocation] = useState({
-    lat: pickup.lat + 0.0006, // Temporarily set driver location near pickup
-    lng: pickup.lng + 0.0006,
+    lat: pickup?.lat + 0.0006,
+    lng: pickup?.lng + 0.0006,
   });
 
+  const fetchAddress = async (location, setAddress) => {
+    const geocoder = new window.google.maps.Geocoder();
+    geocoder.geocode({ location }, (results, status) => {
+      if (status === "OK" && results[0]) {
+        setAddress(results[0].formatted_address);
+      } else {
+        console.error("Geocoder failed due to: " + status);
+      }
+    });
+  };
 
-  const data = {
-
-    pickupDetails:{
-
-
-    },
-    dropDetails:{
-
-    },
-    riderDetails:{
-
-    }
-  }
+  useEffect(() => {
+    if (pickup) fetchAddress(pickup, setPickupAddress);
+    if (dropoff) fetchAddress(dropoff, setDropoffAddress);
+  }, [pickup, dropoff]);
 
   const onLoad = useCallback(function callback(map) {
     const bounds = new window.google.maps.LatLngBounds();
@@ -59,10 +58,6 @@ const MapDirection = ({ pickup, dropoff }) => {
   const onUnmount = useCallback(function callback(map) {
     setMap(null);
   }, []);
-
-
-
-  
 
   const calculateRoute = () => {
     if (map) {
@@ -77,7 +72,6 @@ const MapDirection = ({ pickup, dropoff }) => {
           if (status === window.google.maps.DirectionsStatus.OK) {
             setDirections(result);
 
-            // Fit the map bounds to include the route and the markers
             const bounds = new window.google.maps.LatLngBounds();
             bounds.extend(pickup);
             bounds.extend(dropoff);
@@ -89,7 +83,14 @@ const MapDirection = ({ pickup, dropoff }) => {
               });
             }
 
-            map.fitBounds(bounds); // Fit the map to the bounds
+            map.fitBounds(bounds);
+
+            const routeDistance = result.routes[0].legs[0].distance.value;
+            console.log(routeDistance);
+            
+            if (routeDistance < 1000) {
+              map.setZoom(15);
+            }
           } else {
             console.error(`Error fetching directions: ${status}`);
           }
@@ -102,18 +103,15 @@ const MapDirection = ({ pickup, dropoff }) => {
     calculateRoute();
   }, [map, pickup, dropoff]);
 
-  // Simulate driver's movement by updating the driver's location periodically
   useEffect(() => {
     const intervalId = setInterval(() => {
-      // Simulate the driver's new location (move the driver slightly)
       const newLocation = {
-        lat: currentDriverLocation.lat + 0.0001, // Simulate slight movement
-        lng: currentDriverLocation.lng + 0.0001, // Simulate slight movement
+        lat: currentDriverLocation.lat + 0.0001,
+        lng: currentDriverLocation.lng + 0.0001,
       };
       setCurrentDriverLocation(newLocation);
-    }, 50000); // Update every 5 seconds
-
-    return () => clearInterval(intervalId); 
+    }, 5000);
+    return () => clearInterval(intervalId);
   }, [currentDriverLocation]);
 
   return isLoaded ? (
@@ -129,8 +127,8 @@ const MapDirection = ({ pickup, dropoff }) => {
           position={selectedMarker.position}
           onCloseClick={() => setSelectedMarker(null)}
         >
-          <div>
-            <h2>{selectedMarker.title}</h2>
+          <div style={{ fontSize: "14px" }}> 
+            <h2 style={{ fontSize: "16px", marginBottom: "5px" }}>{selectedMarker.title}</h2>
             <p>{selectedMarker.description}</p>
           </div>
         </InfoWindow>
@@ -148,21 +146,28 @@ const MapDirection = ({ pickup, dropoff }) => {
         position={pickup}
         icon={{
           url: shop,
-          scaledSize: new window.google.maps.Size(50, 50), 
+          scaledSize: new window.google.maps.Size(50, 50),
         }}
         onClick={() =>
-          setSelectedMarker({ position: pickup, title: "Pickup Location" })
+          setSelectedMarker({
+            position: pickup,
+            title: "Pickup Location",
+            description: pickupAddress,
+          })
         }
       />
       <Marker
         position={dropoff}
         icon={{
           url: customer,
-          scaledSize: new window.google.maps.Size(50, 50), 
+          scaledSize: new window.google.maps.Size(50, 50),
         }}
-
         onClick={() =>
-          setSelectedMarker({ position: dropoff, title: "Dropoff Location" })
+          setSelectedMarker({
+            position: dropoff,
+            title: "Drop Location",
+            description: dropoffAddress,
+          })
         }
       />
       <Marker
@@ -174,7 +179,7 @@ const MapDirection = ({ pickup, dropoff }) => {
         onClick={() =>
           setSelectedMarker({
             position: currentDriverLocation,
-            title: "Driver Location",
+            title: "Rider Location",
           })
         }
       />

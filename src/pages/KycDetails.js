@@ -26,7 +26,6 @@ import {
 import { useAuth } from "../context/AuthContext";
 import toast from "react-hot-toast";
 import BookingCard from "./components/BookingCard";
-import KycCard from "./components/kycCard";
 import { faImage } from "@fortawesome/free-solid-svg-icons";
 import KycPopUp from "./kycPopUp";
 
@@ -44,13 +43,67 @@ export default () => {
   const [title, setTitle] = useState({});
 
 
-  const handleImageClick = (data,title) => {
-    console.log("clicking here for modal");
-    setModalData(data);
-    setTitle(title)
-    setShowModal(true); 
+  const handleImageClick = (kycData, title) => {
+    let filteredData = {};
+  
+    // Select data based on the title
+    if (title === "Personal Details") {
+      filteredData = {
+        Name: `${kycData.first_name} ${kycData.last_name}`,
+        Mobile: kycData.mobile,
+        Gender: kycData.gender,
+        Dob: kycData.dob,
+      };
+    } else if (title === "Aadhar Card Details") {
+      filteredData = {
+        Name: `${kycData.first_name} ${kycData.last_name}`,
+
+        Aadhar_No:kycData.aadhar_no,
+        Mobile:kycData.mobile,
+        Dob:kycData.dob,
+        Gender:kycData.gender,
+        Address :`${kycData?.address_line1} , ${kycData?.address_line2} , ${kycData?.city},${kycData?.zipcode} ,${kycData?.district} , ${kycData?.state} ` 
+      };
+    }else if (title === "Pan Card Details") {
+      filteredData = {
+        Name: `${kycData.first_name} ${kycData.last_name}`,
+        Pan_no:kycData.pan_no,
+        Mobile:kycData.mobile,
+        Dob:kycData.dob,
+        Address :`${kycData?.address_line1} , ${kycData?.address_line2} , ${kycData?.city},${kycData?.zipcode} ,${kycData?.district} , ${kycData?.state} ` 
+
+      };
+    }  
+    else if (title === "Bank Details") {
+      filteredData = {
+        Bank_account: kycData.bank_ac,
+        Bank_ifsc: kycData.bank_ifsc,
+        Bank_ac_name: kycData.bank_ac_name,
+      };
+    
+    } else if (title === "License Details") {
+      filteredData = {
+        Name: `${kycData.first_name} ${kycData.last_name}`,
+        Drivers_license: kycData.drivers_license,
+        Drivers_license_expiry: kycData.drivers_license_expiry,
+      };
+    }
+    else if (title === "RC Details") {
+      filteredData = {
+        Name: `${kycData.first_name} ${kycData.last_name}`,
+        Mobile:kycData.mobile,
+        Vehicle_type: kycData.vehicle_type,
+      };
+    }
+  
+    console.log("filteredData before setting : ", filteredData);
+    
+    setModalData(filteredData);
+    setTitle(title);
+    setShowModal(true);
   };
-console.log(showModal,"showModal");
+  
+console.log(modalData,"modalData");
 
   const handleCloseModal = () => {
     setShowModal(false); 
@@ -467,7 +520,7 @@ console.log(showModal,"showModal");
       <KycPopUp
         show={showModal}
         handleClose={handleCloseModal}
-        data={modalData}
+        modalData={modalData}
         title={title}
       />
     </>

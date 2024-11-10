@@ -45,6 +45,7 @@ import { getHomeStatistics } from "../../api/adminApis";
 export default () => {
 
   const [statistics, setStatistics] = useState();
+  const [ refresh,setRefresh] = useState(false);
 
   const pickup = { lat: 28.6139, lng: 77.209 };
   const dropoff = { lat: 28.615, lng: 77.212 };
@@ -68,35 +69,24 @@ export default () => {
       
           fetchStatistics();
        
-  },[auth])
+  },[auth,refresh])
 
   console.log("response from useSatet of state ",statistics);
 
   
+  const refreshMap = ()=>{
+    console.log("refresh the map also");
+    setRefresh(true);
+    
+  }
+  console.log('refresh here : ', refresh);
   
-  
-  const markers = [
-    {
-      position: { lat: 28.6139, lng: 77.209 },
-      riderName: "Captain America",
-      description: "Avenger ",
-    },
-    {
-      position: { lat: 19.076, lng: 72.8777 },
-      riderName: "Thor",
-      description: "Asgaurd",
-    },
-    {
-      position: { lat: 13.0827, lng: 80.2707 },
-      riderName: "IronMan",
-      description: "Avenger Tony Stark",
-    },
-  ];
+ 
   return (
     <>
       <div className="d-flex justify-content-end flex-wrap flex-md-nowrap align-items-center py-4">
       {/* <div className='d-flex justify-content-end mb-2'> */}
-        <Button >
+        <Button  onClick={()=>refreshMap()}>
           Refresh  {" "} <FontAwesomeIcon icon={faSync} />
         </Button>
       {/* </div> */}
@@ -197,7 +187,7 @@ export default () => {
 
       <Row className="justify-content-md-center">
         <Col xs={12} className="mb-4 d-none d-sm-block">
-          <Map markers={markers} pickup={pickup} dropoff={dropoff} />
+          <Map  pickup={pickup} dropoff={dropoff} refresh={refresh} setRefresh={setRefresh}/>
         </Col>
       </Row>
 
@@ -217,3 +207,24 @@ export default () => {
     </>
   );
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

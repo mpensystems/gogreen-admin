@@ -9,6 +9,7 @@ import { CITY_STATE_PIN_DATA } from "../data/Zip";
 import Modal from "./Modal";
 import { createNewBooking } from "../api/adminApis";
 import { useAuth } from "../context/AuthContext";
+import MapLocationFinder from "../pages/MapLocationFinder";
 
 const schema = yup.object().shape({
   pickup_name: yup.string().required("Pickup Name is required"),
@@ -356,6 +357,7 @@ export const GeneralInfoForm = () => {
             </Col>
           </Row>
           <hr />
+          <div> <MapLocationFinder  markers={markers} pickupLoc={pickupLoc} dropLoc={dropLoc} setMarkers={setMarkers} onCoordinatesUpdate={handleCoordinatesUpdate}/> </div>
 
           <h5 className="mb-4">Drop Location</h5>
 

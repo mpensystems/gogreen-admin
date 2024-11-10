@@ -58,7 +58,7 @@ export const CardWidget = ({Title,Content,booking}) => {
     :
     (
       <div>
-{booking ? (booking.trip_distance / 1000).toFixed(2) : ''} Kms
+{booking ? (booking.trip_distance / 1000).toFixed(2) + "Kms": ''} 
 <span style={{ marginRight: '8px' }}><FontAwesomeIcon icon={faRupeeSign} /></span> {data?.this_month?.earnings} 
         
 

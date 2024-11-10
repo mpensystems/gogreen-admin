@@ -1,6 +1,8 @@
 import axios from 'axios';
 export const geocodeAddress = async (address) => {
     console.log(address,"ADDRESS");
+
+    
     
     try {
         const response = await axios.get(
@@ -24,7 +26,7 @@ export const geocodeAddress = async (address) => {
 };
 
 
-export const reverseGeocode = async (latitude,longitude,)=>{
+export const reverseGeocode = async (latitude,longitude)=>{
     console.log(latitude ,longitude , "DATA_FROM_MAP");
     
     try {
