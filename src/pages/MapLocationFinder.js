@@ -5,10 +5,15 @@ import {
   Marker,
   InfoWindow,
 } from "@react-google-maps/api";
-import customer from "../assets/customer.png";
+// import customer from "../assets/customer.png";
 import { customMapStyle } from "../Utils/MapStyle";
 import { geocodeAddress, reverseGeocode } from "../Utils/GeocodeService";
-
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faStore
+} from "@fortawesome/free-solid-svg-icons";
+import customer from "../assets/customer.png";
+import shop from "../assets/shop.png";
 const containerStyle = {
   width: "100%",
   height: "500px",
@@ -58,69 +63,89 @@ const MapLocationFinder = ({ markers, setMarkers, pickupLoc, dropLoc, onCoordina
     }
   };
 
-  
-
-  
 
   const handleGeocodeAddresses = async () => {
-    const pickupCoords = await geocodeAddress(formatAddress(pickupLoc,true));
-    const dropCoords = await geocodeAddress(formatAddress(dropLoc,false));
-    console.log(dropCoords,"dropCoords");
-
-
-    const newMarkers = [];
-    let pickupLatLng = null;
-    let dropLatLng = null;
-
-    if (pickupCoords) {
-      const address = await reverseGeocode(dropCoords?.lat , dropCoords?.lng);
-
-      newMarkers.push({
-        position: pickupCoords,
-        title: `Pickup: ${address}`,
-      });
-      pickupLatLng = pickupCoords;
-    
-
-    }
-
-    if (dropCoords) {
-      // call api and pass reverse coords for showing address on map
-        console.log("dropCoords here : ",dropCoords);
-
-    const address = await reverseGeocode(dropCoords.lat , dropCoords.lng);
-
-      newMarkers.push({
-        position: dropCoords,
-        title: `Drop: ${address}`,
-      });
-      dropLatLng = dropCoords;
+    try {
+      const pickupCoords = pickupLoc ? await geocodeAddress(formatAddress(pickupLoc, true)) : null;
+      const dropCoords = dropLoc ? await geocodeAddress(formatAddress(dropLoc, false)) : null;
   
-
-    }
-
-    
-
-    if (newMarkers.length > 0) {
-      setMarkers((prevMarkers) => [...prevMarkers, ...newMarkers]);
-
-      if (map) {
-        const bounds = new window.google.maps.LatLngBounds();
-        newMarkers.forEach((marker) => bounds.extend(marker.position));
-        map.fitBounds(bounds); // Adjust map to fit all markers
+      console.log("Geocoded Pickup Coordinates:", pickupCoords);
+      console.log("Geocoded Drop Coordinates:", dropCoords);
+  
+      const newMarkers = [];
+      let pickupLatLng = null;
+      let dropLatLng = null;
+  
+      if (pickupCoords) {
+        const address = await reverseGeocode(pickupCoords.lat, pickupCoords.lng);
+        newMarkers.push({
+          position: pickupCoords,
+          title: `Pickup: ${address}`,
+        });
+        pickupLatLng = pickupCoords;
       }
-    }
-
-    if (pickupLatLng || dropLatLng) {
+  
+      if (dropCoords) {
+        const address = await reverseGeocode(dropCoords.lat, dropCoords.lng);
+        newMarkers.push({
+          position: dropCoords,
+          title: `Drop: ${address}`,
+        });
+        dropLatLng = dropCoords;
+      }
+  
+      setMarkers(newMarkers);
+  
+      if (map) {
+        if (newMarkers.length === 1) {
+          // Single marker: Center and set broader zoom
+          map.setCenter(newMarkers[0].position);
+          map.setZoom(6);
+        } else if (newMarkers.length === 2) {
+          // Two markers: Calculate midpoint and set closer zoom manually
+          // const latMid = (pickupCoords.lat + dropCoords.lat) / 2;
+          // const lngMid = (pickupCoords.lng + dropCoords.lng) / 2;
+          
+          // map.setCenter({ lat: latMid, lng: lngMid });
+          // map.setZoom(10);
+          
+          
+          if (newMarkers.length > 0) {
+                setMarkers((prevMarkers) => [...prevMarkers, ...newMarkers]);
+          
+                if (map) {
+                  const bounds = new window.google.maps.LatLngBounds();
+                  newMarkers.forEach((marker) => bounds.extend(marker.position));
+                  map.fitBounds(bounds); // Adjust map to fit all markers
+                }
+              }
+          
+              if (pickupLatLng || dropLatLng) {
+                onCoordinatesUpdate(pickupLatLng, dropLatLng);
+              }
+          
+              map.setCenter(dropCoords)
+              map.setZoom(10)
+          
+          
+          
+          
+          
+          // Set to a closer zoom level manually for better view of both markers
+        }
+      }
+  
+      // Update coordinates in the parent component
       onCoordinatesUpdate(pickupLatLng, dropLatLng);
+    } catch (error) {
+      console.error("Error in geocoding addresses:", error);
     }
-
-    map.setCenter(dropCoords)
-    map.setZoom(10)
-
   };
-
-
+  
+  
+  
+  
+  
   useEffect(() => {
     if (map) {
       handleGeocodeAddresses();
@@ -145,46 +170,66 @@ const MapLocationFinder = ({ markers, setMarkers, pickupLoc, dropLoc, onCoordina
 
   return isLoaded ? (
     <GoogleMap
-      mapContainerStyle={containerStyle}
-      center={center}
-      zoom={4} // Initial zoom level before markers are loaded
-      onLoad={onLoad}
-      onUnmount={onUnmount}
-      options={{ styles: customMapStyle }}
-    >
-      {markers.map((marker, index) => (
-        <Marker
-          key={index}
-          icon={{
-            url: customer,
-            scaledSize: new window.google.maps.Size(50, 50),
-          }}
-          position={marker.position}
-          draggable={true}
-          onDragEnd={(event) => handleMarkerDragEnd(event, index)}
-          onClick={() => {
-            setSelectedMarker(marker);
-            map.setCenter(marker.position);
-            map.setZoom(15); // Zoom in on selected marker
-          }}
-        />
-      ))}
+  mapContainerStyle={containerStyle}
+  center={center}
+  zoom={4} // Initial zoom level before markers are loaded
+  onLoad={onLoad}
+  onUnmount={onUnmount}
+  options={{ styles: customMapStyle }}
+>
+  {markers.map((marker, index) => (
+    <Marker
+      key={index}
+      icon={{
+        url: marker.title.toLowerCase().includes("pickup")
+          ? shop 
+          : customer, 
+        scaledSize: new window.google.maps.Size(50, 50), 
+      }}
+      position={marker.position}
+      draggable={true}
+      onDragEnd={(event) => handleMarkerDragEnd(event, index)}
+      onClick={() => {
+        setSelectedMarker(marker);
+        
+        map.setCenter(marker.position);
+        map.setZoom(15); 
+      }}
+    />
+  ))}
 
-      {selectedMarker && (
-        <InfoWindow
-          position={selectedMarker.position}
-          onCloseClick={() => {
-            setSelectedMarker(null);
-            map.setCenter(markers[0]?.position || center); // Center on the first marker or default center
-          }}
-        >
-          <div>
-            <h2>{selectedMarker.title}</h2>
-            <p>{selectedMarker.description}</p>
-          </div>
-        </InfoWindow>
-      )}
-    </GoogleMap>
+  {selectedMarker && (
+    <InfoWindow
+      position={selectedMarker.position}
+      onCloseClick={() => {
+        setSelectedMarker(null);
+        map.setCenter(markers[0]?.position || center);
+      }}
+    >
+      <div className="card shadow-sm border-0" >
+        <div className="card-body p-3">
+          <h5
+            className="card-title mb-2"
+            style={{
+              fontSize: "1rem",           
+              color:"black",
+              // backgroundColor: "#f8f9fa",   // Subtle background to highlight
+              padding: "5px",               // Add some padding around the title
+              borderRadius: "5px",          // Rounded corners to match card style
+              textAlign: "center",          // Center align for better presentation
+            }}
+          >
+            {selectedMarker.title}
+          </h5>
+          <p className="card-text text-muted mb-1" style={{ fontSize: "0.9rem" }}>
+            {selectedMarker.description}
+          </p>
+        </div>
+      </div>
+    </InfoWindow>
+  )}
+</GoogleMap>
+
   ) : null;
 };
 

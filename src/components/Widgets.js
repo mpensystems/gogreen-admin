@@ -15,6 +15,7 @@ import ProfileCover from "../assets/img/profile-cover.jpg";
 import teamMembers from "../data/teamMembers";
 import { getImage } from "../api/adminApis";
 import { useAuth } from "../context/AuthContext";
+import ImageComponent from "./ImageComponent";
 // const BASE_URL = process.env.imageUrl;
 // const BASE_URL = "http://34.93.209.158:8004/v1/kyc";
 
@@ -22,9 +23,14 @@ import { useAuth } from "../context/AuthContext";
 
 export const ProfileCardWidget = ({profileData}) => {
 
-  const { fullName, city, vehicleNumber,state ,district,mobile} = profileData;
+  const { fullName, city, vehicleNumber,state ,rid,mobile,photo} = profileData;
   
-  const address = city + " " + "," + " "+state;
+ console.log("rider photo : ",photo);
+
+ const {auth} = useAuth();
+ const token = auth?.token;
+
+ console.log("token for rider image : ", token);
  
   // const fullName = rider ? `${rider.first_name} ${rider.last_name}` : ''; 
 
@@ -33,12 +39,25 @@ export const ProfileCardWidget = ({profileData}) => {
     <Card border="light" className="text-center p-0 mb-4">
       <div style={{ backgroundColor:"#61DAFB" }} className="profile-cover rounded-top" />
       <Card.Body className="pb-5">
-        <Card.Img src={Profile1} alt="Neil Portrait" className="user-avatar large-avatar rounded-circle mx-auto mt-n7 mb-1" />
+        <div className="user-avatar large-avatar mx-auto mt-n7 mb-1 rounded-circle" >
+        <ImageComponent 
+         token={token}
+         rid={rid}
+         fileid={photo}
+        //  blur={true}
+        // className=" rounded-circle "
+
+        round={true}
+        />
+        </div>
+        
+        {/* <Card.Img src={Profile1} alt="Neil Portrait" className="user-avatar large-avatar rounded-circle mx-auto mt-n7 mb-1" /> */}
+
         <Card.Title>{fullName}</Card.Title>
         {/* <Card.Subtitle className="fw-normal">Senior Software Engineer</Card.Subtitle> */}
         {/* <Card.Text className="text-gray mb-4">City of Operation : {city +","+ state}</Card.Text> */}
         <Card.Text className="text-gray mb-3">Vehicle No :{vehicleNumber}</Card.Text>
-        <Card.Text className="text-gray mb-3">City of Operation : {address }</Card.Text>
+        <Card.Text className="text-gray mb-3">City of Operation : {city + " , " + state}</Card.Text>
         
         <Card.Text className="text-gray mb-0">Mobile Number  : {mobile}</Card.Text>
 
@@ -53,47 +72,12 @@ export const ProfileCardWidget = ({profileData}) => {
 
 
 
-// export const KycCardWidget = async({ Document, rid, fileid  }) => {
-//   // Use the provided Base64 image or a default image
-//   const { auth } = useAuth();
-//   const token = auth?.token;
-//   const [imageSrc, setImageSrc] = useState(Profile1); // Default profile image
 
-//   useEffect(() => {
-//     const fetchImage = async () => {
-//       if (fileid && rid && token) {
-//         try {
-//           const imageUrl = await getImage(token, rid, fileid);
-//           setImageSrc(imageUrl);
-//         } catch (error) {
-//           console.error("Failed to load image");
-//         }
-//       }
-//     };
-
-//     fetchImage();
-//   }, [rid, fileid, token]);
-
-       
-
-//   console.log("image src : ",imageSrc)
-//   return (
-//     <Card border="light" className="text-center pb-0 mb-4">
-//       <Card.Body className="pb-2">
-//         <Card.Img src={imageSrc} alt="Profile" className="large-avatar mx-auto" />
-//         <br />
-//         <Card.Title className="pt-3">{Document}</Card.Title>
-//       </Card.Body>
-//     </Card>
-//   );
-// };
-
-
-
-export const KycCardWidget = ({ Document, rid, fileid }) => {
+export const KycCardWidget = ({ profileData, rid }) => {
   
+  const fileid = profileData?.photo;
   console.log("rid, fileid : ",rid, fileid);
-  
+  const fullName = profileData?.first_name + profileData?.last_name;
   const { auth } = useAuth();
   const token = auth?.token;
   const [imageSrc, setImageSrc] = useState(Profile1); 
@@ -101,15 +85,17 @@ export const KycCardWidget = ({ Document, rid, fileid }) => {
 
   useEffect(() => {
     const fetchImage = async () => {
+      console.log("image requiremnet here : ",fileid ,rid);
+      
       if (fileid && rid && token) {
         
         try {
           console.log("rid, fileid inside: ",rid, fileid);
+          const response = await getImage(token, rid, fileid);
+          const imageBlob = await response.blob();
+          const imageObjectURL = URL.createObjectURL(imageBlob);
+          setImageSrc(imageObjectURL); 
 
-          const imageUrl = await getImage(token, rid, fileid);
-          console.log("image url in try: ",imageUrl);
-          setImageSrc(imageUrl); 
-          console.log("insdie kyc widge ");
         } catch (error) {
           console.error("Failed to load image");
         } finally {
@@ -123,18 +109,45 @@ export const KycCardWidget = ({ Document, rid, fileid }) => {
     fetchImage();
   }, [rid, fileid, token]);
 
+
+  console.log("image after set with api : ",imageSrc);
+  
   if (loading) {
     return <div>Loading...</div>; 
   }
 
   return (
-    <Card border="light" className="text-center pb-0 mb-4">
-      <Card.Body className="pb-2">
-        <Card.Img src={imageSrc} alt="Profile" className="large-avatar mx-auto" />
-        <br />
-        <Card.Title className="pt-3">{Document}</Card.Title>
-      </Card.Body>
-    </Card>
+    <Card border="light" className="text-center p-0 mt-2 ">
+  <div style={{ backgroundColor: "#61DAFB" }} className="profile-cover rounded-top" />
+  <Card.Body className="pb-4">
+    <Card.Img
+      src={imageSrc}
+      alt="Neil Portrait"
+      className="user-avatar large-avatar rounded-circle mx-auto mt-n7 mb-1"
+    />
+
+    <Card.Title>{fullName}</Card.Title>
+
+    {/* Container for key-value pairs */}
+    <div className="text-start px-4">
+      <div className="row mb-2">
+        <div className="col-4 text-gray"><b>Mobile :</b></div>
+        <div className="col-8">{profileData?.mobile}</div>
+      </div>
+      <div className="row mb-2">
+        <div className="col-4 text-gray"><b>Gender :</b></div>
+        <div className="col-8">{profileData?.gender}</div>
+      </div>
+      <div className="row mb-2">
+        <div className="col-4 text-gray"><b>Address :</b></div>
+        <div className="col-8">
+          {profileData?.address_line1}, {profileData?.address_line2}, {profileData?.city}, {profileData?.zipcode}, {profileData?.state}, {profileData?.district}
+        </div>
+      </div>
+    </div>
+  </Card.Body>
+</Card>
+
   );
 };
 

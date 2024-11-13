@@ -102,11 +102,13 @@ export default () => {
                 <ProfileCardWidget 
                 profileData={{
                   fullName,
+                  rid: rider.rid, 
                   city: rider.city, 
                   vehicleNumber: rider?.vehicle_no ,
                   state: rider?.state ,
                   district: rider?.district ,
                   mobile: rider?.mobile ,
+                  photo: rider?.photo ,
                 }}
                 
                 />

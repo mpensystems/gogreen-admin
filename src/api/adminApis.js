@@ -373,7 +373,47 @@ export const firstRegister = async (token) => {
 
 export const createNewBooking = async (formData,token) => {
   console.log("token : ",token);
-  console.log("formData inside create booking api : ",formData);
+  // const formData = {
+  //   "pickup_address1": "1Aerocity, NIBR Corporate Park",
+  //   "pickup_address2": "Andheri Kurla Roak, Saki Naka",
+  //   "pickup_house": "",
+  //   "pickup_landmark": "Near Safed Pool",
+  //   "pickup_zip": "400072",
+  //   "pickup_city": "Mumbai",
+  //   "pickup_state": "MH",
+  //   "pickup_district": "Andheri East",
+  //   "pickup_mobile": "XXX",
+  //   "pickup_name": "9876543210",
+  //   "pickup_geo": {
+  //     "lat": 0.00,
+  //     "lng": 0.00
+  //   },
+  //   "drop_address1": "WeWork Enam Sambhav",
+  //   "drop_address2": "C20 G Block, BKC, Bandra East",
+  //   "drop_house": "",
+  //   "drop_landmark": "",
+  //   "drop_zip": "400051",
+  //   "drop_city": "Mumbai",
+  //   "drop_state": "MH",
+  //   "drop_district": "Bandra East",
+  //   "drop_mobile": "0123456789",
+  //   "drop_name": "YYY",
+  //     "drop_geo": {
+  //     "lat": 0.00,
+  //     "lng": 0.00
+  //   },
+  //   "orderId": "",
+  //     "bidConfig": {
+  //     "min_bid": 50,
+  //     "max_bid": 200,
+  //     "steps": 2,
+  //     "step_period": 30,
+  //     "dist_increment": 1,
+  //     "start_dist": 1
+  //   }
+  // };
+
+    console.log("formData inside create booking api : ",formData);
 
   try {
     const response = await axios.post(
@@ -383,6 +423,7 @@ export const createNewBooking = async (formData,token) => {
         headers: {
           "Content-Type": "application/json",
           Authorization:`Bearer ${token}`,  
+          // Authorization:`Bearer ZNQM9TuqpJAzJ4eV7VVSx5tDxuUXXVPowfGWIOaAtFqLUWRBrWWrL9xnhQUpSv2L`,  
         },
       }
     );
@@ -393,7 +434,7 @@ export const createNewBooking = async (formData,token) => {
   } catch (error) {
     if (error.response) {
       const errorMessage = error.response.data?.message || "Unknown error occurred";
-      console.error("Error Creating booking:", errorMessage);
+      console.error("Error Creating booking:", error);
       throw new Error(`Error: ${errorMessage}`);
     } else if (error.request) {
       console.error("Error Creating booking: No response received");

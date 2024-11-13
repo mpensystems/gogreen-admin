@@ -1563,10 +1563,14 @@ export const RiderTable = () => {
           </Card.Link>
         </td>
         <td onClick={() => handleViewDetails(rid)}>
+          <span className="fw-normal">{mobile}</span>
+        </td>
+
+        {/* <td onClick={() => handleViewDetails(rid)}>
           <Card.Link as={Link} to={Routes.Invoice.path} className="fw-normal">
             {first_name + "  " + last_name}
           </Card.Link>
-        </td>
+        </td> */}
         <td onClick={() => handleViewDetails(rid)}>
           <span className={`fw-normal text-${statusVariant}`}>
             {kyc_approved}
@@ -1581,9 +1585,7 @@ export const RiderTable = () => {
             {city + (state ? " , " + state : "")}
           </span>
         </td>
-        <td onClick={() => handleViewDetails(rid)}>
-          <span className="fw-normal">{mobile}</span>
-        </td>
+       
         <td>
           <Dropdown as={ButtonGroup}>
             <Dropdown.Toggle
@@ -1622,11 +1624,12 @@ export const RiderTable = () => {
             <thead>
               <tr>
                 <th className="border-bottom">Id</th>
-                <th className="border-bottom">Riders Name</th>
+                <th className="border-bottom">Phone</th>
+                {/* <th className="border-bottom">Riders Name</th> */}
                 <th className="border-bottom">KYC Status</th>
                 <th className="border-bottom">Vehicle Number</th>
                 <th className="border-bottom">City</th>
-                <th className="border-bottom">Phone</th>
+                
                 <th className="border-bottom">Action</th>
               </tr>
             </thead>

@@ -10,6 +10,7 @@ import Modal from "./Modal";
 import { createNewBooking } from "../api/adminApis";
 import { useAuth } from "../context/AuthContext";
 import MapLocationFinder from "../pages/MapLocationFinder";
+// import DropMapLocation from "../pages/dropMapLocation";
 
 const schema = yup.object().shape({
   pickup_name: yup.string().required("Pickup Name is required"),
@@ -25,8 +26,12 @@ const schema = yup.object().shape({
     .matches(/^[0-9]{10}$/, "Drop Mobile must be exactly 10 digits")
     .required("Drop Mobile is required"),
   drop_address1: yup.string().required("Drop Address Line 1 is required"),
-  min_bid: yup.string().required("Minimum bid amount is required"),
-  max_bid: yup.string().required("Maximum bid amount is required"),
+  min_bid: yup.number().required("Minimum bid amount is required"),
+  max_bid: yup.number().required("Maximum bid amount is required"),
+  dist_increment: yup.number().required("dist increment value is required"),
+  start_dist: yup.number().required("start distance value is required"),
+  steps: yup.number().required("Steps value is required"),
+  step_period: yup.number().required("Step Period is required"),
 });
 
 export const GeneralInfoForm = () => {
@@ -211,18 +216,22 @@ export const GeneralInfoForm = () => {
   const [markers, setMarkers] = useState([]);
 
   return (
-    <Card border="light" className="bg-white shadow-sm mb-4">
+    <Card border="light" className="bg-white shadow-sm mb-4 px-4">
       <Card.Body>
-        <h3 className="mb-4">Add Booking Details</h3>
+        <h2 className="mb-4">Add Booking Details</h2>
+      
         <Form onSubmit={handleSubmit(onSubmit)}>
           <hr />
 
-          <h5 className="mb-4">PickUp Location</h5>
+          <h3 className="mb-4">PickUp Details</h3>
 
           <Row>
+          <h5>Personal Details ( For Pickup )</h5>
+
+<hr/>
             <Col md={6} className="mb-3">
               <Form.Group id="pickup_name">
-                <Form.Label>Pickup Name</Form.Label>
+                <Form.Label>Name</Form.Label>
                 <Form.Control
                   type="text"
                   placeholder="Enter name"
@@ -233,7 +242,7 @@ export const GeneralInfoForm = () => {
             </Col>
             <Col md={6} className="mb-3">
               <Form.Group id="pickup_mobile">
-                <Form.Label>Pickup Mobile</Form.Label>
+                <Form.Label>Mobile</Form.Label>
                 <Form.Control
                   type="text"
                   placeholder="Enter mobile number"
@@ -245,7 +254,10 @@ export const GeneralInfoForm = () => {
           </Row>
 
           <Row>
-            <Col md={6} className="mb-3">
+          <h5>Address </h5>
+
+<hr/>
+            <Col md={12} className="mb-3">
               <Form.Group id="pickup_address1">
                 <Form.Label>Pickup Address Line 1</Form.Label>
                 <Form.Control
@@ -258,7 +270,7 @@ export const GeneralInfoForm = () => {
                 <p className="text-danger">{errors.pickup_address1?.message}</p>
               </Form.Group>
             </Col>
-            <Col md={6} className="mb-3">
+            <Col md={12} className="mb-3">
               <Form.Group id="pickup_address2">
                 <Form.Label>Pickup Address Line 2</Form.Label>
                 <Form.Control
@@ -273,47 +285,33 @@ export const GeneralInfoForm = () => {
           </Row>
 
           <Row>
-            <Col md={6} className="mb-3">
+
+
+            <Col md={4} className="mb-3">
               <Form.Group id="pickup_house">
-                <Form.Label>Pickup House</Form.Label>
+                <Form.Label>Apartment Number</Form.Label>
                 <Form.Control
                   type="text"
                   name="pickup_house"
-                  placeholder="Enter house number"
+                  placeholder="Enter Apartment Number"
                   {...register("pickup_house")}
                   onChange={handlePickupChange}
                 />
               </Form.Group>
             </Col>
-            <Col md={6} className="mb-3">
+            <Col md={4} className="mb-3">
               <Form.Group id="pickup_landmark">
-                <Form.Label>Pickup Landmark</Form.Label>
+                <Form.Label>Landmark</Form.Label>
                 <Form.Control
                   type="text"
                   name="pickup_landmark"
-                  placeholder="Enter landmark"
+                  placeholder="Enter landmark for pickup location"
                   {...register("pickup_landmark")}
                   onChange={handlePickupChange}
                 />
               </Form.Group>
             </Col>
-          </Row>
-
-          <Row>
-            
-            <Col md={6} className="mb-3">
-              <Form.Group id="pickup_district">
-                <Form.Label>pickup district</Form.Label>
-                <Form.Control
-                  type="text"
-                  name="pickup_district"
-                  placeholder="Enter pickup district"
-                  {...register("pickup_district")}
-                  
-                />
-              </Form.Group>
-            </Col>
-            <Col md={6} className="mb-3">
+            <Col md={4} className="mb-3">
               <Form.Group id="pickup_zip">
                 <Form.Label>Pickup Zip</Form.Label>
                 <Form.Control
@@ -328,43 +326,66 @@ export const GeneralInfoForm = () => {
                 />
               </Form.Group>
             </Col>
+
           </Row>
 
           <Row>
-            <Col md={6} className="mb-3">
-              <Form.Group id="pickup_state">
-                <Form.Label>Pickup State</Form.Label>
+            
+            <Col md={4} className="mb-3">
+              <Form.Group id="pickup_district">
+                <Form.Label>pickup district</Form.Label>
                 <Form.Control
                   type="text"
-                  name="pickup_state"
-                  placeholder="Enter state"
-                  {...register("pickup_state")}
-                  readOnly
+                  name="pickup_district"
+                  placeholder="Enter pickup district"
+                  {...register("pickup_district")}
+                  
                 />
               </Form.Group>
             </Col>
-            <Col md={6} className="mb-3">
+            <Col md={4} className="mb-3">
               <Form.Group id="pickup_city">
                 <Form.Label>Pickup City</Form.Label>
                 <Form.Control
                   type="text"
                   name="pickup_city"
-                  placeholder="Enter city"
+                  placeholder="Pickup city"
                   {...register("pickup_city")}
                   readOnly
                 />
               </Form.Group>
             </Col>
+            <Col md={4} className="mb-3">
+              <Form.Group id="pickup_state">
+                <Form.Label>Pickup State</Form.Label>
+                <Form.Control
+                  type="text"
+                  name="pickup_state"
+                  placeholder="Pickup state"
+                  {...register("pickup_state")}
+                  readOnly
+                />
+              </Form.Group>
+            </Col>
           </Row>
-          <hr />
-          <div> <MapLocationFinder  markers={markers} pickupLoc={pickupLoc} dropLoc={dropLoc} setMarkers={setMarkers} onCoordinatesUpdate={handleCoordinatesUpdate}/> </div>
-
-          <h5 className="mb-4">Drop Location</h5>
 
           <Row>
+           
+            
+          </Row>
+          <hr />
+          {/* <div> <MapLocationFinder  markers={markers} pickupLoc={pickupLoc} dropLoc={dropLoc} setMarkers={setMarkers} onCoordinatesUpdate={handleCoordinatesUpdate}/> </div> */}
+          {/* <div> <DropMapLocation markers={markers} pickupLoc={pickupLoc} dropLoc={null} setMarkers={setMarkers} onCoordinatesUpdate={handleCoordinatesUpdate}/> </div> */}
+
+          <h3 className="mb-4">Drop Details</h3>
+
+          <Row>
+            <h5>Personal Details ( For Drop )</h5>
+
+            <hr/>
             <Col md={6} className="mb-3">
               <Form.Group id="drop_name">
-                <Form.Label>Drop Name</Form.Label>
+                <Form.Label> Name</Form.Label>
                 <Form.Control
                   type="text"
                   placeholder="Enter name"
@@ -375,7 +396,7 @@ export const GeneralInfoForm = () => {
             </Col>
             <Col md={6} className="mb-3">
               <Form.Group id="drop_mobile">
-                <Form.Label>Drop Mobile</Form.Label>
+                <Form.Label> Mobile</Form.Label>
                 <Form.Control
                   type="text"
                   placeholder="Enter mobile number"
@@ -385,8 +406,13 @@ export const GeneralInfoForm = () => {
               </Form.Group>
             </Col>
           </Row>
+
           <Row>
-            <Col md={6} className="mb-3">
+          <h5>Address </h5>
+
+<hr/>
+{/* <br/> */}
+            <Col md={12} className="mb-3">
               <Form.Group id="drop_address1">
                 <Form.Label>Drop Address Line 1</Form.Label>
                 <Form.Control
@@ -399,7 +425,7 @@ export const GeneralInfoForm = () => {
                 <p className="text-danger">{errors.drop_address1?.message}</p>
               </Form.Group>
             </Col>
-            <Col md={6} className="mb-3">
+            <Col md={12} className="mb-3">
               <Form.Group id="drop_address2">
                 <Form.Label>Drop Address Line 2</Form.Label>
                 <Form.Control
@@ -412,49 +438,37 @@ export const GeneralInfoForm = () => {
               </Form.Group>
             </Col>
           </Row>
+         
 
           <Row>
-            <Col md={6} className="mb-3">
+            <Col md={4} className="mb-3">
               <Form.Group id="drop_house">
-                <Form.Label>Drop House</Form.Label>
+                <Form.Label>Apartment Number</Form.Label>
                 <Form.Control
                   type="text"
                   name="drop_house"
-                  placeholder="Enter house number"
+                  placeholder="Enter apartment number for drop location"
                   {...register("drop_house")}
                   onChange={handleDropChange}
                 />
-              </Form.Group>
+              </Form.Group> 
             </Col>
-            <Col md={6} className="mb-3">
+
+
+            <Col md={4} className="mb-3">
               <Form.Group id="drop_landmark">
-                <Form.Label>Drop Landmark</Form.Label>
+                <Form.Label> Landmark</Form.Label>
                 <Form.Control
                   type="text"
-                  placeholder="Enter landmark"
+                  placeholder="Enter landmark for drop location"
                   {...register("drop_landmark")}
                   name="drop_landmark"
                   onChange={handleDropChange}
                 />
               </Form.Group>
             </Col>
-          </Row>
 
-          <Row>
-           
-            <Col md={6} className="mb-3">
-              <Form.Group id="drop_district">
-                <Form.Label>drop district</Form.Label>
-                <Form.Control
-                  type="text"
-                  name="drop_district"
-                  placeholder="Enter drop district"
-                  {...register("drop_district")}
-                  
-                />
-              </Form.Group>
-            </Col>
-            <Col md={6} className="mb-3">
+            <Col md={4} className="mb-3">
               <Form.Group id="drop_zip">
                 <Form.Label>Drop Zip</Form.Label>
                 <Form.Control
@@ -468,35 +482,61 @@ export const GeneralInfoForm = () => {
                 />
               </Form.Group>
             </Col>
-          </Row>
+            
 
+           
+          </Row>
+ <br/>
           <Row>
-            <Col md={6} className="mb-3">
-              <Form.Group id="drop_state">
-                <Form.Label>Drop State</Form.Label>
+           
+            <Col md={4} className="mb-3">
+              <Form.Group id="drop_district">
+                <Form.Label>drop district</Form.Label>
                 <Form.Control
                   type="text"
-                  placeholder="Enter state"
-                  {...register("drop_state")}
-                  readOnly
+                  name="drop_district"
+                  placeholder="Enter drop district"
+                  {...register("drop_district")}
+                  
                 />
               </Form.Group>
             </Col>
-            <Col md={6} className="mb-3">
+            <Col md={4} className="mb-3">
               <Form.Group id="drop_city">
                 <Form.Label>Drop City</Form.Label>
                 <Form.Control
                   type="text"
-                  placeholder="Enter city"
+                  placeholder="Drop city"
                   {...register("drop_city")}
                   readOnly
                 />
               </Form.Group>
             </Col>
+           <Col md={4} className="mb-3">
+              <Form.Group id="drop_state">
+                <Form.Label>Drop State</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="Drop state"
+                  {...register("drop_state")}
+                  readOnly
+                />
+              </Form.Group>
+            </Col>
           </Row>
 
+          <Row>
+           
+           <hr/>
+          </Row>
+<br/>
+<h4>Pin Point</h4>
+<br/>
+<div> <MapLocationFinder  markers={markers} pickupLoc={pickupLoc} dropLoc={dropLoc} setMarkers={setMarkers} onCoordinatesUpdate={handleCoordinatesUpdate}/> </div>
+
           <hr />
-          <h5 className="mb-4">
+
+          {/* <h5 className="mb-4">
             Select exact Pick Up and drop location in map
           </h5>
 
@@ -519,7 +559,7 @@ export const GeneralInfoForm = () => {
               <h2>Select Location</h2>
             </Modal>
           </Row>
-          <hr />
+          <hr /> */}
 
           <h5 className="mb-4">Bidding Configuration</h5>
 
@@ -589,7 +629,7 @@ export const GeneralInfoForm = () => {
                 <Form.Control
                   type="text"
                   name="start_dist"
-                  placeholder="Enter start_dist"
+                  placeholder="Enter starting distance"
                   {...register("start_dist")}
                 />
               </Form.Group>

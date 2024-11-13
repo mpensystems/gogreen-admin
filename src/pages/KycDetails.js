@@ -15,7 +15,7 @@ import {
   OverlayTrigger,
   Tooltip,
 } from "@themesberg/react-bootstrap";
-import { KycCardWidget } from "../components/Widgets";
+import { KycCardWidget, ProfileCardWidget } from "../components/Widgets";
 import { CardWidget, CardWidgetForKyc } from "../components/Card";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 import {
@@ -28,6 +28,7 @@ import toast from "react-hot-toast";
 import BookingCard from "./components/BookingCard";
 import { faImage } from "@fortawesome/free-solid-svg-icons";
 import KycPopUp from "./kycPopUp";
+import ImageComponent from "../components/ImageComponent";
 
 export default () => {
   const [showRejectReason, setShowRejectReason] = useState(false);
@@ -41,7 +42,6 @@ export default () => {
   const [showModal, setShowModal] = useState(false);
   const [modalData, setModalData] = useState({});
   const [title, setTitle] = useState({});
-
 
   const handleImageClick = (kycData, title) => {
     let filteredData = {};
@@ -57,56 +57,94 @@ export default () => {
     } else if (title === "Aadhar Card Details") {
       filteredData = {
         Name: `${kycData.first_name} ${kycData.last_name}`,
-
-        Aadhar_No:kycData.aadhar_no,
-        Mobile:kycData.mobile,
-        Dob:kycData.dob,
-        Gender:kycData.gender,
-        Address :`${kycData?.address_line1} , ${kycData?.address_line2} , ${kycData?.city},${kycData?.zipcode} ,${kycData?.district} , ${kycData?.state} ` 
+        Aadhar_No: kycData.aadhar_no,
+        Mobile: kycData.mobile,
+        Dob: kycData.dob,
+        Gender: kycData.gender,
+        Address: `${kycData?.address_line1}, ${kycData?.address_line2}, ${kycData?.city}, ${kycData?.zipcode}, ${kycData?.district}, ${kycData?.state}`,
       };
-    }else if (title === "Pan Card Details") {
+  
+      // Include images for Aadhar card if required
+      setModalData({
+        ...filteredData,
+        title: "Aadhar Card Details",
+        frontImageUrl: kycData?.photo_id_front,  
+        backImageUrl: kycData?.photo_id_back,    
+      });
+  
+    } else if (title === "Pan Card Details") {
       filteredData = {
         Name: `${kycData.first_name} ${kycData.last_name}`,
-        Pan_no:kycData.pan_no,
-        Mobile:kycData.mobile,
-        Dob:kycData.dob,
-        Address :`${kycData?.address_line1} , ${kycData?.address_line2} , ${kycData?.city},${kycData?.zipcode} ,${kycData?.district} , ${kycData?.state} ` 
-
+        Pan_no: kycData.pan_no,
+        Mobile: kycData.mobile,
+        Dob: kycData.dob,
+        Address: `${kycData?.address_line1}, ${kycData?.address_line2}, ${kycData?.city}, ${kycData?.zipcode}, ${kycData?.district}, ${kycData?.state}`,
       };
-    }  
-    else if (title === "Bank Details") {
+  
+      // Include images for Pan card if required
+      setModalData({
+        ...filteredData,
+        title: "Pan Card Details",
+        frontImageUrl: kycData?.pan_copy,   
+      });
+  
+    } else if (title === "Bank Details") {
       filteredData = {
         Bank_account: kycData.bank_ac,
         Bank_ifsc: kycData.bank_ifsc,
         Bank_ac_name: kycData.bank_ac_name,
       };
-    
+  
+      // Include cancelled cheque image if required
+      setModalData({
+        ...filteredData,
+        title: "Bank Details",
+        frontImageUrl: kycData?.cancelled_cheque,  
+      });
+  
     } else if (title === "License Details") {
       filteredData = {
         Name: `${kycData.first_name} ${kycData.last_name}`,
         Drivers_license: kycData.drivers_license,
         Drivers_license_expiry: kycData.drivers_license_expiry,
       };
-    }
-    else if (title === "RC Details") {
+  
+      // Include front and back images for License details
+      setModalData({
+        ...filteredData,
+        title: "License Details",
+        frontImageUrl: kycData.drivers_license_front, 
+        backImageUrl: kycData.drivers_license_back,    
+      });
+  
+    } else if (title === "RC Details") {
       filteredData = {
         Name: `${kycData.first_name} ${kycData.last_name}`,
-        Mobile:kycData.mobile,
+        Mobile: kycData.mobile,
         Vehicle_type: kycData.vehicle_type,
       };
+  
+      setModalData({
+        ...filteredData,
+        title: "RC Details",
+        frontImageUrl: kycData?.rc_copy_front,   
+        backImageUrl: kycData?.rc_copy_back,     
+      });
     }
   
-    console.log("filteredData before setting : ", filteredData);
-    
-    setModalData(filteredData);
+    // Log filtered data for debugging
+    console.log("filteredData before setting: ", filteredData);
+  
+    // Update modal visibility and title
     setTitle(title);
     setShowModal(true);
   };
   
-console.log(modalData,"modalData");
+
+  console.log(modalData, "modalData");
 
   const handleCloseModal = () => {
-    setShowModal(false); 
+    setShowModal(false);
   };
 
   console.log("token in kyc details for approve api : ", token);
@@ -167,21 +205,24 @@ console.log(modalData,"modalData");
     console.log("kyc rediers : ", kycData);
   }, []);
 
-
   function maskAccountNumber(accountNumber) {
     const str = String(accountNumber);
-    return str.slice(-2).padStart(str.length, '*');
+    return str.slice(-2).padStart(str.length, "*");
   }
 
   function maskVehicleNumber(vehicleNumber) {
     const str = String(vehicleNumber);
-    const visiblePart = str.slice(0, 4); 
-    const maskedPart = '*'.repeat(str.length - 4); 
-    return visiblePart + maskedPart; 
-  }
-  
+    if (str.length <= 4) {
+      return str;
+    }
 
-  const maskedAccountNumber = maskAccountNumber(kycData?.bank_ac); 
+    const visiblePart = str.slice(0, 4);
+    const maskedPart = "*".repeat(str.length - 4);
+
+    return visiblePart + maskedPart;
+  }
+
+  const maskedAccountNumber = maskAccountNumber(kycData?.bank_ac);
   const maskedVehicleNo = maskVehicleNumber(kycData?.vehicle_no);
 
   return (
@@ -250,274 +291,240 @@ console.log(modalData,"modalData");
         </Row>
       )}
 
-    
-
-      <Row>
-        <Col className="mx-3">
-          <Card border="light" className="bg-white shadow-sm mb-4">
-            <Card.Body className="b-1 shadow-sm mb-2">
-              <h5 className="mb-2">Personal Details</h5>
-              <div className="d-flex align-items-center ms-xl-3  p-2 bg-light">
-                <div
-                  className="fw-normal text-dark m-1 p-2"
-                  style={{ flex: "0 0 70%" }}
-                >
-                  <b>Name : </b> {kycData.first_name} {kycData.last_name}
-                  <br />
-                  <b>Gender : </b> {kycData.gender} 
-                </div>
-
-                {/* Div with 30% width for image icon */}
-                <OverlayTrigger
-                  placement="top"
-                  overlay={<Tooltip>View All Details</Tooltip>}
-                >
-                <div
-                  className="d-flex justify-content-center align-items-center "
-                  style={{
-                    flex: "0 0 30%",
-                    cursor: "pointer",
-                  }}
-                >
-                  <FontAwesomeIcon
-                    icon={faImage}
-                    style={{ fontSize: "24px", color: "#61DAFB" }}
-                    onClick={() => handleImageClick(kycData,"Personal Details")}
-                  />
-
-                </div>
-                </OverlayTrigger>
-              </div>
-
-              
-
-            </Card.Body>
-          </Card>
+      <Row className="mb-0" >
+        <Col  xs={12} xl={4}>
+          <KycCardWidget profileData={kycData} rid={rid} />
         </Col>
-       
 
-        <Col className="mx-3">
-          <Card border="light" className="bg-white shadow-sm mb-4">
-            <Card.Body className="b-1 shadow-sm mb-2">
-              <h5 className="mb-2">License Details</h5>
-              <div className="d-flex align-items-center ms-xl-3  p-2 bg-light">
-                <div
-                  className="fw-normal text-dark m-1 p-2"
-                  style={{ flex: "0 0 70%" }}
-                >
-                  {/* <b>Name : </b>  {kycData.pan_no } {" "}{kycData.last_name}
-      <br/> */}
-                  <b>Driver's License : </b> {kycData.drivers_license}
-                  <br />
-                  <b>License Expiry Date : </b> {kycData.drivers_license_expiry}
-                </div>
-
-                {/* Div with 30% width for image icon */}
-                <OverlayTrigger
-                  placement="top"
-                  overlay={<Tooltip>View All Details</Tooltip>}
-                >
-                <div
-                  className="d-flex justify-content-center align-items-center"
-                  style={{
-                    flex: "0 0 30%",
-                    cursor: "pointer",
-                  }}
-                >
-                  <FontAwesomeIcon
-                    icon={faImage}
-                    style={{ fontSize: "24px", color: "#61DAFB" }}
-                    onClick={() => handleImageClick(kycData,"License Details")}
-                  />
-
-                </div>
-              </OverlayTrigger>
-              </div>
-
-              
-            </Card.Body>
-          </Card>{" "}
-        </Col>
-      </Row>
-
-
-      <Row>
-
-      <Col className="mx-3">
-          <Card border="light" className="bg-white shadow-sm mb-4">
-            <Card.Body className="b-1 shadow-sm mb-2">
-              <h5 className="mb-2">Pan Card Details</h5>
-              <div className="d-flex align-items-center ms-xl-3  p-2 bg-light">
-                <div
-                  className="fw-normal text-dark m-1 p-2"
-                  style={{ flex: "0 0 70%" }}
-                >
-                  {/* <b>Name : </b>  {kycData.pan_no } {" "}{kycData.last_name}
-      <br/> */}
-                  <b>Pan Number : </b> {kycData.pan_no}
-                  <br />
-                  <b>Date of Birth : </b> {kycData.dob}
-                </div>
-
-                {/* Div with 30% width for image icon */}
-                <OverlayTrigger
-                  placement="top"
-                  overlay={<Tooltip>View All Details</Tooltip>}
-                >
-                <div
-                  className="d-flex justify-content-center align-items-center"
-                  style={{
-                    flex: "0 0 30%",
-                    cursor: "pointer",
-                  }}
-                >
-                   <FontAwesomeIcon
-                    icon={faImage}
-                    style={{ fontSize: "24px", color: "#61DAFB" }}
-                    onClick={() => handleImageClick(kycData,"Pan Card Details")}
-                  />
-
-                </div>
-                </OverlayTrigger>
-              </div>
-
-            </Card.Body>
-          </Card>{" "}
-        </Col>
-       
-        <Col className="mx-3">
-          <Card border="light" className="bg-white shadow-sm mb-4">
-            <Card.Body className="b-1 shadow-sm mb-2">
-              <h5 className="mb-2">Aadhar Card Details</h5>
-              <div className="d-flex align-items-center ms-xl-3  p-2 bg-light">
-                <div
-                  className="fw-normal text-dark m-1 p-2"
-                  style={{ flex: "0 0 70%" }}
-                >
-                  {/* <b>Name : </b>  {kycData.pan_no } {" "}{kycData.last_name}
-      <br/> */}
-                  <b>Aadhar Number : </b> {kycData.aadhar_no}
-                  <br />
-                  <b>Address : </b> {kycData.city} , {kycData.state}
-                </div>
-
-                {/* Div with 30% width for image icon */}
-                <OverlayTrigger
-                  placement="top"
-                  overlay={<Tooltip>View All Details</Tooltip>}
-                >
-                <div
-                  className="d-flex justify-content-center align-items-center"
-                  style={{
-                    flex: "0 0 30%",
-                    cursor: "pointer",
-                  }}
-                >
-                  <FontAwesomeIcon
-                    icon={faImage}
-                    style={{ fontSize: "24px", color: "#61DAFB" }}
-                    onClick={() => handleImageClick(kycData,"Aadhar Card Details")}
-                  />
-
-                </div>
-                </OverlayTrigger>
-              </div>
-
-              
-            </Card.Body>
-          </Card>{" "}
-        </Col>
-      </Row>
-
-
-      <Row>
-      <Col className="mx-3">
-          <Card border="light" className="bg-white shadow-sm mb-4">
-            <Card.Body className="b-1 shadow-sm mb-2">
-              <h5 className="mb-2">Bank Details</h5>
-              <div className="d-flex align-items-center ms-xl-3  p-2 bg-light">
-                <div
-                  className="fw-normal text-dark m-1 p-2"
-                  style={{ flex: "0 0 70%" }}
-                >
-                  {/* <b>Name : </b>  {kycData.pan_no } {" "}{kycData.last_name}
-      <br/> */}
-                  <b>Bank Account Name : </b> {kycData.bank_ac_name}
-                  <br />
-                  <b>Bank Account Number  : </b> {maskedAccountNumber} 
-                </div>
-
-                {/* Div with 30% width for image icon */}
-                <OverlayTrigger
-                  placement="top"
-                  overlay={<Tooltip>View All Details</Tooltip>}
-                >
-                <div
-                  className="d-flex justify-content-center align-items-center"
-                  style={{
-                    flex: "0 0 30%",
-                    cursor: "pointer",
-                  }}
-                >
-                   <FontAwesomeIcon
-                    icon={faImage}
-                    style={{ fontSize: "24px", color: "#61DAFB" }}
-                    onClick={() => handleImageClick(kycData,"Bank Details")}
-                  />
-
-                </div>
-                </OverlayTrigger>
-              </div>
-
-              
-            </Card.Body>
-          </Card>{" "}
-        </Col>
-        <Col className="mx-3">
-          <Card border="light" className="bg-white shadow-sm mb-4">
+        <Col xs={12} xl={8} >
+          <Card border="light" className="bg-white shadow-sm mb-2 my-1">
             <Card.Body className=" shadow-sm mb-2">
-              <h5 className="mb-2 ">RC Details</h5>
+              <h5 className="">License Details</h5>
               <div className="d-flex align-items-center ms-xl-3 p-2 bg-light">
                 <div
                   className="fw-normal text-dark m-1 p-2"
-                  style={{ flex: "0 0 70%" }}
+                  style={{ flex: "0 0 50%" }}
                 >
-                  <b>Vehicle Type : </b> {kycData.vehicle_type} 
+                  <b>Driver's License:</b> {kycData.drivers_license}
                   <br />
-                  <b>Vehicle Number : </b> *{maskedVehicleNo} 
-                
-                   </div>
+                  <b>License Expiry Date:</b> {kycData.drivers_license_expiry}
+                  <br />
+                  {/* <b>Address : </b> {kycData?.address_line1}, {kycData?.address_line2}, {kycData?.city}, {kycData?.zipcode}, {kycData?.state}, {kycData?.district} */}
+                </div>
 
-                {/* Div with 30% width for image icon */}
                 <OverlayTrigger
                   placement="top"
                   overlay={<Tooltip>View All Details</Tooltip>}
                 >
-                <div
-                  className="d-flex justify-content-center align-items-center"
-                  style={{
-                    flex: "0 0 30%",
-                    cursor: "pointer",
-                  }}
-                >
-                   <FontAwesomeIcon
-                    icon={faImage}
-                    style={{ fontSize: "24px", color: "#61DAFB" }}
-                    onClick={() => handleImageClick(kycData,"RC Details")}
-                  />
+                  <div
+                    className="d-flex justify-content-center align-items-center"
+                    style={{
+                      flex: "0 0 40%",
+                      cursor: "pointer",
+                      width: "100%",
+                      height: "130px", // Set the desired height here
 
-                </div>
+                      marginLeft: "20px",
+                    }}
+                    onClick={() => handleImageClick(kycData, "License Details")}
+                  >
+                    <ImageComponent
+                      token={token}
+                      rid={rid}
+                      fileid={kycData.drivers_license_front}
+                      blur={true}
+                    />
+                  </div>
                 </OverlayTrigger>
               </div>
+            </Card.Body>
+          </Card>
 
-             
+          <Card border="light" className="bg-white shadow-sm mb-2 my-1">
+            <Card.Body className=" shadow-sm mb-2">
+              <h5 className="">RC Details</h5>
+              <div className="d-flex align-items-center ms-xl-3 p-2 bg-light">
+                <div
+                  className="fw-normal text-dark m-1 p-2"
+                  style={{ flex: "0 0 50%" }}
+                >
+                  <b>Vehicle Type : </b> {kycData.vehicle_type}
+                  <br />
+                  <b>Vehicle Number : </b> *{maskedVehicleNo}
+                  <br />
+                  {/* <b>Address : </b> {kycData?.address_line1}, {kycData?.address_line2}, {kycData?.city}, {kycData?.zipcode}, {kycData?.state}, {kycData?.district} */}
+                </div>
+
+                <OverlayTrigger
+                  placement="top"
+                  overlay={<Tooltip>View All Details</Tooltip>}
+                >
+                  <div
+                    className="d-flex justify-content-center align-items-center"
+                    style={{
+                      flex: "0 0 40%",
+                      cursor: "pointer",
+                      width: "100%",
+                      height: "130px", // Set the desired height here
+
+                      marginLeft: "20px",
+                    }}
+                    onClick={() => handleImageClick(kycData, "RC Details")}
+                  >
+                    {/* <img
+              src={kycData.drivers_license_image_url}
+              alt="Driver's License"
+              style={{
+                width: "100%",
+                height: "100%",  
+                filter: "blur(8px)",
+                borderRadius: "8px",
+               
+                objectFit: "cover",  // Ensures image fills space without distortion
+              }}
+            /> */}
+
+                    <ImageComponent
+                      token={token}
+                      rid={rid}
+                      fileid={kycData.rc_copy_front}
+                      blur={true}
+                    />
+                  </div>
+                </OverlayTrigger>
+              </div>
             </Card.Body>
           </Card>
         </Col>
-        
       </Row>
 
+      <br />
+
+      <Row >
+  {/* Pan Card */}
+  <Col xs={12} xl={6}>
+    <Card border="light" className="bg-white shadow-sm mb-4">
+      <Card.Body className="b-1 shadow-sm mb-2">
+        <h5 className="mb-2">Pan Card Details</h5>
+        <div className="d-flex align-items-center ms-xl-3 p-2 bg-light">
+          <div className="fw-normal text-dark m-1 p-2" style={{ flex: "0 0 50%" }}>
+            <b>Pan Number : </b> {kycData.pan_no}
+            <br />
+            <b>Date of Birth : </b> {kycData.dob}
+          </div>
+          <OverlayTrigger placement="top" overlay={<Tooltip>View All Details</Tooltip>}>
+            <div
+              className="d-flex justify-content-center align-items-center"
+              style={{
+                flex: "0 0 40%",
+                cursor: "pointer",
+                width: "100%",
+                height: "130px",
+                marginLeft: "20px",
+                overflow: "hidden", // Prevent overflow
+                borderRadius: "3px" // Optional, for rounded corners
+              }}
+              onClick={() => handleImageClick(kycData, "Pan Card Details")}
+            >
+              <ImageComponent
+                token={token}
+                rid={rid}
+                fileid={kycData?.pan_copy}
+                blur={true}
+                style={{ objectFit: "cover", width: "100%", height: "100%" }} // Ensure the image stays within the container
+              />
+            </div>
+          </OverlayTrigger>
+        </div>
+      </Card.Body>
+    </Card>
+  </Col>
+
+  {/* Aadhar Card */}
+  <Col xs={12} xl={6}>
+    <Card border="light" className="bg-white shadow-sm mb-4">
+      <Card.Body className="b-1 shadow-sm mb-2">
+        <h5 className="mb-2">Aadhar Card Details</h5>
+        <div className="d-flex align-items-center ms-xl-3 p-2 bg-light">
+          <div className="fw-normal text-dark m-1 p-2" style={{ flex: "0 0 50%" }}>
+            <b>Aadhar Number : </b> {kycData.aadhar_no}
+            <br />
+            <b>Address : </b> {kycData.city}, {kycData.state}
+          </div>
+          <OverlayTrigger placement="top" overlay={<Tooltip>View All Details</Tooltip>}>
+            <div
+              className="d-flex justify-content-center align-items-center"
+              style={{
+                flex: "0 0 40%",
+                cursor: "pointer",
+                width: "100%",
+                height: "130px",
+                marginLeft: "20px",
+                overflow: "hidden", // Prevent overflow
+                borderRadius: "3px" // Optional, for rounded corners
+              }}
+              onClick={() => handleImageClick(kycData, "Aadhar Card Details")}
+            >
+              <ImageComponent
+                token={token}
+                rid={rid}
+                fileid={kycData?.photo_id_front}
+                blur={true}
+                style={{ objectFit: "cover", width: "100%", height: "100%" }} // Ensure the image stays within the container
+              />
+            </div>
+          </OverlayTrigger>
+        </div>
+      </Card.Body>
+    </Card>
+  </Col>
+</Row>
+
+<Row>
+  {/* Bank Details */}
+  <Col xs={12} xl={6}>
+    <Card border="light" className="bg-white shadow-sm mb-4">
+      <Card.Body className="b-1 shadow-sm mb-2">
+        <h5 className="mb-2">Bank Details</h5>
+        <div className="d-flex align-items-center ms-xl-3 p-2 bg-light">
+          <div className="fw-normal text-dark m-1 p-2" style={{ flex: "0 0 50%" }}>
+            <b>Bank Account Name : </b> {kycData.bank_ac_name}
+            <br />
+            <b>Bank Account Number : </b> {maskedAccountNumber}
+          </div>
+          <OverlayTrigger placement="top" overlay={<Tooltip>View All Details</Tooltip>}>
+            <div
+              className="d-flex justify-content-center align-items-center"
+              style={{
+                flex: "0 0 40%",
+                cursor: "pointer",
+                width: "100%",
+                height: "130px",
+                marginLeft: "20px",
+                overflow: "hidden", // Prevent overflow
+                // borderRadius: "8px" // Optional, for rounded corners
+              }}
+              onClick={() => handleImageClick(kycData, "Bank Details")}
+            >
+              <ImageComponent
+                token={token}
+                rid={rid}
+                fileid={kycData?.cancelled_cheque}
+                blur={true}
+                style={{ objectFit: "cover", width: "100%", height: "100%" }} 
+              />
+            </div>
+          </OverlayTrigger>
+        </div>
+      </Card.Body>
+    </Card>
+  </Col>
+</Row>
+
+
       <KycPopUp
+        token = {token} 
+        rid = {rid}        
         show={showModal}
         handleClose={handleCloseModal}
         modalData={modalData}
