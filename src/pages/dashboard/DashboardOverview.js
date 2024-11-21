@@ -84,128 +84,92 @@ export default () => {
   
  
   return (
-    <>
-      <div className="d-flex justify-content-end flex-wrap flex-md-nowrap align-items-center py-4">
-      {/* <div className='d-flex justify-content-end mb-2'> */}
-        <Button  onClick={()=>refreshMap()}>
-          Refresh  {" "} <FontAwesomeIcon icon={faSync} />
-        </Button>
-      {/* </div> */}
-      </div>
-
-   
 
 
-
-
+<>
+<div className="d-flex justify-content-end flex-wrap flex-md-nowrap align-items-center py-4">
+  <Button onClick={() => refreshMap()}>
+    Refresh <FontAwesomeIcon icon={faSync} />
+  </Button>
+</div>
 
 <Row>
-<h4>General Sales</h4>
-<Col xs={12} sm={6} xl={3} className="mb-4">
+  <h4>General Sales</h4>
+  <Col xs={12} sm={6} xl={3} className="mb-4">
     <RidersWidget
       category="Today's Trips"
       title={statistics?.today_trips}
-      icon={faTachometerAlt} // Icon for total trips
+      icon={faTachometerAlt}
       iconColor="#FA5252"
       iconSize="2x"
-      // fontSize="1.5rem"
-
     />
   </Col>
-  
   <Col xs={12} sm={6} xl={3} className="mb-4">
     <RidersWidget
       category="Trips in Progress"
       title={statistics?.trips_inprogress}
-      icon={faRoute} // Icon for trips
+      icon={faRoute}
       iconColor="#FFD700"
       iconSize="2x"
-      // // fontSize="1.5rem"
     />
   </Col>
-
   <Col xs={12} sm={6} xl={3} className="mb-4">
     <RidersWidget
       category="Today's Bookings"
       title={statistics?.today_bookings}
-      icon={faShoppingCart} 
+      icon={faShoppingCart}
       iconColor="#FF9800"
       iconSize="2x"
-      // fontSize="1.5rem"
     />
   </Col>
-
   <Col xs={12} sm={6} xl={3} className="mb-4">
     <RidersWidget
       category="Today's Earnings"
-      title={"Rs. " + statistics?.today_earnings}
-      icon={faMoneyBillWave} // Icon for earnings
+      title={`Rs. ${statistics?.today_earnings}`}
+      icon={faMoneyBillWave}
       iconColor="#4CAF50"
       iconSize="2x"
-      // fontSize="1.5rem"
     />
   </Col>
-
- 
 </Row>
 
 <Row>
   <h4>Rider Section</h4>
-
   <Col xs={12} sm={6} xl={4} className="mb-4">
     <RidersWidget
       category="Total Riders"
       title={statistics?.total_riders}
-      icon={faMotorcycle} // Correct for riders
+      icon={faMotorcycle}
       iconColor="green"
-      iconSize="2x" 
-      // fontSize="1.5rem"
+      iconSize="2x"
     />
   </Col>
-
   <Col xs={12} sm={6} xl={4} className="mb-4">
     <RidersWidget
       category="Active Riders"
       title={statistics?.active_riders}
-      icon={faUserCheck} // Updated icon for active riders
+      icon={faUserCheck}
       iconColor="#61DAFB"
       iconSize="2x"
     />
   </Col>
-
   <Col xs={12} sm={6} xl={4} className="mb-4">
     <RidersWidget
       category="Today's Riders Earnings"
-      title={"Rs. " + statistics?.today_rider_earnings}
-      icon={faMoneyCheck} 
+      title={`Rs. ${statistics?.today_rider_earnings}`}
+      icon={faMoneyCheck}
       iconColor="red"
       iconSize="2x"
-      // fontSize="1.5rem"
     />
   </Col>
 </Row>
 
-
-      <Row className="justify-content-md-center">
-        <Col xs={12} className="mb-4 d-none d-sm-block">
-          <Map  pickup={pickup} dropoff={dropoff} refresh={refresh} setRefresh={setRefresh}/>
-        </Col>
-      </Row>
-
-      <Row className="justify-content-md-center">
-        <Col xs={12} className="mb-4 d-none d-sm-block">
-         
-        </Col>
-        <Col xs={12} className="mb-4 d-sm-none">
-        
-        </Col>
-        
-
-        
-      </Row>
-
-    
-    </>
+<Row className="justify-content-md-center">
+  <Col xs={12} className="mb-4">
+    <Map pickup={pickup} dropoff={dropoff} refresh={refresh} setRefresh={setRefresh} />
+  </Col>
+</Row>
+</>
   );
 };
 

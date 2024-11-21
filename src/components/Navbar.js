@@ -1,7 +1,7 @@
 
 import React, { useEffect, useState } from "react";
 // import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBell, faCog, faEnvelopeOpen, faSearch, faSignOutAlt, faUserShield } from "@fortawesome/free-solid-svg-icons";
+import { faBell, faCog, faEnvelopeOpen, faKey, faSignOutAlt, faUserShield } from "@fortawesome/free-solid-svg-icons";
 import { faUserCircle } from "@fortawesome/free-regular-svg-icons";
 import { Row, Col, Nav, Form, Image, Navbar, Dropdown, Container, ListGroup, InputGroup } from '@themesberg/react-bootstrap';
 
@@ -66,6 +66,8 @@ useEffect(() => {
       const response = await getLoggedInUser(token);
 
       const user = response;
+      console.log("user detail : ", user);
+      
       setUser(user);
     } catch (error) {
       console.log("Error while fetching the data", error);
@@ -95,6 +97,11 @@ const manageUser =() =>{
   console.log("inside /UserManagment ");
 
   navigate("/UserManagment");
+}
+const changePassword =() =>{
+  console.log("inside /UserManagment ");
+
+  navigate("/reset-password");
 }
 
   return (
@@ -140,7 +147,9 @@ const manageUser =() =>{
                   {/* <Image src={Profile3} className="user-avatar md-avatar rounded-circle" /> */}
                   <FontAwesomeIcon icon={faUser} className="user-avatar  rounded-circle bg-dark"/>
                   <div className="media-body ms-2 text-dark align-items-center d-none d-lg-block ">
-                    <span className="mb-0 font-small fw-bold">{user?.username}</span>
+                    <span className="mb-0 font-small fw-bold text-center align-items-center">{user?.first_name}</span>
+                    <br/>
+                    <span className="mb-0 font-small fw-bold">{user?.role}</span>
                   </div>
                 </div>
               </Dropdown.Toggle>
@@ -149,15 +158,21 @@ const manageUser =() =>{
   <FontAwesomeIcon icon={faUserCircle} className="me-2" /> Update Profile
 </Dropdown.Item>
 
+<Dropdown.Item className="fw-bold" onClick={changePassword}>
+        <FontAwesomeIcon icon={faKey} className="me-2" /> Change Password
+      </Dropdown.Item>
+
                 {/* <Dropdown.Item className="fw-bold">
                   <FontAwesomeIcon icon={faCog} className="me-2" /> Settings
                 </Dropdown.Item>
                 <Dropdown.Item className="fw-bold">
                   <FontAwesomeIcon icon={faEnvelopeOpen} className="me-2" /> Messages
                 </Dropdown.Item> */}
-                <Dropdown.Item className="fw-bold" onClick={manageUser}>
-                  <FontAwesomeIcon icon={faUserShield} className="me-2" /> User Managment
-                </Dropdown.Item>
+                {user?.role === "superadmin" && (
+      <Dropdown.Item className="fw-bold" onClick={manageUser}>
+        <FontAwesomeIcon icon={faUserShield} className="me-2" /> User Management
+      </Dropdown.Item>
+    )}
 
                 <Dropdown.Divider />
 

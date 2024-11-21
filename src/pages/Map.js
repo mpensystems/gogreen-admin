@@ -181,7 +181,7 @@ const Map = ({refresh,setRefresh}) => {
             onCloseClick={handleInfoWindowClose} // Reset map bounds when closing InfoWindow
           >
             <div style={{ fontSize: "14px" }}> {/* Adjust the font size here */}
-              <h2 style={{ fontSize: "16px", marginBottom: "5px" }}>Marker Info</h2>
+              <h2 style={{ fontSize: "16px", marginBottom: "5px" }}>Rider Location</h2>
               {/* <p>Latitude: {selectedMarker.position.lat}</p>
               <p>Longitude: {selectedMarker.position.lng}</p> */}
               <p>Address: {addresses[parsedMarkers.indexOf(selectedMarker)] || 'Fetching address...'}</p>

@@ -334,7 +334,9 @@ export  function HomePage() {
         // path={RoutePaths.DashboardOverview.path}
         path="/dashboard"
         // element={<PrivateRoute requiredRole="admin" element={<RouteWithSidebar element={<DashboardOverview />} />} />}
-        element={<PrivateRoute requiredRole="superadmin" element={<RouteWithSidebar element={<DashboardOverview />} />} />}
+        element={<PrivateRoute
+          requiredRoles={["superadmin", "admin", "user"]} 
+          element={<RouteWithSidebar element={<DashboardOverview />} />} />}
 
         // for testing
         // element={<PrivateRoute requiredRole="user"  element={<RouteWithSidebar element={<DashboardOverview />} />} />}

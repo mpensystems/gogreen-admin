@@ -24,8 +24,14 @@ import { Link } from "react-router-dom";
 
 import { Routes } from "../../routes";
 import BgImage from "../../assets/img/illustrations/signin.svg";
+import { userRegister } from "../../api/adminApis";
+import { useAuth } from "../../context/AuthContext";
 
 export default () => {
+
+  const {auth} = useAuth();
+  const token = auth?.token;
+
   const [signupDetails, setSignupDetails] = useState({
     username: null,
     password: null,
@@ -40,6 +46,11 @@ export default () => {
 
   const handleSubmit = (e) =>{
     e.preventDefault();
+   console.log("signupDetails : ",signupDetails);
+   const credentials = signupDetails ;
+   
+    const register = userRegister(credentials,token);
+
 
     //apiCall
 

@@ -1,19 +1,22 @@
-// PrivateRoute.js
+
+
+
 import React from 'react';
 import { Navigate } from 'react-router-dom';
-import { useAuth } from '../../context/AuthContext'; // Import the authentication context
+import { useAuth } from '../../context/AuthContext';
 
-const PrivateRoute = ({ element, requiredRole }) => {
+const PrivateRoute = ({ element, requiredRoles }) => {
   const { auth } = useAuth(); 
 
-  console.log(auth,"AUTH");
-  
+  console.log(auth, "AUTH");
 
+  // Redirect to sign-in if the user is not authenticated
   if (!auth?.token) {
     return <Navigate to="/signin" />;
   }
 
-  if (requiredRole && auth.role !== requiredRole) {
+  // Check if the user's role matches any role in the requiredRoles array
+  if (requiredRoles && !requiredRoles.includes(auth.role)) {
     return <Navigate to="/unauthorized" />; 
   }
 

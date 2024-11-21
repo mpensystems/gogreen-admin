@@ -44,3 +44,8 @@ const ImageComponent = ({ token, rid, fileid,blur,round }) => {
 };
 
 export default ImageComponent;
+
+
+
+
+

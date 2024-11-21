@@ -66,7 +66,7 @@ export const userUpdateProfile = async (credentials, token) => {
       {
         headers: {
           "Content-Type": "application/json",
-          Authorization: token,
+          Authorization: `Bearer ${token}`,
         },
       }
     );
@@ -94,18 +94,22 @@ export const userChangePassword = async (credentials, token) => {
       {
         headers: {
           "Content-Type": "application/json",
-          Authorization: token,
+          Authorization: `Bearer ${token}` ,
         },
       }
     );
 
-    console.log("Change password successful, user data:", response.data);
+    console.log("Change password successful, user data:", response);
+    // console.log("Change password successful, user data:",response.json());
 
     return response.data;
   } catch (error) {
+
+    console.log(error);
+    
     if (error.response) {
       throw new Error(
-        `Error: ${error.response.data.message || "Network response was not ok"}`
+        `Error: ${error.response.data}`
       );
     } else if (error.request) {
       throw new Error("Error: No response received from server.");

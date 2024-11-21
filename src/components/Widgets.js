@@ -182,31 +182,29 @@ export const ChoosePhotoWidget = (props) => {
   );
 };
 
-export const RidersWidget = (props) => {
-  const { icon, iconColor, category, title, period, percentage } = props;
-  const percentageIcon = percentage < 0 ? faAngleDown : faAngleUp;
-  const percentageColor = percentage < 0 ? "text-danger" : "text-success";
 
+
+
+
+
+
+
+export const RidersWidget = ({ icon, iconColor, category, title }) => {
   return (
-    <Card border="light" className="shadow-sm">
+    <Card border="light" className="shadow-sm h-100">
       <Card.Body>
-        <Row className="d-block d-xl-flex align-items-center" >
-          <Col xl={4} className="text-xl-center d-flex align-items-center justify-content-xl-center mb-3 mb-xl-0">
-            <div className={`icon icon-shape icon-md icon-${iconColor} rounded me-4 me-sm-0 ` }  >
-              <FontAwesomeIcon icon={icon}   />
-            </div>
-            <div className="d-sm-none">
-              <h5>{category}</h5>
-              <h3 className="mb-1"  >{title}</h3>
+        <Row className="align-items-center text-center text-md-start">
+          <Col xs={4} md={4} className="d-flex justify-content-center align-items-center">
+            <div
+              className="icon rounded-circle d-flex justify-content-center align-items-center"
+              style={{ backgroundColor: iconColor, width: "50px", height: "50px" }}
+            >
+              <FontAwesomeIcon icon={icon} style={{ color: "white", fontSize: "1.5rem" }} />
             </div>
           </Col>
-          <Col xs={2} xl={8} className="px-xl-0"  >
-            <div className="d-xl-flex align-items-center justify-content-xl-center flex-column" >
-              <h5  style={{ color: `${iconColor}` }}> {category} </h5>
-              <h5  className="mb-1 d-xl-flex align-items-center justify-content-xl-center"  >{title}</h5>
-            </div>
-            
-            
+          <Col xs={8} md={8}>
+            <h5 className="mb-1" style={{ color: iconColor }}>{category}</h5>
+            <h4>{title}</h4>
           </Col>
         </Row>
       </Card.Body>
