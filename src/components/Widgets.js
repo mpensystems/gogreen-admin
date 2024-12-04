@@ -11,6 +11,7 @@ import { faRupeeSign } from '@fortawesome/free-solid-svg-icons';
 
 import Profile1 from "../assets/img/team/profile-picture-1.jpg";
 import ProfileCover from "../assets/img/profile-cover.jpg";
+import { Spinner } from "@themesberg/react-bootstrap";
 
 import teamMembers from "../data/teamMembers";
 import { getImage } from "../api/adminApis";
@@ -189,28 +190,86 @@ export const ChoosePhotoWidget = (props) => {
 
 
 
-export const RidersWidget = ({ icon, iconColor, category, title }) => {
+export const RidersWidget = ({ icon, iconColor, category, title ,refreshing }) => {
   return (
     <Card border="light" className="shadow-sm h-100">
       <Card.Body>
         <Row className="align-items-center text-center text-md-start">
-          <Col xs={4} md={4} className="d-flex justify-content-center align-items-center">
+
+          {refreshing ? (<div className="d-flex justify-content-center align-items-center w-100 h-100 position-absolute" style={{ zIndex: 10 }}>
+            <Spinner animation="border" variant="primary" />
+          </div>):(
+<>
+<Col xs={4} md={4} className="d-flex justify-content-center align-items-center">
             <div
               className="icon rounded-circle d-flex justify-content-center align-items-center"
-              style={{ backgroundColor: iconColor, width: "50px", height: "50px" }}
+              style={{ backgroundColor: iconColor, width: "50px", height: "50px" , color:'white' }}
             >
-              <FontAwesomeIcon icon={icon} style={{ color: "white", fontSize: "1.5rem" }} />
+              {/* <FontAwesomeIcon icon={icon} style={{ color: "white", fontSize: "1.5rem" }} /> */}
+
+              {icon}
+
             </div>
           </Col>
           <Col xs={8} md={8}>
             <h5 className="mb-1" style={{ color: iconColor }}>{category}</h5>
             <h4>{title}</h4>
           </Col>
+</>
+          )}
+
+          
         </Row>
       </Card.Body>
     </Card>
   );
 };
+
+
+
+
+
+// export const RidersWidget = ({ icon, iconColor, category, title, refreshing }) => {
+//   return (
+//     <Card border="light" className="shadow-sm h-100">
+//       <Card.Body>
+//         <Row className="align-items-center text-center text-md-start">
+//           {refreshing ? (
+//             <div
+//               className="d-flex justify-content-center align-items-center w-100 h-100 position-absolute"
+//               style={{ zIndex: 10 }}
+//             >
+//               <Spinner animation="border" variant="primary" />
+//             </div>
+//           ) : (
+//             <>
+//               <Col xs={4} md={4} className="d-flex justify-content-center align-items-center">
+//                 <div
+//                   className="icon rounded-circle d-flex justify-content-center align-items-center"
+//                   style={{
+//                     backgroundColor: iconColor,
+//                     width: "60px", // Increased size for better visibility
+//                     height: "60px", // Increased size for better visibility
+//                   }}
+//                 >
+//                   {icon}
+//                 </div>
+//               </Col>
+//               <Col xs={8} md={8}>
+//                 <h5 className="mb-1" style={{ color: iconColor }}>
+//                   {category}
+//                 </h5>
+//                 <h4>{title}</h4>
+//               </Col>
+//             </>
+//           )}
+//         </Row>
+//       </Card.Body>
+//     </Card>
+//   );
+// };
+
+
 
 export const CircleChartWidget = (props) => {
   const { title, data = [] } = props;

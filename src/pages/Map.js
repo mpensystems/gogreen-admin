@@ -199,3 +199,203 @@ export default React.memo(Map);
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// import React, { useState, useEffect, useCallback } from 'react';
+// import { GoogleMap, useJsApiLoader, Marker, InfoWindow } from '@react-google-maps/api';
+// import { MarkerClusterer } from '@react-google-maps/api';
+// import motorbike from "../assets/motorbike.png";
+// import { customMapStyle } from '../Utils/MapStyle';
+// import { getActiveRiders } from '../api/adminApis';
+// import { useAuth } from '../context/AuthContext';
+// import { Button, Spinner } from "@themesberg/react-bootstrap";
+// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+// import { faSync } from '@fortawesome/free-solid-svg-icons';
+
+// const containerStyle = {
+//   width: '100%',
+//   height: '500px'
+// };
+
+// const Map = ({refresh, setRefresh}) => {
+//   const { isLoaded } = useJsApiLoader({
+//     id: 'google-map-script',
+//     googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAP_API
+//   });
+
+//   const [map, setMap] = useState(null);
+//   const [selectedMarker, setSelectedMarker] = useState(null);
+//   const [parsedMarkers, setParsedMarkers] = useState([]);
+//   const [addresses, setAddresses] = useState({});
+//   const [loading, setLoading] = useState(true);  // Added loading state
+//   const { auth } = useAuth();
+//   const token = auth?.token;
+
+//   // Function to fetch markers from the API
+//   const fetchMarkers = async () => {
+//     setLoading(true);  // Set loading state to true when fetching data
+//     try {
+//       setParsedMarkers([]);
+//       setAddresses({});
+
+//       const response = await getActiveRiders(token);
+//       const data = response;
+
+//       const parsed = data?.map(coord => {
+//         const [lat, lng] = coord.split(',').map(Number);
+//         return {
+//           position: { lat, lng }
+//         };
+//       });
+
+//       setParsedMarkers(parsed);
+
+//       parsed.forEach((marker, index) => {
+//         fetchAddress(marker.position, index);
+//       });
+
+//       if (map) {
+//         const indiaBounds = new window.google.maps.LatLngBounds(
+//           new window.google.maps.LatLng(6.5, 68),
+//           new window.google.maps.LatLng(37.5, 97)
+//         );
+//         map.fitBounds(indiaBounds);
+//       }
+
+//     } catch (error) {
+//       console.error('Error fetching marker data:', error);
+//     } finally {
+//       setLoading(false);  // Set loading state to false once the data is fetched
+//     }
+//   };
+
+//   useEffect(() => {
+//     if (refresh) {
+//       fetchMarkers();
+//       setRefresh(false);
+//     }
+//   }, [refresh]);
+
+//   // Fetch address for a given location using Google Geocoding API
+//   const fetchAddress = (location, index) => {
+//     const geocoder = new window.google.maps.Geocoder();
+//     geocoder.geocode({ location }, (results, status) => {
+//       if (status === "OK" && results[0]) {
+//         setAddresses(prevAddresses => ({
+//           ...prevAddresses,
+//           [index]: results[0].formatted_address
+//         }));
+//       } else {
+//         console.error("Geocoder failed due to: " + status);
+//       }
+//     });
+//   };
+
+//   useEffect(() => {
+//     if (isLoaded) {
+//       fetchMarkers();
+//     }
+//   }, [isLoaded, token]);
+
+//   const onLoad = useCallback((map) => {
+//     setMap(map);
+//     if (isLoaded) {
+//       const indiaBounds = new window.google.maps.LatLngBounds(
+//         new window.google.maps.LatLng(6.5, 68),
+//         new window.google.maps.LatLng(37.5, 97)
+//       );
+//       map.fitBounds(indiaBounds);
+//     }
+//   }, [isLoaded]);
+
+//   const onUnmount = useCallback((map) => {
+//     setMap(null);
+//   }, []);
+
+//   const handleMarkerDblClick = (position) => {
+//     if (map) {
+//       map.setCenter(position);
+//       map.setZoom(8);
+//       setSelectedMarker(null);
+//     }
+//   };
+
+//   const createKey = (position) => position.lat + position.lng;
+
+//   const handleInfoWindowClose = () => {
+//     if (map) {
+//       const indiaBounds = new window.google.maps.LatLngBounds(
+//         new window.google.maps.LatLng(6.5, 68),
+//         new window.google.maps.LatLng(37.5, 97)
+//       );
+//       map.fitBounds(indiaBounds);
+//     }
+//     setSelectedMarker(null);
+//   };
+
+//   return isLoaded ? (
+//     <>
+//       {loading ? (
+//         <div className="d-flex justify-content-center align-items-center" style={{ height: '500px' }}>
+//           <Spinner animation="border" variant="primary" />
+//         </div>
+//       ) : (
+//         <GoogleMap
+//           mapContainerStyle={containerStyle}
+//           onLoad={onLoad}
+//           onUnmount={onUnmount}
+//           options={{
+//             styles: customMapStyle
+//           }}
+//         >
+//           <MarkerClusterer>
+//             {(clusterer) => 
+//               parsedMarkers?.map((marker, index) => (
+//                 <Marker
+//                   key={createKey(marker.position)}
+//                   icon={{
+//                     url: motorbike,
+//                     scaledSize: new window.google.maps.Size(50, 50),
+//                   }}
+//                   position={marker.position}
+//                   clusterer={clusterer}
+//                   onDblClick={() => handleMarkerDblClick(marker.position)}
+//                   onClick={() => setSelectedMarker(marker)}
+//                 />
+//               ))
+//             }
+//           </MarkerClusterer>
+
+//           {selectedMarker && (
+//             <InfoWindow
+//               position={selectedMarker.position}
+//               onCloseClick={handleInfoWindowClose}
+//             >
+//               <div style={{ fontSize: "14px" }}>
+//                 <h2 style={{ fontSize: "16px", marginBottom: "5px" }}>Rider Location</h2>
+//                 <p>Address: {addresses[parsedMarkers.indexOf(selectedMarker)] || 'Fetching address...'}</p>
+//               </div>
+//             </InfoWindow>
+//           )}
+//         </GoogleMap>
+//       )}
+//     </>
+//   ) : <></>;
+// };
+
+// export default React.memo(Map);
