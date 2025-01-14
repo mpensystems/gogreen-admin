@@ -1,23 +1,40 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { GoogleMap, useJsApiLoader, Marker, InfoWindow } from '@react-google-maps/api';
-import { MarkerClusterer } from '@react-google-maps/api';
+// Copyright 2025 MP ENSYSTEMS ADVISORY PRIVATE LIMITED.
+
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+
+// http://www.apache.org/licenses/LICENSE-2.0
+
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+
+import React, { useState, useEffect, useCallback } from "react";
+import {
+  GoogleMap,
+  useJsApiLoader,
+  Marker,
+  InfoWindow,
+} from "@react-google-maps/api";
+import { MarkerClusterer } from "@react-google-maps/api";
 import motorbike from "../assets/motorbike.png";
-import { customMapStyle } from '../Utils/MapStyle';
-import { getActiveRiders } from '../api/adminApis';
-import { useAuth } from '../context/AuthContext';
-import { Button } from "@themesberg/react-bootstrap";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSync } from '@fortawesome/free-solid-svg-icons';
+import { customMapStyle } from "../Utils/MapStyle";
+import { getActiveRiders } from "../api/adminApis";
+import { useAuth } from "../context/AuthContext";
 
 const containerStyle = {
-  width: '100%',
-  height: '500px'
+  width: "100%",
+  height: "500px",
 };
 
-const Map = ({refresh,setRefresh}) => {
+const Map = ({ refresh, setRefresh }) => {
   const { isLoaded } = useJsApiLoader({
-    id: 'google-map-script',
-    googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAP_API
+    id: "google-map-script",
+    googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAP_API,
   });
 
   const [map, setMap] = useState(null);
@@ -31,7 +48,7 @@ const Map = ({refresh,setRefresh}) => {
   // Function to fetch markers from the API
   const fetchMarkers = async () => {
     console.log("calling fetch for map ");
-    
+
     try {
       // Reset parsed markers and addresses before fetching new data
       setParsedMarkers([]);
@@ -42,10 +59,10 @@ const Map = ({refresh,setRefresh}) => {
       console.log("Active riders in map: ", data);
 
       // Parsing lat, lng from the response
-      const parsed = data?.map(coord => {
-        const [lat, lng] = coord.split(',').map(Number); // Convert to lat, lng format
+      const parsed = data?.map((coord) => {
+        const [lat, lng] = coord.split(",").map(Number); // Convert to lat, lng format
         return {
-          position: { lat, lng }
+          position: { lat, lng },
         };
       });
       console.log("Parsed data: ", parsed);
@@ -59,25 +76,24 @@ const Map = ({refresh,setRefresh}) => {
       // Reset the zoom and center of the map back to cover India
       if (map) {
         const indiaBounds = new window.google.maps.LatLngBounds(
-          new window.google.maps.LatLng(6.5, 68),  // South-west corner (latitude, longitude)
-          new window.google.maps.LatLng(37.5, 97)  // North-east corner (latitude, longitude)
+          new window.google.maps.LatLng(6.5, 68), // South-west corner (latitude, longitude)
+          new window.google.maps.LatLng(37.5, 97) // North-east corner (latitude, longitude)
         );
         map.fitBounds(indiaBounds); // Automatically fit the bounds to India
       }
-
     } catch (error) {
-      console.error('Error fetching marker data:', error);
+      console.error("Error fetching marker data:", error);
     }
   };
 
-  useEffect(()=>{
+  useEffect(() => {
     console.log("refresh in useeffect after calling ", refresh);
-    
-    if(refresh){
+
+    if (refresh) {
       fetchMarkers();
       setRefresh(false);
     }
-  },[refresh])
+  }, [refresh]);
 
   console.log("refresh  after calling from useeffect", refresh);
 
@@ -86,9 +102,9 @@ const Map = ({refresh,setRefresh}) => {
     const geocoder = new window.google.maps.Geocoder();
     geocoder.geocode({ location }, (results, status) => {
       if (status === "OK" && results[0]) {
-        setAddresses(prevAddresses => ({
+        setAddresses((prevAddresses) => ({
           ...prevAddresses,
-          [index]: results[0].formatted_address
+          [index]: results[0].formatted_address,
         }));
       } else {
         console.error("Geocoder failed due to: " + status);
@@ -103,16 +119,19 @@ const Map = ({refresh,setRefresh}) => {
     }
   }, [isLoaded, token]);
 
-  const onLoad = useCallback((map) => {
-    setMap(map);
-    if (isLoaded) {
-      const indiaBounds = new window.google.maps.LatLngBounds(
-        new window.google.maps.LatLng(6.5, 68),  // South-west corner (latitude, longitude)
-        new window.google.maps.LatLng(37.5, 97)  // North-east corner (latitude, longitude)
-      );
-      map.fitBounds(indiaBounds); // Ensure map is centered on India initially
-    }
-  }, [isLoaded]);
+  const onLoad = useCallback(
+    (map) => {
+      setMap(map);
+      if (isLoaded) {
+        const indiaBounds = new window.google.maps.LatLngBounds(
+          new window.google.maps.LatLng(6.5, 68), // South-west corner (latitude, longitude)
+          new window.google.maps.LatLng(37.5, 97) // North-east corner (latitude, longitude)
+        );
+        map.fitBounds(indiaBounds); // Ensure map is centered on India initially
+      }
+    },
+    [isLoaded]
+  );
 
   const onUnmount = useCallback((map) => {
     setMap(null);
@@ -139,35 +158,31 @@ const Map = ({refresh,setRefresh}) => {
       );
       map.fitBounds(indiaBounds); // Reset to India bounds when closing InfoWindow
     }
-    setSelectedMarker(null);  // Close the info window
+    setSelectedMarker(null); // Close the info window
   };
 
   return isLoaded ? (
     <>
-      <div className='d-flex justify-content-end mb-2'>
-        {/* <Button onClick={fetchMarkers}>
-          Refresh Map {" "} <FontAwesomeIcon icon={faSync} />
-        </Button> */}
-      </div>
+      <div className="d-flex justify-content-end mb-2"></div>
       <GoogleMap
         mapContainerStyle={containerStyle}
         onLoad={onLoad}
         onUnmount={onUnmount}
         options={{
-          styles: customMapStyle
+          styles: customMapStyle,
         }}
       >
         <MarkerClusterer>
-          {(clusterer) => 
+          {(clusterer) =>
             parsedMarkers?.map((marker, index) => (
               <Marker
-                key={createKey(marker.position)}  // Unique key for each marker
+                key={createKey(marker.position)} // Unique key for each marker
                 icon={{
                   url: motorbike,
                   scaledSize: new window.google.maps.Size(50, 50),
                 }}
                 position={marker.position}
-                clusterer={clusterer}  // Attach markers to the clusterer
+                clusterer={clusterer} // Attach markers to the clusterer
                 onDblClick={() => handleMarkerDblClick(marker.position)} // Center map on double click
                 onClick={() => setSelectedMarker(marker)} // Show InfoWindow on click
               />
@@ -178,224 +193,26 @@ const Map = ({refresh,setRefresh}) => {
         {selectedMarker && (
           <InfoWindow
             position={selectedMarker.position}
-            onCloseClick={handleInfoWindowClose} // Reset map bounds when closing InfoWindow
+            onCloseClick={handleInfoWindowClose}
           >
-            <div style={{ fontSize: "14px" }}> {/* Adjust the font size here */}
-              <h2 style={{ fontSize: "16px", marginBottom: "5px" }}>Rider Location</h2>
-              {/* <p>Latitude: {selectedMarker.position.lat}</p>
-              <p>Longitude: {selectedMarker.position.lng}</p> */}
-              <p>Address: {addresses[parsedMarkers.indexOf(selectedMarker)] || 'Fetching address...'}</p>
+            <div style={{ fontSize: "14px" }}>
+              <h2 style={{ fontSize: "16px", marginBottom: "5px" }}>
+                Rider Location
+              </h2>
+
+              <p>
+                Address:{" "}
+                {addresses[parsedMarkers.indexOf(selectedMarker)] ||
+                  "Fetching address..."}
+              </p>
             </div>
           </InfoWindow>
         )}
       </GoogleMap>
     </>
-  ) : <></>;
+  ) : (
+    <></>
+  );
 };
 
 export default React.memo(Map);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// import React, { useState, useEffect, useCallback } from 'react';
-// import { GoogleMap, useJsApiLoader, Marker, InfoWindow } from '@react-google-maps/api';
-// import { MarkerClusterer } from '@react-google-maps/api';
-// import motorbike from "../assets/motorbike.png";
-// import { customMapStyle } from '../Utils/MapStyle';
-// import { getActiveRiders } from '../api/adminApis';
-// import { useAuth } from '../context/AuthContext';
-// import { Button, Spinner } from "@themesberg/react-bootstrap";
-// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-// import { faSync } from '@fortawesome/free-solid-svg-icons';
-
-// const containerStyle = {
-//   width: '100%',
-//   height: '500px'
-// };
-
-// const Map = ({refresh, setRefresh}) => {
-//   const { isLoaded } = useJsApiLoader({
-//     id: 'google-map-script',
-//     googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAP_API
-//   });
-
-//   const [map, setMap] = useState(null);
-//   const [selectedMarker, setSelectedMarker] = useState(null);
-//   const [parsedMarkers, setParsedMarkers] = useState([]);
-//   const [addresses, setAddresses] = useState({});
-//   const [loading, setLoading] = useState(true);  // Added loading state
-//   const { auth } = useAuth();
-//   const token = auth?.token;
-
-//   // Function to fetch markers from the API
-//   const fetchMarkers = async () => {
-//     setLoading(true);  // Set loading state to true when fetching data
-//     try {
-//       setParsedMarkers([]);
-//       setAddresses({});
-
-//       const response = await getActiveRiders(token);
-//       const data = response;
-
-//       const parsed = data?.map(coord => {
-//         const [lat, lng] = coord.split(',').map(Number);
-//         return {
-//           position: { lat, lng }
-//         };
-//       });
-
-//       setParsedMarkers(parsed);
-
-//       parsed.forEach((marker, index) => {
-//         fetchAddress(marker.position, index);
-//       });
-
-//       if (map) {
-//         const indiaBounds = new window.google.maps.LatLngBounds(
-//           new window.google.maps.LatLng(6.5, 68),
-//           new window.google.maps.LatLng(37.5, 97)
-//         );
-//         map.fitBounds(indiaBounds);
-//       }
-
-//     } catch (error) {
-//       console.error('Error fetching marker data:', error);
-//     } finally {
-//       setLoading(false);  // Set loading state to false once the data is fetched
-//     }
-//   };
-
-//   useEffect(() => {
-//     if (refresh) {
-//       fetchMarkers();
-//       setRefresh(false);
-//     }
-//   }, [refresh]);
-
-//   // Fetch address for a given location using Google Geocoding API
-//   const fetchAddress = (location, index) => {
-//     const geocoder = new window.google.maps.Geocoder();
-//     geocoder.geocode({ location }, (results, status) => {
-//       if (status === "OK" && results[0]) {
-//         setAddresses(prevAddresses => ({
-//           ...prevAddresses,
-//           [index]: results[0].formatted_address
-//         }));
-//       } else {
-//         console.error("Geocoder failed due to: " + status);
-//       }
-//     });
-//   };
-
-//   useEffect(() => {
-//     if (isLoaded) {
-//       fetchMarkers();
-//     }
-//   }, [isLoaded, token]);
-
-//   const onLoad = useCallback((map) => {
-//     setMap(map);
-//     if (isLoaded) {
-//       const indiaBounds = new window.google.maps.LatLngBounds(
-//         new window.google.maps.LatLng(6.5, 68),
-//         new window.google.maps.LatLng(37.5, 97)
-//       );
-//       map.fitBounds(indiaBounds);
-//     }
-//   }, [isLoaded]);
-
-//   const onUnmount = useCallback((map) => {
-//     setMap(null);
-//   }, []);
-
-//   const handleMarkerDblClick = (position) => {
-//     if (map) {
-//       map.setCenter(position);
-//       map.setZoom(8);
-//       setSelectedMarker(null);
-//     }
-//   };
-
-//   const createKey = (position) => position.lat + position.lng;
-
-//   const handleInfoWindowClose = () => {
-//     if (map) {
-//       const indiaBounds = new window.google.maps.LatLngBounds(
-//         new window.google.maps.LatLng(6.5, 68),
-//         new window.google.maps.LatLng(37.5, 97)
-//       );
-//       map.fitBounds(indiaBounds);
-//     }
-//     setSelectedMarker(null);
-//   };
-
-//   return isLoaded ? (
-//     <>
-//       {loading ? (
-//         <div className="d-flex justify-content-center align-items-center" style={{ height: '500px' }}>
-//           <Spinner animation="border" variant="primary" />
-//         </div>
-//       ) : (
-//         <GoogleMap
-//           mapContainerStyle={containerStyle}
-//           onLoad={onLoad}
-//           onUnmount={onUnmount}
-//           options={{
-//             styles: customMapStyle
-//           }}
-//         >
-//           <MarkerClusterer>
-//             {(clusterer) => 
-//               parsedMarkers?.map((marker, index) => (
-//                 <Marker
-//                   key={createKey(marker.position)}
-//                   icon={{
-//                     url: motorbike,
-//                     scaledSize: new window.google.maps.Size(50, 50),
-//                   }}
-//                   position={marker.position}
-//                   clusterer={clusterer}
-//                   onDblClick={() => handleMarkerDblClick(marker.position)}
-//                   onClick={() => setSelectedMarker(marker)}
-//                 />
-//               ))
-//             }
-//           </MarkerClusterer>
-
-//           {selectedMarker && (
-//             <InfoWindow
-//               position={selectedMarker.position}
-//               onCloseClick={handleInfoWindowClose}
-//             >
-//               <div style={{ fontSize: "14px" }}>
-//                 <h2 style={{ fontSize: "16px", marginBottom: "5px" }}>Rider Location</h2>
-//                 <p>Address: {addresses[parsedMarkers.indexOf(selectedMarker)] || 'Fetching address...'}</p>
-//               </div>
-//             </InfoWindow>
-//           )}
-//         </GoogleMap>
-//       )}
-//     </>
-//   ) : <></>;
-// };
-
-// export default React.memo(Map);

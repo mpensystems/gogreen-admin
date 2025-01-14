@@ -1,191 +1,16 @@
-// import React, { useEffect, useState } from "react";
-// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-// import {
-//   faMotorcycle,
-//   faMoneyCheck,
-//   faUserCheck,
-//   faMoneyBillWave,
-//   faShoppingCart,
-//   faRoute,
-//   faTachometerAlt,
-//   faCloudUploadAlt,
-//   faPlus,
-//   faRocket,
-//   faTasks,
-//   faUserShield,
-// } from "@fortawesome/free-solid-svg-icons";
-// import {
-//   Col,
-//   Row,
-//   Button,
-//   Dropdown,
-//   ButtonGroup,
-// } from "@themesberg/react-bootstrap";
-// import { faSync } from '@fortawesome/free-solid-svg-icons';
+// Copyright 2025 MP ENSYSTEMS ADVISORY PRIVATE LIMITED.
 
-// import {
-//   CounterWidget,
-//   CircleChartWidget,
-//   BarChartWidget,
-//   TeamMembersWidget,
-//   ProgressTrackWidget,
-//   RankingWidget,
-//   SalesValueWidget,
-//   SalesValueWidgetPhone,
-//   AcquisitionWidget,
-//   RidersWidget,
-// } from "../../components/Widgets";
-// import { PageVisitsTable } from "../../components/Tables";
-// import { trafficShares, totalOrders } from "../../data/charts";
-// import MapDirection from "../MapDirection";
-// import Map from "../Map";
-// import { useAuth } from "../../context/AuthContext";
-// import { getHomeStatistics } from "../../api/adminApis";
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
 
-// export default () => {
+// http://www.apache.org/licenses/LICENSE-2.0
 
-//   const [statistics, setStatistics] = useState();
-//   const [ refresh,setRefresh] = useState(false);
-
-//   const pickup = { lat: 28.6139, lng: 77.209 };
-//   const dropoff = { lat: 28.615, lng: 77.212 };
-
-//   const {auth}  = useAuth();
-//   const token = auth.token ;
-
-
-//   useEffect (()=>{
-    
-//           const fetchStatistics = async () => {
-//             try {
-//               // console.log("inside try ");
-//               const response = await getHomeStatistics(token);
-//               console.log("Home Statistics in dashboard overview: ", response);
-//               // setRiderList(riders);
-//               setStatistics(response);
-//             } catch (error) {
-//               console.log("Error while fetching the data", error);
-//             }
-//           };
-      
-//           fetchStatistics();
-       
-//   },[auth,refresh])
-
-//   console.log("response from useSatet of state ",statistics);
-
-  
-//   const refreshMap = ()=>{
-//     console.log("refresh the map also");
-//     setRefresh(true);
-    
-//   }
-//   console.log('refresh here : ', refresh);
-  
- 
-//   return (
-
-
-// <>
-// <div className="d-flex justify-content-end flex-wrap flex-md-nowrap align-items-center py-4">
-//   <Button onClick={() => refreshMap()}>
-//   Resync <FontAwesomeIcon icon={faSync} className="mx-2"/>
-//   </Button>
-// </div>
-
-// <Row>
-//   <h4>Operational Highlights</h4>
-//   <Col xs={12} sm={6} xl={3} className="mb-4">
-//     <RidersWidget
-//       category="Today's Trips"
-//       title={statistics?.today_trips}
-//       icon={faTachometerAlt}
-//       iconColor="#FA5252"
-//       iconSize="2x"
-//     />
-//   </Col>
-//   <Col xs={12} sm={6} xl={3} className="mb-4">
-//     <RidersWidget
-//       category="Trips in Progress"
-//       title={statistics?.trips_inprogress}
-//       icon={faRoute}
-//       iconColor="#FFD700"
-//       iconSize="2x"
-//     />
-//   </Col>
-//   <Col xs={12} sm={6} xl={3} className="mb-4">
-//     <RidersWidget
-//       category="Today's Bookings"
-//       title={statistics?.today_bookings}
-//       icon={faShoppingCart}
-//       iconColor="#FF9800"
-//       iconSize="2x"
-//     />
-//   </Col>
-//   <Col xs={12} sm={6} xl={3} className="mb-4">
-//     <RidersWidget
-//       category="Earnings from Today's Trips"
-//       title={`Rs. ${statistics?.today_earnings}`}
-//       icon={faMoneyBillWave}
-//       iconColor="#4CAF50"
-//       iconSize="2x"
-//     />
-//   </Col>
-// </Row>
-
-// <Row>
-//   <h4>Rider Engagement & Earnings</h4>
-//   <Col xs={12} sm={6} xl={4} className="mb-4">
-//     <RidersWidget
-//       category="Total Riders"
-//       title={statistics?.total_riders}
-//       icon={faMotorcycle}
-//       iconColor="green"
-//       iconSize="2x"
-//     />
-//   </Col>
-//   <Col xs={12} sm={6} xl={4} className="mb-4">
-//     <RidersWidget
-//       category="Active Riders"
-//       title={statistics?.active_riders}
-//       icon={faUserCheck}
-//       iconColor="#61DAFB"
-//       iconSize="2x"
-//     />
-//   </Col>
-//   <Col xs={12} sm={6} xl={4} className="mb-4">
-//     <RidersWidget
-//       category="Today's Riders Earnings"
-//       title={`Rs. ${statistics?.today_rider_earnings}`}
-//       icon={faMoneyCheck}
-//       iconColor="red"
-//       iconSize="2x"
-//     />
-//   </Col>
-// </Row>
-
-// <Row className="justify-content-md-center">
-//   <Col xs={12} className="mb-4">
-//     <Map pickup={pickup} dropoff={dropoff} refresh={refresh} setRefresh={setRefresh} />
-//   </Col>
-// </Row>
-// </>
-//   );
-// };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 
 
 import React, { useEffect, useState } from "react";
@@ -328,7 +153,7 @@ export default () => {
               <Map
                 pickup={pickup}
                 dropoff={dropoff}
-                refreshing={refreshing} // Pass the refreshing state for Map to show loader
+                refreshing={refreshing} 
               />
             </Col>
           </Row>

@@ -1,3 +1,18 @@
+// Copyright 2025 MP ENSYSTEMS ADVISORY PRIVATE LIMITED.
+
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+
+// http://www.apache.org/licenses/LICENSE-2.0
+
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+
 import React, { useEffect, useState, useRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -7,7 +22,7 @@ import {
   faDownload,
   faUpload,
   faSearch,
-  faHandPointer
+  faHandPointer,
 } from "@fortawesome/free-solid-svg-icons";
 
 import {
@@ -28,27 +43,25 @@ import toast from "react-hot-toast";
 
 export default () => {
   const [transactionsData, setTransactionsData] = useState([]);
-  const [selectedFile, setSelectedFile] = useState(null); // Define selectedFile state
-  const [selectedFileName, setSelectedFileName] = useState(''); // Store file name
-  const fileInputRef = useRef(null); // Create ref for the file input
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [selectedFileName, setSelectedFileName] = useState("");
+  const fileInputRef = useRef(null);
 
-  // Load sample transactions data on component mount
   useEffect(() => {
     console.log("Sample data: ", transactions);
     setTransactionsData(transactions);
   }, []);
 
-  // Log the transactions data when updated
   useEffect(() => {
     if (transactionsData.length > 0) {
-      const exportData = transactionsData.map(item => ({
+      const exportData = transactionsData.map((item) => ({
         trip_id: item.trip_id,
         status: item.status,
         pickup_loc: item.pickup_loc,
         drop_loc: item.drop_loc,
         rider_name: item.rider_name,
       }));
-      console.log("Data being exported to Excel:", exportData); 
+      console.log("Data being exported to Excel:", exportData);
     }
   }, [transactionsData]);
 
@@ -56,7 +69,7 @@ export default () => {
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     setSelectedFile(file);
-    setSelectedFileName(file ? file.name : ''); // Set the file name when a file is selected
+    setSelectedFileName(file ? file.name : ""); // Set the file name when a file is selected
   };
 
   // Handle file upload button click
@@ -66,7 +79,7 @@ export default () => {
 
       // Clear the file input and reset the state after upload
       setSelectedFile(null);
-      setSelectedFileName('');
+      setSelectedFileName("");
       fileInputRef.current.value = null; // Reset the input element to clear the previous file
     } else {
       toast.error("Please select a file first!");
@@ -95,7 +108,8 @@ export default () => {
               size="sm"
               onClick={() => fileInputRef.current.click()} // Trigger hidden file input click
             >
-              <FontAwesomeIcon icon={faHandPointer} className="me-1" /> Select File
+              <FontAwesomeIcon icon={faHandPointer} className="me-1" /> Select
+              File
             </Button>
 
             <Button
@@ -106,13 +120,12 @@ export default () => {
               <FontAwesomeIcon icon={faUpload} className="me-1" /> Upload File
             </Button>
 
-            {/* Hidden file input */}
             <input
               type="file"
               ref={fileInputRef} // Link this input to the button click
-              style={{ display: 'none' }} // Hide it
+              style={{ display: "none" }}
               accept=".xlsx, .xls"
-              onChange={handleFileChange} // Handle file selection
+              onChange={handleFileChange}
             />
           </ButtonGroup>
         </div>
@@ -120,8 +133,16 @@ export default () => {
 
       {/* Show selected file name directly below the three buttons */}
       {selectedFileName && (
-        <div style={{ marginRight: '20px', textAlign: 'center',display:"flex" ,justifyContent:"flex-end"}}>
-          <strong style={{color:"#0288D0"}}>Selected File : </strong> {selectedFileName}
+        <div
+          style={{
+            marginRight: "20px",
+            textAlign: "center",
+            display: "flex",
+            justifyContent: "flex-end",
+          }}
+        >
+          <strong style={{ color: "#0288D0" }}>Selected File : </strong>{" "}
+          {selectedFileName}
         </div>
       )}
 

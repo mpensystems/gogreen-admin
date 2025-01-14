@@ -1,3 +1,19 @@
+// Copyright 2025 MP ENSYSTEMS ADVISORY PRIVATE LIMITED.
+
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+
+// http://www.apache.org/licenses/LICENSE-2.0
+
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+
+
 import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -10,7 +26,6 @@ import {
   faExternalLinkAlt,
   faEye,
   faTrashAlt,
-  // faIndianRupeeSign
 } from "@fortawesome/free-solid-svg-icons";
 import { faRupeeSign } from '@fortawesome/free-solid-svg-icons';
 
@@ -344,8 +359,9 @@ export const TransactionsTable = () => {
 
     return (
       <tr>
+       
         <td>
-          <Card.Link as={Link} to={Routes.Invoice.path} className="fw-normal">
+          <Card.Link  className="fw-normal">
             {rider_id}
           </Card.Link>
         </td>

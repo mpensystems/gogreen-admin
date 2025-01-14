@@ -1,17 +1,37 @@
-import React, { useState } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faAngleLeft } from "@fortawesome/free-solid-svg-icons";
-import { Col, Row, Form, Card, Button, Container, InputGroup } from '@themesberg/react-bootstrap';
-import { Link } from 'react-router-dom';
-import { Routes } from "../../routes";
-import { useAuth } from "../../context/AuthContext"; // Import your AuthContext
-import { userChangePassword } from "../../api/adminApis"; // Import your API function
-import toast from "react-hot-toast"; // Import toast for notifications
+// Copyright 2025 MP ENSYSTEMS ADVISORY PRIVATE LIMITED.
 
-const ForgotPassword =  () => {
-  const { auth } = useAuth(); 
-  const [oldPassword, setOldPassword] = useState('');
-  const [newPassword, setNewPassword] = useState('');
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+
+// http://www.apache.org/licenses/LICENSE-2.0
+
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+
+import React, { useState } from "react";
+import {
+  Col,
+  Row,
+  Form,
+  Button,
+  Container,
+  InputGroup,
+} from "@themesberg/react-bootstrap";
+import { Link } from "react-router-dom";
+import { Routes } from "../../routes";
+import { useAuth } from "../../context/AuthContext";
+import { userChangePassword } from "../../api/adminApis";
+import toast from "react-hot-toast";
+
+const ForgotPassword = () => {
+  const { auth } = useAuth();
+  const [oldPassword, setOldPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -19,10 +39,9 @@ const ForgotPassword =  () => {
     try {
       const response = await userChangePassword(
         { oldPassword, newPassword },
-        auth.token 
+        auth.token
       );
-      console.log(response,"RESPONSE_USERCHANGEPASSWORD");
-      
+      console.log(response, "RESPONSE_USERCHANGEPASSWORD");
 
       toast.success("Password changed successfully!");
     } catch (error) {
@@ -36,15 +55,13 @@ const ForgotPassword =  () => {
       <section className="vh-lg-100 mt-4 mt-lg-0 bg-soft d-flex align-items-center">
         <Container>
           <Row className="justify-content-center">
-            <p className="text-center">
-              {/* <Card.Link as={Link} to={Routes.Signin.path} className="text-gray-700">
-                <FontAwesomeIcon icon={faAngleLeft} className="me-2" /> Back to sign in
-              </Card.Link> */}
-            </p>
-            <Col xs={12} className="d-flex align-items-center justify-content-center">
+            <p className="text-center"></p>
+            <Col
+              xs={12}
+              className="d-flex align-items-center justify-content-center"
+            >
               <div className="signin-inner my-3 my-lg-0 bg-white shadow-soft border rounded border-light p-4 p-lg-5 w-100 fmxw-500">
                 <h3>Change Password</h3>
-                {/* <p className="mb-4">Create New Password</p> */}
                 <Form onSubmit={handleSubmit}>
                   <div className="mb-4">
                     <Form.Label htmlFor="oldpassword">Old Password</Form.Label>
@@ -55,7 +72,7 @@ const ForgotPassword =  () => {
                         type="password"
                         placeholder="Old Password"
                         value={oldPassword}
-                        onChange={(e) => setOldPassword(e.target.value)} // Update state on change
+                        onChange={(e) => setOldPassword(e.target.value)}
                       />
                     </InputGroup>
                   </div>
@@ -67,7 +84,7 @@ const ForgotPassword =  () => {
                         type="password"
                         placeholder="New Password"
                         value={newPassword}
-                        onChange={(e) => setNewPassword(e.target.value)} // Update state on change
+                        onChange={(e) => setNewPassword(e.target.value)}
                       />
                     </InputGroup>
                   </div>
@@ -84,5 +101,4 @@ const ForgotPassword =  () => {
   );
 };
 
-
-export default ForgotPassword
+export default ForgotPassword;

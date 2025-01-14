@@ -1,3 +1,18 @@
+// Copyright 2025 MP ENSYSTEMS ADVISORY PRIVATE LIMITED.
+
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+
+// http://www.apache.org/licenses/LICENSE-2.0
+
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+
 import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -85,80 +100,6 @@ export default () => {
   
 
   return (
-//     <main>
-//   <section className="d-flex align-items-center  mt-lg-6 ">
-//     <Container>
-//       <Row className="justify-content-center form-bg-image">
-//         <Col xs={12} className="d-flex align-items-center justify-content-center">
-//           <div className="bg-white shadow-soft border rounded border-light p-4 p-lg-5 w-100 fmxw-500">
-//             {/* Logo and Heading */}
-//             <div className="text-center text-md-center mb-4 mt-md-0">
-//               <img src={logo} alt="GoGreen Logo" className="mb-3" style={{ width: '100px', height: 'auto' }} />
-//               <h3 className="mb-1">Admin Portal</h3>
-//               <p className="text-muted" style={{ fontSize: '1.3rem' }}>Login</p>
-//             </div>
-
-//             {/* Login Form */}
-//             <Form className="mt-4">
-//               <Form.Group id="username" className="mb-4">
-//                 <Form.Label>Username</Form.Label>
-//                 <InputGroup>
-//                   <InputGroup.Text>
-//                     <FontAwesomeIcon icon={faEnvelope} />
-//                   </InputGroup.Text>
-//                   <Form.Control
-//                     name="username"
-//                     value={loginDetails.username}
-//                     onChange={handleValueChange}
-//                     autoFocus
-//                     required
-//                     type="text"
-//                     placeholder="Username"
-//                   />
-//                 </InputGroup>
-//               </Form.Group>
-//               <Form.Group id="password" className="mb-4">
-//                 <Form.Label>Password</Form.Label>
-//                 <InputGroup>
-//                   <InputGroup.Text>
-//                     <FontAwesomeIcon icon={faUnlockAlt} />
-//                   </InputGroup.Text>
-//                   <Form.Control
-//                     name="password"
-//                     value={loginDetails.password}
-//                     onChange={handleValueChange}
-//                     required
-//                     type="password"
-//                     placeholder="Password"
-//                   />
-//                 </InputGroup>
-//               </Form.Group>
-//               <Button onClick={handleSubmit} variant="primary" type="submit" className="w-100">
-//                 Sign in
-//               </Button>
-//             </Form>
-
-//             {/* Signup Link */}
-//             <div className="d-flex justify-content-center align-items-center mt-4">
-//               <span className="fw-normal">
-//                 Not registered? 
-//                 <Card.Link as={Link} to={Routes.Signup.path} className="fw-bold">
-//                   {` Create account `}
-//                 </Card.Link>
-//               </span>
-//             </div>
-//           </div>
-//         </Col>
-//       </Row>
-//     </Container>
-//   </section>
-// </main>
-
-
-
-
-
-
 
 
 <main style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>

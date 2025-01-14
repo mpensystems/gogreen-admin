@@ -1,33 +1,31 @@
+// Copyright 2025 MP ENSYSTEMS ADVISORY PRIVATE LIMITED.
+
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+
+// http://www.apache.org/licenses/LICENSE-2.0
+
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faBoxOpen,
-  faCartArrowDown,
-  faChartPie,
-  faChevronDown,
-  faClipboard,
-  faCommentDots,
-  faFileAlt,
-  faPlus,
-  faRocket,
-  faStore,
-  faArrowLeft,
-} from "@fortawesome/free-solid-svg-icons";
+import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { Col, Row, Card, Button, Dropdown } from "@themesberg/react-bootstrap";
-import { ChoosePhotoWidget, ProfileCardWidget } from "../components/Widgets";
-import { GeneralInfoForm } from "../components/Forms";
-// import { Col, Row, Card, Image, Button, ListGroup, ProgressBar } from '@themesberg/react-bootstrap';
 import { useNavigate } from "react-router-dom";
 
 import Profile3 from "../assets/img/team/profile-picture-3.jpg";
-import { CardWidget, CardWidgetForTrip } from "../components/Card";
+import { CardWidgetForTrip } from "../components/Card";
 import MapDirection from "./MapDirection";
 
-// import { faLeftLong } from '@fortawesome/free-solid-svg-icons';
-
 export default () => {
-  const pickup = { lat: 28.6139, lng: 77.209 }; 
-  const dropoff = { lat: 28.615, lng: 77.212 }; 
+  const pickup = { lat: 28.6139, lng: 77.209 };
+  const dropoff = { lat: 28.615, lng: 77.212 };
 
   // const markers = [
   //   {
@@ -59,8 +57,6 @@ export default () => {
 
       <Row>
         <Col xs={12} xl={1}>
-          {/* <ProfileCardWidget /> */}
-
           <Button
             onClick={handleBackTrip}
             variant="light"
@@ -72,8 +68,6 @@ export default () => {
         </Col>
 
         <Col xs={12} xl={12}>
-          {/* <ProfileCardWidget /> */}
-
           <Card border="light" className="bg-white shadow-sm mb-4">
             <MapDirection pickup={pickup} dropoff={dropoff} />
           </Card>

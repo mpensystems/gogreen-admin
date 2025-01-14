@@ -1,3 +1,18 @@
+// Copyright 2025 MP ENSYSTEMS ADVISORY PRIVATE LIMITED.
+
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+
+// http://www.apache.org/licenses/LICENSE-2.0
+
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+
 import React, { useState, useCallback, useEffect } from "react";
 import {
   GoogleMap,
@@ -14,7 +29,12 @@ const containerStyle = {
   height: "500px",
 };
 
-const DropLocationFinder = ({ markers, setMarkers, dropLoc, onCoordinatesUpdate}) => {
+const DropLocationFinder = ({
+  markers,
+  setMarkers,
+  dropLoc,
+  onCoordinatesUpdate,
+}) => {
   console.log("drop loc in map", dropLoc);
 
   const { isLoaded } = useJsApiLoader({
@@ -34,7 +54,7 @@ const DropLocationFinder = ({ markers, setMarkers, dropLoc, onCoordinatesUpdate}
     (map) => {
       const bounds = new window.google.maps.LatLngBounds();
       markers.forEach((marker) => bounds.extend(marker.position));
-      if (markers.length === 0) bounds.extend(center); 
+      if (markers.length === 0) bounds.extend(center);
       setMap(map);
       console.log("CALLED_ONLOAD");
     },
@@ -48,88 +68,20 @@ const DropLocationFinder = ({ markers, setMarkers, dropLoc, onCoordinatesUpdate}
 
   const formatAddress = (location) => {
     // console.log(location,"location in api google",isPickup);
-    
-   
-      return `${location.drop_address1}, ${location.drop_address2}, ${location.drop_house}, ${location.drop_city},${location.drop_landmark}, ${location.drop_state}`;
 
+    return `${location.drop_address1}, ${location.drop_address2}, ${location.drop_house}, ${location.drop_city},${location.drop_landmark}, ${location.drop_state}`;
   };
-
-  
-
-  
-
-  // const handleGeocodeAddresses = async () => {
-  //   const pickupCoords = await geocodeAddress(formatAddress(pickupLoc,true));
-  //   const dropCoords = await geocodeAddress(formatAddress(dropLoc,false));
-  //   console.log(dropCoords,"dropCoords");
-
-
-  //   const newMarkers = [];
-  //   let pickupLatLng = null;
-  //   let dropLatLng = null;
-
-  //   if (pickupCoords) {
-  //     const address = await reverseGeocode(dropCoords?.lat , dropCoords?.lng);
-
-  //     newMarkers.push({
-  //       position: pickupCoords,
-  //       title: `Pickup: ${address}`,
-  //     });
-  //     pickupLatLng = pickupCoords;
-    
-
-  //   }
-
-  //   if (dropCoords) {
-  //     // call api and pass reverse coords for showing address on map
-  //       console.log("dropCoords here : ",dropCoords);
-
-  //   const address = await reverseGeocode(dropCoords.lat , dropCoords.lng);
-
-  //     newMarkers.push({
-  //       position: dropCoords,
-  //       title: `Drop: ${address}`,
-  //     });
-  //     dropLatLng = dropCoords;
-  
-
-  //   }
-
-    
-
-  //   if (newMarkers.length > 0) {
-  //     setMarkers((prevMarkers) => [...prevMarkers, ...newMarkers]);
-
-  //     if (map) {
-  //       const bounds = new window.google.maps.LatLngBounds();
-  //       newMarkers.forEach((marker) => bounds.extend(marker.position));
-  //       map.fitBounds(bounds); // Adjust map to fit all markers
-  //     }
-  //   }
-
-  //   if (pickupLatLng || dropLatLng) {
-  //     onCoordinatesUpdate(pickupLatLng, dropLatLng);
-  //   }
-
-  //   map.setCenter(dropCoords)
-  //   map.setZoom(10)
-
-  // };
-
-
-
-
 
   const handleGeocodeAddresses = async () => {
     const newMarkers = [];
-  
-   
-  
-    // Geocode drop location if available
+
     if (dropLoc) {
       const dropCoords = await geocodeAddress(formatAddress(dropLoc, false));
       if (dropCoords) {
-        const dropAddress = await reverseGeocode(dropCoords.lat, dropCoords.lng);
+        const dropAddress = await reverseGeocode(
+          dropCoords.lat,
+          dropCoords.lng
+        );
         newMarkers.push({
           position: dropCoords,
           title: `Drop: ${dropAddress}`,
@@ -138,21 +90,20 @@ const DropLocationFinder = ({ markers, setMarkers, dropLoc, onCoordinatesUpdate}
         if (dropCoords) {
           const bounds = new window.google.maps.LatLngBounds();
           newMarkers.forEach((marker) => bounds.extend(marker.position));
-          map.fitBounds(bounds); 
-        } 
+          map.fitBounds(bounds);
+        }
         // else {
         //   map.setCenter(dropCoords);
         //   map.setZoom(12); // Adjust zoom level for a closer view
         // }
       }
     }
-  
+
     if (newMarkers.length > 0) {
       setMarkers(newMarkers);
       onCoordinatesUpdate(newMarkers[0]?.position, newMarkers[1]?.position);
     }
   };
-  
 
   useEffect(() => {
     if (map) {
@@ -208,7 +159,7 @@ const DropLocationFinder = ({ markers, setMarkers, dropLoc, onCoordinatesUpdate}
           position={selectedMarker.position}
           onCloseClick={() => {
             setSelectedMarker(null);
-            map.setCenter(markers[0]?.position || center); 
+            map.setCenter(markers[0]?.position || center);
           }}
         >
           <div>

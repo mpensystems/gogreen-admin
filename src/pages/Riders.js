@@ -1,17 +1,22 @@
+// Copyright 2025 MP ENSYSTEMS ADVISORY PRIVATE LIMITED.
+
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+
+// http://www.apache.org/licenses/LICENSE-2.0
+
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+
+
 import React, { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faBoxOpen,
-  faCartArrowDown,
-  faChartPie,
-  faChevronDown,
-  faClipboard,
-  faCommentDots,
-  faFileAlt,
-  faPlus,
-  faRocket,
-  faStore,
-} from "@fortawesome/free-solid-svg-icons";
+
 import { Col, Row, Button, Dropdown } from "@themesberg/react-bootstrap";
 import { ChoosePhotoWidget, ProfileCardWidget } from "../components/Widgets";
 import { GeneralInfoForm } from "../components/Forms";
@@ -116,12 +121,7 @@ export default () => {
                 <p>Loading...</p>
               )}
               </Col>
-            {/* <Col xs={12}>
-              <ChoosePhotoWidget
-                title="Select profile photo"
-                photo={Profile3}
-              />
-            </Col> */}
+           
           </Row>
         </Col>
         <Col xs={12} xl={8} className="mb-4">

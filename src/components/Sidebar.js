@@ -1,3 +1,18 @@
+// Copyright 2025 MP ENSYSTEMS ADVISORY PRIVATE LIMITED.
+
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+
+// http://www.apache.org/licenses/LICENSE-2.0
+
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+
 
 import React, { useState } from "react";
 import SimpleBar from 'simplebar-react';
@@ -5,11 +20,10 @@ import { useLocation } from "react-router-dom";
 import { CSSTransition } from 'react-transition-group';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import { faBook, faBoxOpen, faChartPie, faCog, faFileAlt, faFile,faUser,faUsers, faBox,faMotorcycle,faSignOutAlt, faTable, faTimes, faCalendarAlt, faMapPin, faInbox, faRocket ,faReceipt} from "@fortawesome/free-solid-svg-icons";
+import {  faChartPie, faFile,faUser, faBox,faMotorcycle,faSignOutAlt, faTimes, faReceipt} from "@fortawesome/free-solid-svg-icons";
 import { Nav, Badge, Image, Button, Dropdown, Accordion, Navbar } from '@themesberg/react-bootstrap';
 import { Link } from 'react-router-dom';
 import { Routes } from "../routes";
-import ThemesbergLogo from "../assets/img/themesberg.svg";
 import ReactHero from "../assets/img/technologies/react-hero-logo.svg";
 import ProfilePicture from "../assets/img/team/profile-picture-3.jpg";
 
@@ -55,10 +69,9 @@ export default (props = {}) => {
     console.log("link from props",link);
     
     const classNames = badgeText ? "d-flex justify-content-start align-items-center justify-content-between" : "";
-    // const navItemClassName = pathname.includes(link) ? "active" : "";
     const isActive = link === "/" 
-    ? pathname === "/" // Only mark 'Home' active when exactly at the root
-    : pathname.startsWith(link); // For other paths, allow startsWith check
+    ? pathname === "/" 
+    : pathname.startsWith(link);
 
   const navItemClassName = isActive ? "active" : "";
 
@@ -114,10 +127,8 @@ export default (props = {}) => {
               </Nav.Link>
             </div>
             <Nav className="flex-column pt-3 pt-md-0">
-              {/* <NavItem title="Admin Panel"  icon={faChartPie} /> */}
-
+            
               <NavItem title="Home" link={Routes.DashboardOverview.path} icon={faChartPie} />
-              {/* <NavItem external title="Messages" link="https://demo.themesberg.com/volt-pro-react/#/messages" target="_blank" badgeText="Pro" icon={faInbox} /> */}
               <NavItem title="Kyc Details" icon={faFile} link={Routes.Kyc.path} />
               <NavItem title="Aggregate Balance" icon={faReceipt} link={Routes.Transactions.path} />
               <NavItem title="Trips" icon={faMotorcycle} link={Routes.TripsTab.path} />
@@ -125,62 +136,11 @@ export default (props = {}) => {
               <NavItem title="Riders" icon={faUser} link={Routes.Riders.path} />
               
               <NavItem title="Bookings" icon={faBox} link={Routes.Bookings.path} />
-              {/* <NavItem title="User Managment" icon={faUsers} link={Routes.UserManagment.path} /> */}
-              
-              {/* <NavItem title="Settings" icon={faCog} link={Routes.Settings.path} /> */}
-
-              {/* <NavItem external title="Calendar" link="https://demo.themesberg.com/volt-pro-react/#/calendar" target="_blank" badgeText="Pro" icon={faCalendarAlt} />
-              <NavItem external title="Map" link="https://demo.themesberg.com/volt-pro-react/#/map" target="_blank" badgeText="Pro" icon={faMapPin} /> */}
-
-              {/* <CollapsableNavItem eventKey="tables/" title="Tables" icon={faTable}>
-                <NavItem title="Bootstrap Table" link={Routes.BootstrapTables.path} />
-              </CollapsableNavItem> */}
-
-              {/* <CollapsableNavItem eventKey="examples/" title="Page Examples" icon={faFileAlt}>
-                <NavItem title="Sign In" link={Routes.Signin.path} />
-                <NavItem title="Sign Up" link={Routes.Signup.path} />
-                <NavItem title="Forgot password" link={Routes.ForgotPassword.path} />
-                <NavItem title="Reset password" link={Routes.ResetPassword.path} />
-                <NavItem title="Lock" link={Routes.Lock.path} />
-                <NavItem title="404 Not Found" link={Routes.NotFound.path} />
-                <NavItem title="500 Server Error" link={Routes.ServerError.path} />
-              </CollapsableNavItem> */}
-
-              {/* <NavItem external title="Plugins" link="https://demo.themesberg.com/volt-pro-react/#/plugins/datatable" target="_blank" badgeText="Pro" icon={faChartPie} /> */}
-
+             
+             
               <Dropdown.Divider className="my-3 border-indigo" />
 
-              {/* <CollapsableNavItem eventKey="documentation/" title="Getting Started" icon={faBook}>
-                <NavItem title="Overview" link={Routes.DocsOverview.path} />
-                <NavItem title="Download" link={Routes.DocsDownload.path} />
-                <NavItem title="Quick Start" link={Routes.DocsQuickStart.path} />
-                <NavItem title="License" link={Routes.DocsLicense.path} />
-                <NavItem title="Folder Structure" link={Routes.DocsFolderStructure.path} />
-                <NavItem title="Build Tools" link={Routes.DocsBuild.path} />
-                <NavItem title="Changelog" link={Routes.DocsChangelog.path} />
-              </CollapsableNavItem> */}
-              {/* <CollapsableNavItem eventKey="components/" title="Components" icon={faBoxOpen}>
-                <NavItem title="Accordion" link={Routes.Accordions.path} />
-                <NavItem title="Alerts" link={Routes.Alerts.path} />
-                <NavItem title="Badges" link={Routes.Badges.path} />
-                <NavItem external title="Widgets" link="https://demo.themesberg.com/volt-pro-react/#/components/widgets" target="_blank" badgeText="Pro" />
-                <NavItem title="Breadcrumbs" link={Routes.Breadcrumbs.path} />
-                <NavItem title="Buttons" link={Routes.Buttons.path} />
-                <NavItem title="Forms" link={Routes.Forms.path} />
-                <NavItem title="Modals" link={Routes.Modals.path} />
-                <NavItem title="Navbars" link={Routes.Navbars.path} />
-                <NavItem title="Navs" link={Routes.Navs.path} />
-                <NavItem title="Pagination" link={Routes.Pagination.path} />
-                <NavItem title="Popovers" link={Routes.Popovers.path} />
-                <NavItem title="Progress" link={Routes.Progress.path} />
-                <NavItem title="Tables" link={Routes.Tables.path} />
-                <NavItem title="Tabs" link={Routes.Tabs.path} />
-                <NavItem title="Toasts" link={Routes.Toasts.path} />
-                <NavItem title="Tooltips" link={Routes.Tooltips.path} />
-              </CollapsableNavItem>
-              <NavItem external title="Themesberg" link="https://themesberg.com" target="_blank" image={ThemesbergLogo} />
-              <Button as={Link} to={Routes.Upgrade.path} variant="secondary" className="upgrade-to-pro"><FontAwesomeIcon icon={faRocket} className="me-1" /> Upgrade to Pro</Button> */}
-            </Nav>
+                </Nav>
           </div>
         </SimpleBar>
       </CSSTransition>

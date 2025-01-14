@@ -1,12 +1,25 @@
+// Copyright 2025 MP ENSYSTEMS ADVISORY PRIVATE LIMITED.
+
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+
+// http://www.apache.org/licenses/LICENSE-2.0
+
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+
+
 
 import React, { useEffect, useState } from "react";
-// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBell, faCog, faEnvelopeOpen, faKey, faSignOutAlt, faUserShield } from "@fortawesome/free-solid-svg-icons";
 import { faUserCircle } from "@fortawesome/free-regular-svg-icons";
 import { Row, Col, Nav, Form, Image, Navbar, Dropdown, Container, ListGroup, InputGroup } from '@themesberg/react-bootstrap';
 
-// import NOTIFICATIONS_DATA from "../data/notifications";
-// import Profile3 from "../assets/img/team/profile-picture-3.jpg";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser} from "@fortawesome/free-solid-svg-icons";
 import { getLoggedInUser } from "../api/adminApis";
@@ -15,43 +28,6 @@ import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 
 export default (props) => {
-  // const [notifications, setNotifications] = useState(NOTIFICATIONS_DATA);
-  // const areNotificationsRead = notifications.reduce((acc, notif) => acc && notif.read, true);
-
-  // const markNotificationsAsRead = () => {
-  //   setTimeout(() => {
-  //     setNotifications(notifications.map(n => ({ ...n, read: true })));
-  //   }, 300);
-  // };
-
-
-  // const Notification = (props) => {
-  //   const { link, sender, image, time, message, read = false } = props;
-  //   const readClassName = read ? "" : "text-danger";
-
-  //   return (
-  //     <ListGroup.Item action href={link} className="border-bottom border-light">
-  //       <Row className="align-items-center">
-  //         <Col className="col-auto">
-  //           <Image src={image} className="user-avatar lg-avatar rounded-circle" />
-  //         </Col>
-  //         <Col className="ps-0 ms--2">
-  //           <div className="d-flex justify-content-between align-items-center">
-  //             <div>
-  //               <h4 className="h6 mb-0 text-small">{sender}</h4>
-  //             </div>
-  //             <div className="text-end">
-  //               <small className={readClassName}>{time}</small>
-  //             </div>
-  //           </div>
-  //           <p className="font-small mt-1 mb-0">{message}</p>
-  //         </Col>
-  //       </Row>
-  //     </ListGroup.Item>
-  //   );
-  // };
-
-
  const [user,setUser] = useState();
  const {auth} = useAuth();
  const navigate = useNavigate();
@@ -109,37 +85,10 @@ const changePassword =() =>{
       <Container fluid className="px-0">
         <div className="d-flex justify-content-between w-100">
           <div className="d-flex align-items-center">
-            {/* <Form className="navbar-search">
-              <Form.Group id="topbarSearch">
-                <InputGroup className="input-group-merge search-bar">
-                  <InputGroup.Text><FontAwesomeIcon icon={faSearch} /></InputGroup.Text>
-                  <Form.Control type="text" placeholder="Search" />
-                </InputGroup>
-              </Form.Group>
-            </Form> */}
+           
           </div>
           <Nav className="align-items-center">
-            {/* <Dropdown as={Nav.Item} onToggle={markNotificationsAsRead} >
-              <Dropdown.Toggle as={Nav.Link} className="text-dark icon-notifications me-lg-3">
-                <span className="icon icon-sm">
-                  <FontAwesomeIcon icon={faBell} className="bell-shake" />
-                  {areNotificationsRead ? null : <span className="icon-badge rounded-circle unread-notifications" />}
-                </span>
-              </Dropdown.Toggle>
-              <Dropdown.Menu className="dashboard-dropdown notifications-dropdown dropdown-menu-lg dropdown-menu-center mt-2 py-0">
-                <ListGroup className="list-group-flush">
-                  <Nav.Link href="#" className="text-center text-primary fw-bold border-bottom border-light py-3">
-                    Notifications
-                  </Nav.Link>
-
-                  {notifications.map(n => <Notification key={`notification-${n.id}`} {...n} />)}
-
-                  <Dropdown.Item className="text-center text-primary fw-bold py-3">
-                    View all
-                  </Dropdown.Item>
-                </ListGroup>
-              </Dropdown.Menu>
-            </Dropdown> */}
+           
 
             <Dropdown as={Nav.Item}>
               <Dropdown.Toggle as={Nav.Link} className="pt-1 px-0">

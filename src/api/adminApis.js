@@ -1,4 +1,20 @@
-// import { fields } from "@hookform/resolvers/ajv/src/__tests__/__fixtures__/data.js";
+// Copyright 2025 MP ENSYSTEMS ADVISORY PRIVATE LIMITED.
+
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+
+// http://www.apache.org/licenses/LICENSE-2.0
+
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+
+
+
 import axios from "axios";
 
 const url = process.env.REACT_APP_BACKEND_URL;
@@ -37,13 +53,13 @@ export const userRegister = async (credentials, token) => {
       {
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`, // Ensure this is in the correct format (e.g., 'Bearer your-token')
+          Authorization: `Bearer ${token}`, 
         },
       }
     );
 
     console.log("Registration successful, user data:", response.data);
-    return response; // Return the data directly from the response
+    return response; 
   } catch (error) {
     // Handle error
     if (error.response) {
@@ -100,7 +116,6 @@ export const userChangePassword = async (credentials, token) => {
     );
 
     console.log("Change password successful, user data:", response);
-    // console.log("Change password successful, user data:",response.json());
 
     return response.data;
   } catch (error) {
@@ -141,68 +156,7 @@ export const getLoggedInUser = async (token) => {
 };
 
 
-// export const getUserProfile = async (token) => {
-//   console.log("token in user get : ",token);
-//   try {
-//     const response = await axios.get(`${BASE_URL}/user/profile`, {
-//       headers: {
-//         // "Content-Type": "application/json",
-//         Authorization:`Bearer ${token}`, 
-//       },
-//     });
 
-//     console.log("User profile retrieved successfully:", response.data);
-
-//     return response;
-//   } catch (error) {
-//     console.log(error);
-    
-//     if (error.response) {
-//       throw new Error(
-//         `Error: ${error.response.data.message || "Network response was not ok"}`
-//       );
-//     } else if (error.request) {
-//       throw new Error("Error: No response received from server.");
-//     } else {
-//       throw new Error(`Error: ${error.message}`);
-//     }
-//   }
-// };
-
-
-//user management Api's
-
-// export const adminUpdateProfile = async (aid, profileData, token) => {
-//   try {
-//     const response = await axios.post(
-//       `${BASE_URL}/v1/user-mgmt/${aid}/update-profile`,
-//       profileData,
-//       {
-//         headers: {
-//           "Content-Type": "application/json",
-//           Authorization: `Bearer ${token}`, // Use dynamic token
-//         },
-//       }
-//     );
-
-//     console.log("Profile updated successfully, user data:", response.data);
-
-//     return response;
-//   } catch (error) {
-//     if (error.response) {
-//       console.error("Error updating profile:", error.response.data);
-//       throw new Error(
-//         `Error: ${error.response.data.message || "Network response was not ok"}`
-//       );
-//     } else if (error.request) {
-//       console.error("No response received:", error.request);
-//       throw new Error("No response received from the server");
-//     } else {
-//       console.error("Error:", error.message);
-//       throw error;
-//     }
-//   }
-// };
 
 export const adminResetPassword = async (aid, profileData, token) => {
   try {
@@ -212,7 +166,7 @@ export const adminResetPassword = async (aid, profileData, token) => {
       {
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`, // Use dynamic token
+          Authorization: `Bearer ${token}`, 
         },
       }
     );
@@ -241,7 +195,7 @@ export const firstRegister = async (token) => {
     const response = await axios.get(`${BASE_URL}/v1/activation-status`, {
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`, // Use dynamic token
+        Authorization: `Bearer ${token}`, 
       },
     });
 
@@ -262,160 +216,17 @@ export const firstRegister = async (token) => {
   }
 };
 
-// export const adminGetUserProfile = async (aid, token) => {
-//   try {
-//     const response = await axios.get(
-//       `${BASE_URL}/v1/user-mgmt/${aid}/profile`,
-//       {
-//         headers: {
-//           "Content-Type": "application/json",
-//           Authorization: `Bearer ${token}`, 
-//         },
-//       }
-//     );
-
-//     return response;
-//   } catch (error) {
-//     if (error.response) {
-//       console.error("Error updating profile:", error.response.data);
-//       throw new Error(
-//         `Error: ${error.response.data.message || "Network response was not ok"}`
-//       );
-//     } else if (error.request) {
-//       console.error("No response received:", error.request);
-//       throw new Error("No response received from the server");
-//     } else {
-//       console.error("Error:", error.message);
-//       throw error;
-//     }
-//   }
-// };
 
 
 
 
-
-// export const listUsers = async (token) => {
-//   try {
-//     const response = await axios.get(`${BASE_URL}/v1/user-mgmt/list-users`, {
-//       headers: {
-//         "Content-Type": "application/json",
-//         Authorization: `Bearer ${token}`, // Use dynamic token
-//       },
-//     });
-
-//     return response;
-//   } catch (error) {
-//     if (error.response) {
-//       console.error("Error updating profile:", error.response.data);
-//       throw new Error(
-//         `Error: ${error.response.data.message || "Network response was not ok"}`
-//       );
-//     } else if (error.request) {
-//       console.error("No response received:", error.request);
-//       throw new Error("No response received from the server");
-//     } else {
-//       console.error("Error:", error.message);
-//       throw error;
-//     }
-//   }
-// };
-
-
-
-
-// Rider  Api's
-
-// export const getRidersKYCDoc = async () => {
-//   try {
-//     // console.log('url : ',url);
-//     const response = await fetch(`${URL}/v1/routes/admin/getRidersKYCDoc`, {
-//       method: "GET",
-//       headers: {
-//         "Content-Type": "application/json",
-//         Authorization: "Bearer your-token-here",
-//       },
-//     });
-//     if (!response.ok) {
-//       throw new Error("Network response was not ok");
-//     }
-//     const data = await response.json();
-//     console.log("data in api ", data);
-//     return data;
-//   } catch (error) {
-//     console.error("Error fetching orders:", error);
-//     throw error;
-//   }
-// };
-
-// for transaction table
-// export const getAllTransactions = async () => {
-//   try {
-//     // console.log('url : ',url);
-//     const response = await fetch(`${URL}/v1/rider/get-transactions`, {
-//       method: "GET",
-//       headers: {
-//         "Content-Type": "application/json",
-//         Authorization: "Bearer your-token-here",
-//       },
-//     });
-//     if (!response.ok) {
-//       throw new Error("Network response was not ok");
-//     }
-//     const data = await response.json();
-//     console.log("get all Transactions data", data);
-
-//     return data;
-//   } catch (error) {
-//     console.error("Error fetching Transactions:", error);
-//     throw error;
-//   }
-// };
 
 
 // booking Apis 
 
 export const createNewBooking = async (formData,token) => {
   console.log("token : ",token);
-  // const formData = {
-  //   "pickup_address1": "1Aerocity, NIBR Corporate Park",
-  //   "pickup_address2": "Andheri Kurla Roak, Saki Naka",
-  //   "pickup_house": "",
-  //   "pickup_landmark": "Near Safed Pool",
-  //   "pickup_zip": "400072",
-  //   "pickup_city": "Mumbai",
-  //   "pickup_state": "MH",
-  //   "pickup_district": "Andheri East",
-  //   "pickup_mobile": "XXX",
-  //   "pickup_name": "9876543210",
-  //   "pickup_geo": {
-  //     "lat": 0.00,
-  //     "lng": 0.00
-  //   },
-  //   "drop_address1": "WeWork Enam Sambhav",
-  //   "drop_address2": "C20 G Block, BKC, Bandra East",
-  //   "drop_house": "",
-  //   "drop_landmark": "",
-  //   "drop_zip": "400051",
-  //   "drop_city": "Mumbai",
-  //   "drop_state": "MH",
-  //   "drop_district": "Bandra East",
-  //   "drop_mobile": "0123456789",
-  //   "drop_name": "YYY",
-  //     "drop_geo": {
-  //     "lat": 0.00,
-  //     "lng": 0.00
-  //   },
-  //   "orderId": "",
-  //     "bidConfig": {
-  //     "min_bid": 50,
-  //     "max_bid": 200,
-  //     "steps": 2,
-  //     "step_period": 30,
-  //     "dist_increment": 1,
-  //     "start_dist": 1
-  //   }
-  // };
+ 
 
     console.log("formData inside create booking api : ",formData);
 
@@ -427,7 +238,6 @@ export const createNewBooking = async (formData,token) => {
         headers: {
           "Content-Type": "application/json",
           Authorization:`Bearer ${token}`,  
-          // Authorization:`Bearer ZNQM9TuqpJAzJ4eV7VVSx5tDxuUXXVPowfGWIOaAtFqLUWRBrWWrL9xnhQUpSv2L`,  
         },
       }
     );
@@ -811,38 +621,6 @@ export const updateUserProfile = async (formData,token,aid) => {
 };
 
 
-
-
-
-// user get in login
-
-// export const getCurrentUser = async (token) => {
-//   console.log("token in user get : ",token);
-//   try {
-//     const response = await axios.get(`${BASE_URL}/user/profile`, {
-//       headers: {
-//         // "Content-Type": "application/json",
-//         Authorization:`Bearer ${token}`, 
-//       },
-//     });
-
-//     console.log("User profile retrieved successfully:", response.data);
-
-//     return response;
-//   } catch (error) {
-//     console.log(error);
-    
-//     if (error.response) {
-//       throw new Error(
-//         `Error: ${error.response.data.message || "Network response was not ok"}`
-//       );
-//     } else if (error.request) {
-//       throw new Error("Error: No response received from server.");
-//     } else {
-//       throw new Error(`Error: ${error.message}`);
-//     }
-//   }
-// };
 
 
 export const updateCurrentUser = async ( token,formdata) => {
